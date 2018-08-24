@@ -20,6 +20,7 @@ class RESOURCE(object):
         self.price_type = price_type
         self.prices = dict()
         self.history = dict()
+        self.df = None
 
         self.price_header = 'Close'
 
@@ -34,6 +35,15 @@ class RESOURCE(object):
         df = df.rename(index=str, columns={'1. open': 'Open'})
         df = df.rename(index=str, columns={'4. close': 'Close'})
         self.prices = df
+        self.df = df.reset_index()
+
+    def fix_alpha_history_columns(self):
+        df = self.history
+        df = df.rename(index=str, columns={'3. low': 'Low'})
+        df = df.rename(index=str, columns={'2. high': 'High'})
+        df = df.rename(index=str, columns={'1. open': 'Open'})
+        df = df.rename(index=str, columns={'4. close': 'Close'})
+        self.history = df
 
     def get_history_from_alpha(self, key='', cachedir='history', cacheage=3600*24*365*10):
         if not os.path.isdir(cachedir):
@@ -93,6 +103,15 @@ class RESOURCE(object):
         sma = sma.to_frame().iloc[0, 0]
         return sma
 
+    def check_atr(self, period=20):
+        atr = libs.technical_indicators.average_true_range(self.df, period)
+        atr = atr['ATR'].tail(1).values[0]
+        rez = 0
+        if atr > 1.5:
+            rez = 1
+            self.msg.append('BUY: ATR is good')
+        return rez
+
     def check_price_close_sma(self, period=20):
         rez = 0
         buy_treshold = 2
@@ -118,7 +137,6 @@ class RESOURCE(object):
             self.msg.append('BUY: Price is above SMA_' + str(period))
             rez = 1
 
-        self.buy += rez
         return rez
 
     def check_sma20_above_sma100(self):
@@ -138,8 +156,7 @@ class RESOURCE(object):
     def get_ema_last(self, period=20):
         pricedata = self.prices
         ema = libs.technical_indicators.exponential_moving_average(pricedata.reset_index(), period)
-        ema = ema.to_frame()
-        ema = ema.tail(1).iloc[0, 0]
+        ema = ema['EMA'].tail(1).values[0]
         return ema
 
     def check_price_above_ema(self, period=50):

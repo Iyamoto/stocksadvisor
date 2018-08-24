@@ -26,7 +26,8 @@ def exponential_moving_average(df, n):
     :return: pandas.DataFrame
     """
     EMA = pd.Series(df['Close'].ewm(span=n, min_periods=n).mean(), name='EMA')
-    return EMA
+    df = df.join(EMA)
+    return df
 
 
 def momentum(df, n):
@@ -36,7 +37,7 @@ def momentum(df, n):
     :param n: 
     :return: pandas.DataFrame
     """
-    M = pd.Series(df['Close'].diff(n), name='Momentum_' + str(n))
+    M = pd.Series(df['Close'].diff(n), name='Momentum')
     df = df.join(M)
     return df
 
@@ -50,7 +51,7 @@ def rate_of_change(df, n):
     """
     M = df['Close'].diff(n - 1)
     N = df['Close'].shift(n - 1)
-    ROC = pd.Series(M / N, name='ROC_' + str(n))
+    ROC = pd.Series(M / N, name='ROC')
     df = df.join(ROC)
     return df
 
@@ -69,7 +70,7 @@ def average_true_range(df, n):
         TR_l.append(TR)
         i = i + 1
     TR_s = pd.Series(TR_l)
-    ATR = pd.Series(TR_s.ewm(span=n, min_periods=n).mean(), name='ATR_' + str(n))
+    ATR = pd.Series(TR_s.ewm(span=n, min_periods=n).mean(), name='ATR')
     df = df.join(ATR)
     return df
 

@@ -5,65 +5,62 @@ R&D
 import sys
 import os
 sys.path.insert(0, os.path.abspath('..'))
-import tensorflow as tf
+# import tensorflow as tf
 import configs.alphaconf
 import libs.stockslib as sl
 import libs.technical_indicators as ti
 from pprint import pprint
 import pandas as pd
 
-p = 107.56
-sma20 = 107.7155
 
-res = sl.RESOURCE(symbol='INTC')
+#res = sl.RESOURCE(symbol='INTC')
+res = sl.RESOURCE(symbol='MSFT')
 res.get_prices_from_alpha(key=configs.alphaconf.key)
+res.get_history_from_alpha(key=configs.alphaconf.key)
+res.fix_alpha_columns()
+res.fix_alpha_history_columns()
 
 ####
 
-df = res.prices
-df = df.rename(index=str, columns={'3. low': 'Low'})
-df = df.rename(index=str, columns={'2. high': 'High'})
-df = df.rename(index=str, columns={'1. open': 'Open'})
-df = df.rename(index=str, columns={'4. close': 'Close'})
-
+df = res.history
 df = df.reset_index()
 
+n = 14
+MAX = pd.Series(df['Close'].iloc[::-1].rolling(window=90).max(), name='MAX')
+
+# df = ti.moving_average(df, n)
+# df = ti.exponential_moving_average(df, n)
+# df['dist'] = 100 * (df['Close'] - df['SMA']) / df['SMA']
+# df = ti.average_true_range(df, n)
+df = ti.rsi(df, n)
+df['over'] = df['RSI'] < 50
+
 df = df.drop(axis=1, columns='date')
-df = df.drop(axis=1, columns='Open')
-df = df.drop(axis=1, columns='Close')
-df = df.drop(axis=1, columns='8. split coefficient')
-df = df.drop(axis=1, columns='7. dividend amount')
-df = df.drop(axis=1, columns='6. volume')
-df = df.drop(axis=1, columns='5. adjusted close')
+df = df.join(MAX[::-1])
+df = df.dropna()
+df = df.reset_index()
+df = df.drop(axis=1, columns='index')
 
-df = ti.rsi(df, 5)
+df['profit'] = 100 * (df['MAX'] - df['Close']) / df['Close']
 
-pprint(df)
+df['result'] = df['profit'] > 9
 
-# pricedata = res.prices['4. close']
-# MA = pd.Series(df['4. close'].rolling(window=20).mean(), name='SMA')
-# MAX = pd.Series(df['4. close'].iloc[::-1].rolling(window=30).max(), name='MAX')
-#
-# df = df.drop(axis=1, columns='date')
-# df = df.join(MA)
-# df = df.join(MAX[::-1])
-# df = df.dropna()
-# df = df.rename(index=str, columns={'4. close': 'close'})
-# df = df.reset_index()
-# df = df.drop(axis=1, columns='index')
-# df['dist'] = 100 * (df['SMA'] - df['close']) / df['close']
-# df['diff'] = 100 * (df['MAX'] - df['close']) / df['close']
-# df['flag'] = abs(df['dist']) < 1.5
-# df['result'] = df['diff'] > 5
-#
-# df.pop('SMA')
-# df.pop('MAX')
-# df.pop('diff')
+df.pop('MAX')
+df.pop('Open')
+df.pop('High')
+df.pop('Low')
+df.pop('5. adjusted close')
+df.pop('6. volume')
+df.pop('7. dividend amount')
+df.pop('8. split coefficient')
 
-# pprint(df[df.flag])
+pprint(df.tail(10))
+print()
+print('Correlation:', round(df['profit'].corr(df['RSI']), 2))
+print('Correlation:', round(df['result'].corr(df['over']), 2))
 
-
-#
+# p = 107.56
+# sma20 = 107.7155
 # x = tf.constant(p, name='input')
 # w = tf.Variable(0.5, name='weight')
 # y = tf.mul(w, x, name='output')
