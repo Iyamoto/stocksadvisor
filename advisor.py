@@ -47,6 +47,7 @@ class ADVISOR(object):
             # buy += res.check_rsi_buy(period=14)
 
             buy += 0.22 * res.check_atr(period=20)
+            buy += 0.11 * res.check_rsi2_buy(period=20)
 
             # buy += res.check_ema5_above_ema20()
             # buy += res.check_ema20_above_ema50()

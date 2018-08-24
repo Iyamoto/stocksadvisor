@@ -218,12 +218,19 @@ class RESOURCE(object):
 
         return rsi.tail(1).to_frame().iloc[0, 0]
 
-    def get_rsi2(self, period=5, points=5):
+    def get_rsi2(self, period=5):
         """https://stackoverflow.com/questions/20526414/relative-strength-index-in-python-pandas"""
-        pricedata = self.prices
-        rsi2 = libs.technical_indicators.relative_strength_index(pricedata.reset_index(), period)
+        rsi2 = libs.technical_indicators.rsi(self.df, period)
+        rsi2 = rsi2['RSI'].tail(1).values[0]
+        return rsi2
 
-        return rsi2.tail(points).to_dict()
+    def check_rsi2_buy(self, period=20):
+        rsi2 = self.get_rsi2(period=period)
+        rez = 0
+        if rsi2 < 70:
+            self.msg.append('BUY: RSI is good')
+            rez = 1
+        return rez
 
     def check_rsi_buy(self, period=5):
         rsi = self.get_last_rsi(period=period)

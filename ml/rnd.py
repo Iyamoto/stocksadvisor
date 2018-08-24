@@ -25,7 +25,7 @@ res.fix_alpha_history_columns()
 df = res.history
 df = df.reset_index()
 
-n = 14
+n = 20
 MAX = pd.Series(df['Close'].iloc[::-1].rolling(window=90).max(), name='MAX')
 
 # df = ti.moving_average(df, n)
@@ -33,7 +33,7 @@ MAX = pd.Series(df['Close'].iloc[::-1].rolling(window=90).max(), name='MAX')
 # df['dist'] = 100 * (df['Close'] - df['SMA']) / df['SMA']
 # df = ti.average_true_range(df, n)
 df = ti.rsi(df, n)
-df['over'] = df['RSI'] < 50
+df['over'] = df['RSI'] < 70
 
 df = df.drop(axis=1, columns='date')
 df = df.join(MAX[::-1])
