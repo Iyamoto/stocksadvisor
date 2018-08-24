@@ -281,6 +281,17 @@ class RESOURCE(object):
         }
         return macddata
 
+    def check_macd_negative(self):
+        data = libs.technical_indicators.macd(self.prices.reset_index())
+        df = data.tail(1)
+        rez = 0
+        if df['MACD'].values[0] < 0 and df['MACD_Hist'].values[0] < 0:
+            rez = 1
+            self.msg.append('MACD and MACD_HIST are negative')
+
+        return rez
+
+
     def check_macd(self):
         """
         https://mindspace.ru/abcinvest/shozhdenie-rashozhdenie-skolzyashhih-srednih-moving-average-convergence-divergence-macd/

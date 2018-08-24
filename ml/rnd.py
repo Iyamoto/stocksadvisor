@@ -41,6 +41,8 @@ MAX = pd.Series(df['Close'].iloc[::-1].rolling(window=90).max(), name='MAX')
 # EMA2 = pd.Series(df['Close'].ewm(span=n2, min_periods=n2).mean(), name='EMA2')
 # df = df.join(EMA2)
 
+df = ti.macd(df)
+
 df = df.drop(axis=1, columns='date')
 df = df.join(MAX[::-1])
 df = df.dropna()
@@ -50,7 +52,7 @@ df = df.drop(axis=1, columns='index')
 df['profit'] = 100 * (df['MAX'] - df['Close']) / df['Close']
 
 df['result'] = df['profit'] > 9
-df['over'] = df['EMA1'] > df['EMA2']
+df['over'] = (df['MACD'] < 0) & (df['MACD_Hist'] < 0)
 
 df.pop('MAX')
 df.pop('Open')
@@ -63,7 +65,7 @@ df.pop('8. split coefficient')
 
 pprint(df[df['over']].tail(10))
 print()
-# print('Correlation:', round(df['profit'].corr(df['RSI']), 2))
+print('Correlation:', round(df['profit'].corr(df['MACD']), 2))
 print('Correlation:', round(df['result'].corr(df['over']), 2))
 
 # p = 107.56
