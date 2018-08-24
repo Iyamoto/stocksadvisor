@@ -186,18 +186,15 @@ class RESOURCE(object):
         self.buy += rez
         return rez
 
-    def check_ema20_above_ema50(self):
-        ema20 = self.get_ema_last(period=20)
+    def check_ema200_above_ema50(self):
+        ema200 = self.get_ema_last(period=200)
         ema50 = self.get_ema_last(period=50)
+        rez = 0
 
-        if ema20 > ema50:
-            self.msg.append('BUY: EMA20 above EMA50 (midterm bullish)')
+        if ema200 > ema50:
+            self.msg.append('BUY: EMA200 above EMA50')
             rez = 1
-        else:
-            self.msg.append('Warning: EMA20 bellow EMA50')
-            rez = -1
 
-        self.buy += rez
         return rez
 
     def get_last_rsi(self, period=5):

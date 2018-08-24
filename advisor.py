@@ -42,20 +42,13 @@ class ADVISOR(object):
 
             buy = 0
 
-            # buy += res.check_rsi_buy(period=3)
-            # buy += res.check_rsi_buy(period=5)
-            # buy += res.check_rsi_buy(period=14)
-
             buy += 0.22 * res.check_atr(period=20)
             buy += 0.11 * res.check_rsi2_buy(period=20)
+            buy += 0.18 * res.check_ema200_above_ema50()
 
-            # buy += res.check_ema5_above_ema20()
-            # buy += res.check_ema20_above_ema50()
-            # buy += res.check_sma20_above_sma100()
+            buy += res.check_macd()
 
-            # buy += res.check_macd()
-
-            if buy > 0:
+            if buy > 0.1:
                 res.buy = buy
                 self.tobuy[symbol] = [buy, lastprice, res.msg]
 

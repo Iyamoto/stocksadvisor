@@ -13,8 +13,8 @@ from pprint import pprint
 import pandas as pd
 
 
-#res = sl.RESOURCE(symbol='INTC')
-res = sl.RESOURCE(symbol='MSFT')
+res = sl.RESOURCE(symbol='INTC')
+# res = sl.RESOURCE(symbol='MSFT')
 res.get_prices_from_alpha(key=configs.alphaconf.key)
 res.get_history_from_alpha(key=configs.alphaconf.key)
 res.fix_alpha_columns()
@@ -32,8 +32,14 @@ MAX = pd.Series(df['Close'].iloc[::-1].rolling(window=90).max(), name='MAX')
 # df = ti.exponential_moving_average(df, n)
 # df['dist'] = 100 * (df['Close'] - df['SMA']) / df['SMA']
 # df = ti.average_true_range(df, n)
-df = ti.rsi(df, n)
-df['over'] = df['RSI'] < 70
+# df = ti.rsi(df, n)
+
+# n1 = 100
+# n2 = 50
+# EMA1 = pd.Series(df['Close'].ewm(span=n1, min_periods=n1).mean(), name='EMA1')
+# df = df.join(EMA1)
+# EMA2 = pd.Series(df['Close'].ewm(span=n2, min_periods=n2).mean(), name='EMA2')
+# df = df.join(EMA2)
 
 df = df.drop(axis=1, columns='date')
 df = df.join(MAX[::-1])
@@ -44,6 +50,7 @@ df = df.drop(axis=1, columns='index')
 df['profit'] = 100 * (df['MAX'] - df['Close']) / df['Close']
 
 df['result'] = df['profit'] > 9
+df['over'] = df['EMA1'] > df['EMA2']
 
 df.pop('MAX')
 df.pop('Open')
@@ -54,9 +61,9 @@ df.pop('6. volume')
 df.pop('7. dividend amount')
 df.pop('8. split coefficient')
 
-pprint(df.tail(10))
+pprint(df[df['over']].tail(10))
 print()
-print('Correlation:', round(df['profit'].corr(df['RSI']), 2))
+# print('Correlation:', round(df['profit'].corr(df['RSI']), 2))
 print('Correlation:', round(df['result'].corr(df['over']), 2))
 
 # p = 107.56
