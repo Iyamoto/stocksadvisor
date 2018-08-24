@@ -1,0 +1,10 @@
+"""
+Config for alphavantage.co
+"""
+
+key = 'demo'
+
+symbols = [
+    'MSFT',
+    'INTC',
+]

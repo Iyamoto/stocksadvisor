@@ -1,0 +1,7 @@
+cache
+.idea
+__pycache__
+configs/*.py
+configs/*.cfg
+history
+
