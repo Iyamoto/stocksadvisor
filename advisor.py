@@ -45,18 +45,21 @@ class ADVISOR(object):
 
             buy = 0
 
+            if res.get_prophet_prediction() > 5:
+                buy += 2
+
             # buy += 0.22 * res.check_atr(period=20)
             # buy += 0.11 * res.check_rsi2_buy(period=20)
             # buy += 0.18 * res.check_ema200_above_ema50()
             # buy += 0.08 * res.check_macd_negative()
 
-            df = ti.chaikin_oscillator(res.df)
-            df['cross'] = (df.Chaikin > 0) & (df.Chaikin.shift(periods=1) < 0)
-            try:
-                if df.cross.tail(4).head(1)[df['cross']].values[0]:
-                    buy += 1.1
-            except:
-                pass
+            # df = ti.chaikin_oscillator(res.df)
+            # df['cross'] = (df.Chaikin > 0) & (df.Chaikin.shift(periods=1) < 0)
+            # try:
+            #     if df.cross.tail(4).head(1)[df['cross']].values[0]:
+            #         buy += 1.1
+            # except:
+            #     pass
 
             if buy > 1.0:
                 res.buy = buy

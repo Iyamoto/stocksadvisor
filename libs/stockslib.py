@@ -11,6 +11,8 @@ from alpha_vantage.timeseries import TimeSeries
 import libs.technical_indicators
 from pprint import pprint
 from fbprophet import Prophet
+import logging
+logging.getLogger('fbprophet').setLevel(logging.WARNING)
 
 
 class RESOURCE(object):
@@ -92,7 +94,7 @@ class RESOURCE(object):
         self.prices = data
         return data
 
-    def get_prophet_prediction(self, periods = 90):
+    def get_prophet_prediction(self, periods=30):
 
         dfraw = self.prices
         dfraw = dfraw.reset_index()
@@ -114,6 +116,8 @@ class RESOURCE(object):
 
         max = stats['max']
         profit = round(100 * (max - last) / last, 2)
+
+        self.msg.append('Profit: ' + str(profit))
 
         return profit
 
