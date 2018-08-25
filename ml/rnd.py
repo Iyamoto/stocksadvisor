@@ -15,7 +15,7 @@ import pandas as pd
 
 res = sl.RESOURCE(symbol='INTC')
 # res = sl.RESOURCE(symbol='MSFT')
-res.get_prices_from_alpha(key=configs.alphaconf.key)
+res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*7)
 res.get_history_from_alpha(key=configs.alphaconf.key)
 res.fix_alpha_columns()
 res.fix_alpha_history_columns()
@@ -25,7 +25,7 @@ res.fix_alpha_history_columns()
 df = res.history
 df = df.reset_index()
 
-n = 20
+n = 50
 MAX = pd.Series(df['Close'].iloc[::-1].rolling(window=90).max(), name='MAX')
 
 # df = ti.moving_average(df, n)
@@ -41,7 +41,9 @@ MAX = pd.Series(df['Close'].iloc[::-1].rolling(window=90).max(), name='MAX')
 # EMA2 = pd.Series(df['Close'].ewm(span=n2, min_periods=n2).mean(), name='EMA2')
 # df = df.join(EMA2)
 
-df = ti.macd(df)
+# df = ti.macd(df)
+# df = ti.vortex_indicator(df, n)
+df = ti.chaikin_oscillator(df)
 
 df = df.drop(axis=1, columns='date')
 df = df.join(MAX[::-1])
@@ -52,20 +54,20 @@ df = df.drop(axis=1, columns='index')
 df['profit'] = 100 * (df['MAX'] - df['Close']) / df['Close']
 
 df['result'] = df['profit'] > 9
-df['over'] = (df['MACD'] < 0) & (df['MACD_Hist'] < 0)
+df['over'] = (df.Chaikin > 0) & (df.Chaikin.shift(periods=1) < 0)
 
 df.pop('MAX')
 df.pop('Open')
 df.pop('High')
 df.pop('Low')
+df.pop('Volume')
 df.pop('5. adjusted close')
-df.pop('6. volume')
 df.pop('7. dividend amount')
 df.pop('8. split coefficient')
 
-pprint(df[df['over']].tail(10))
+pprint(df.tail(10))
 print()
-print('Correlation:', round(df['profit'].corr(df['MACD']), 2))
+print('Correlation:', round(df['profit'].corr(df['Chaikin']), 2))
 print('Correlation:', round(df['result'].corr(df['over']), 2))
 
 # p = 107.56

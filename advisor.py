@@ -5,6 +5,9 @@ S-advisor
 import configs.alphaconf
 import libs.stockslib as sl
 import fire
+import json
+import libs.technical_indicators as ti
+from pprint import pprint
 
 
 class ADVISOR(object):
@@ -34,7 +37,7 @@ class ADVISOR(object):
 
             # Init
             res = sl.RESOURCE(symbol=symbol)
-            res.get_prices_from_alpha(key=self.key)
+            res.get_prices_from_alpha(key=self.key, cacheage=3600*24*3)
             res.fix_alpha_columns()
             # res.get_history_from_alpha(key=self.key)
 
@@ -42,16 +45,24 @@ class ADVISOR(object):
 
             buy = 0
 
-            buy += 0.22 * res.check_atr(period=20)
-            buy += 0.11 * res.check_rsi2_buy(period=20)
-            buy += 0.18 * res.check_ema200_above_ema50()
-            buy += 0.08 * res.check_macd_negative()
+            # buy += 0.22 * res.check_atr(period=20)
+            # buy += 0.11 * res.check_rsi2_buy(period=20)
+            # buy += 0.18 * res.check_ema200_above_ema50()
+            # buy += 0.08 * res.check_macd_negative()
 
-            if buy > 0.4:
+            df = ti.chaikin_oscillator(res.df)
+            df['cross'] = (df.Chaikin > 0) & (df.Chaikin.shift(periods=1) < 0)
+            try:
+                if df.cross.tail(4).head(1)[df['cross']].values[0]:
+                    buy += 1.1
+            except:
+                pass
+
+            if buy > 1.0:
                 res.buy = buy
                 self.tobuy[symbol] = [buy, lastprice, res.msg]
 
-            if lastprice > price > 0 and (price/lastprice - 1)*100 > 5:
+            if lastprice > price > 0 and (price/lastprice - 1)*100 > 3:
                 sell = 0
                 sell += res.check_rsi_sell(period=3)
                 sell += res.check_rsi_sell(period=5)
@@ -65,9 +76,10 @@ class ADVISOR(object):
                     self.tosell[symbol] = [sell, income]
 
         print('BUY:')
-        print(self.tobuy)
+        print(json.dumps(self.tobuy, indent=4))
         print('SELL:')
         print(self.tosell)
+
 
 if __name__ == "__main__":
     adv = ADVISOR()

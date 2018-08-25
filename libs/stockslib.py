@@ -10,6 +10,7 @@ import pandas as pd
 from alpha_vantage.timeseries import TimeSeries
 import libs.technical_indicators
 from pprint import pprint
+from fbprophet import Prophet
 
 
 class RESOURCE(object):
@@ -34,6 +35,7 @@ class RESOURCE(object):
         df = df.rename(index=str, columns={'2. high': 'High'})
         df = df.rename(index=str, columns={'1. open': 'Open'})
         df = df.rename(index=str, columns={'4. close': 'Close'})
+        df = df.rename(index=str, columns={'6. volume': 'Volume'})
         self.prices = df
         self.df = df.reset_index()
 
@@ -43,6 +45,7 @@ class RESOURCE(object):
         df = df.rename(index=str, columns={'2. high': 'High'})
         df = df.rename(index=str, columns={'1. open': 'Open'})
         df = df.rename(index=str, columns={'4. close': 'Close'})
+        df = df.rename(index=str, columns={'6. volume': 'Volume'})
         self.history = df
 
     def get_history_from_alpha(self, key='', cachedir='history', cacheage=3600*24*365*10):
@@ -88,6 +91,31 @@ class RESOURCE(object):
 
         self.prices = data
         return data
+
+    def get_prophet_prediction(self, periods = 90):
+
+        dfraw = self.prices
+        dfraw = dfraw.reset_index()
+
+        df = pd.DataFrame(dfraw['date'])
+        df = df.rename({'date': 'ds'}, axis=1)
+        df['y'] = dfraw['5. adjusted close']
+
+        last = df['y'].tail(1).values[0]
+
+        m = Prophet()
+        m.fit(df)
+
+        future = m.make_future_dataframe(periods=periods)
+
+        forecast = m.predict(future)
+
+        stats = forecast['yhat'].tail(periods).describe()
+
+        max = stats['max']
+        profit = round(100 * (max - last) / last, 2)
+
+        return profit
 
     def get_last_price(self):
         prices = self.prices[self.price_header].tail(1)
