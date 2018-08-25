@@ -14,7 +14,7 @@ import pandas as pd
 from fbprophet import Prophet
 import matplotlib.pyplot as plt
 
-sybmol = 'MSFT'
+sybmol = 'KO'
 
 res = sl.RESOURCE(symbol=sybmol)
 res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*7)
@@ -24,7 +24,7 @@ res.fix_alpha_history_columns()
 
 # Prepare data for the Prophet
 
-dfraw = res.prices
+dfraw = res.history
 dfraw = dfraw.reset_index()
 
 df = pd.DataFrame(dfraw['date'])
@@ -47,8 +47,8 @@ profit = round(100 * (max - last) / last, 2)
 
 print(sybmol, last, profit)
 
-# fig1 = m.plot(forecast)
-# plt.show()
-#
-# fig2 = m.plot_components(forecast)
-# plt.show()
+fig1 = m.plot(forecast)
+plt.show()
+
+fig2 = m.plot_components(forecast)
+plt.show()

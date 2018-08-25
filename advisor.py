@@ -45,7 +45,7 @@ class ADVISOR(object):
 
             buy = 0
 
-            if res.get_prophet_prediction() > 5:
+            if res.get_prophet_prediction() > 10:
                 buy += 2
 
             # buy += 0.22 * res.check_atr(period=20)
