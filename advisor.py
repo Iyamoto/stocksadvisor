@@ -20,6 +20,8 @@ class ADVISOR(object):
         self.tobuy = dict()
         self.tosell = dict()
 
+        self.incomelimit = 9
+
     def check_watchlist(self):
         """Checks indicators"""
 
@@ -39,44 +41,27 @@ class ADVISOR(object):
             res = sl.RESOURCE(symbol=symbol)
             res.get_prices_from_alpha(key=self.key, cacheage=3600*24*3)
             res.fix_alpha_columns()
-            # res.get_history_from_alpha(key=self.key)
 
             lastprice = res.get_last_price()
 
             buy = 0
 
-            if res.get_prophet_prediction() > 10:
-                buy += 2
+            # FB Prophet
+            # if res.get_prophet_prediction() > 30:
+            #     buy += 1
 
-            # buy += 0.22 * res.check_atr(period=20)
-            # buy += 0.11 * res.check_rsi2_buy(period=20)
-            # buy += 0.18 * res.check_ema200_above_ema50()
-            # buy += 0.08 * res.check_macd_negative()
+            buy += res.check_ema200_closeto_ema50()
 
-            # df = ti.chaikin_oscillator(res.df)
-            # df['cross'] = (df.Chaikin > 0) & (df.Chaikin.shift(periods=1) < 0)
-            # try:
-            #     if df.cross.tail(4).head(1)[df['cross']].values[0]:
-            #         buy += 1.1
-            # except:
-            #     pass
-
-            if buy > 1.0:
+            if buy > 0:
                 res.buy = buy
                 self.tobuy[symbol] = [buy, lastprice, res.msg]
 
-            if lastprice > price > 0 and (price/lastprice - 1)*100 > 3:
-                sell = 0
-                sell += res.check_rsi_sell(period=3)
-                sell += res.check_rsi_sell(period=5)
-                sell += res.check_rsi_sell(period=14)
-
-                print('Sell advice', sell)
-                income = (price / lastprice) * 100
-                print('Income', income)
-
-                if sell > 5:
-                    self.tosell[symbol] = [sell, income]
+            if lastprice > price > 0:
+                income = round((lastprice / price - 1) * 100, 1)
+                if income > self.incomelimit:
+                    sell = 0
+                    if sell >= 0:
+                        self.tosell[symbol] = [sell, income]
 
         print('BUY:')
         print(json.dumps(self.tobuy, indent=4))

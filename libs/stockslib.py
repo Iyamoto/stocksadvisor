@@ -11,6 +11,7 @@ from alpha_vantage.timeseries import TimeSeries
 import libs.technical_indicators
 from pprint import pprint
 from fbprophet import Prophet
+import talib
 import logging
 logging.getLogger('fbprophet').setLevel(logging.WARNING)
 
@@ -125,241 +126,25 @@ class RESOURCE(object):
         prices = self.prices[self.price_header].tail(1)
         return prices.to_frame().iloc[0, 0]
 
-    def get_sma(self, period=20, points=1):
-        pricedata = self.prices[self.price_header]
-        sma = pricedata.rolling(window=period).mean()
-        return sma.tail(points)
-
-    def get_sma_last(self, period=20):
-        sma = self.get_sma(period=period, points=1)
-        sma = sma.to_frame().iloc[0, 0]
-        return sma
-
-    def check_atr(self, period=20):
-        atr = libs.technical_indicators.average_true_range(self.df, period)
-        atr = atr['ATR'].tail(1).values[0]
-        rez = 0
-        if atr > 1.5:
-            rez = 1
-            self.msg.append('BUY: ATR is good')
-        return rez
-
-    def check_price_close_sma(self, period=20):
-        rez = 0
-        buy_treshold = 2
-
-        sma = self.get_sma_last(period=period)
-        price = self.get_last_price()
-
-        if price > sma and abs(price / sma - 1) * 100 < buy_treshold:
-            self.msg.append('BUY: Price is close to SMA_' + str(period))
-            rez = 1
-            self.buy += rez
-
-        self.buy += rez
-        return rez
-
-    def check_price_above_sma(self, period=20):
-        rez = 0
-
-        sma = self.get_sma_last(period=period)
-        price = self.get_last_price()
-
-        if price > sma:
-            self.msg.append('BUY: Price is above SMA_' + str(period))
-            rez = 1
-
-        return rez
-
-    def check_sma20_above_sma100(self):
-        sma20 = self.get_sma_last(period=20)
-        sma100 = self.get_sma_last(period=100)
-
-        if sma20 > sma100:
-            self.msg.append('BUY: SMA20 above SMA100 (midterm bullish)')
-            rez = 1
-        else:
-            self.msg.append('Warning: SMA20 bellow SMA100')
-            rez = -1
-
-        self.buy += rez
-        return rez
-
-    def get_ema_last(self, period=20):
+    def get_ema_last(self, period=20, name='Close'):
         pricedata = self.prices
-        ema = libs.technical_indicators.exponential_moving_average(pricedata.reset_index(), period)
-        ema = ema['EMA'].tail(1).values[0]
-        return ema
+        output = talib.EMA(pricedata[name], timeperiod=period)
+        return output.tail(1).values[0]
 
-    def check_price_above_ema(self, period=50):
-        rez = 0
+    def get_sma_last(self, period=20, name='Close'):
+        pricedata = self.prices
+        output = talib.SMA(pricedata[name], timeperiod=period)
+        return output.tail(1).values[0]
 
-        ema = self.get_ema_last(period=period)
-        price = self.get_last_price()
-
-        if price > ema:
-            self.msg.append('BUY: Price is above EMA_' + str(period))
-            rez = 1
-
-        self.buy += rez
-        return rez
-
-    def check_ema5_above_ema20(self):
-        ema5 = self.get_ema_last(period=5)
-        ema20 = self.get_ema_last(period=20)
-
-        if ema5 > ema20:
-            self.msg.append('BUY: EMA5 above EMA20 (shortterm bullish)')
-            rez = 1
-        else:
-            self.msg.append('Warning: EMA5 bellow EMA20')
-            rez = -1
-
-        self.buy += rez
-        return rez
-
-    def check_ema200_above_ema50(self):
+    def check_ema200_closeto_ema50(self):
         ema200 = self.get_ema_last(period=200)
         ema50 = self.get_ema_last(period=50)
+        price = self.get_last_price()
         rez = 0
 
-        if ema200 > ema50:
-            self.msg.append('BUY: EMA200 above EMA50')
+        if abs(ema200 - ema50) < price * 0.01:
+            self.msg.append('BUY: EMA200 close to EMA50')
             rez = 1
 
         return rez
 
-    def get_last_rsi(self, period=5):
-        """https://stackoverflow.com/questions/20526414/relative-strength-index-in-python-pandas"""
-        data = self.prices[self.price_header]
-
-        delta = data.diff().dropna()
-
-        up, down = delta.copy(), delta.copy()
-        up[up < 0] = 0
-        down[down > 0] = 0
-
-        roll_up = up.rolling(window=period).mean()
-        roll_down = down.abs().rolling(window=period).mean()
-
-        rs = roll_up / roll_down
-        rsi = 100.0 - (100.0 / (1.0 + rs))
-
-        return rsi.tail(1).to_frame().iloc[0, 0]
-
-    def get_rsi2(self, period=5):
-        """https://stackoverflow.com/questions/20526414/relative-strength-index-in-python-pandas"""
-        rsi2 = libs.technical_indicators.rsi(self.df, period)
-        rsi2 = rsi2['RSI'].tail(1).values[0]
-        return rsi2
-
-    def check_rsi2_buy(self, period=20):
-        rsi2 = self.get_rsi2(period=period)
-        rez = 0
-        if rsi2 < 70:
-            self.msg.append('BUY: RSI is good')
-            rez = 1
-        return rez
-
-    def check_rsi_buy(self, period=5):
-        rsi = self.get_last_rsi(period=period)
-        rez = 0
-        buy_treshold = 35
-        sell_treshold = 50
-        oversell_treshold = 70
-
-        if rsi < buy_treshold:
-            self.msg.append('BUY: RSI_' + str(period))
-            rez += 2
-
-        if rsi > sell_treshold:
-            self.msg.append('Warning: RSI_' + str(period))
-            rez -= 1
-
-        if rsi > oversell_treshold:
-            self.msg.append('Warning: RSI_' + str(period))
-            rez -= 1
-
-        self.buy += rez
-        return rez
-
-    def check_rsi_sell(self, period=5):
-        rsidata = self.get_last_rsi(period=period)
-        rez = 0
-        sell_treshold = 65
-        buy_treshold = 50
-        for rsi in rsidata:
-            if rsidata[rsi] > sell_treshold:
-                self.msg.append('SELL: RSI_' + str(period))
-                rez += 4
-
-            if rsidata[rsi] < buy_treshold:
-                self.msg.append('Warning: RSI_' + str(period))
-                rez -= 2
-
-        self.buy += rez
-        return rez
-
-    def get_last_macd(self):
-        pricedata = self.prices
-        data = libs.technical_indicators.macd(pricedata.reset_index())
-        data = data.set_index('date')
-        data = data.tail(1)[['MACD', 'MACD_Sign', 'MACD_Hist']]
-
-        macddata = {
-            'macd': data.tail(1)[['MACD', 'MACD_Sign', 'MACD_Hist']].iloc[0, 0],
-            'macd_signal': data.tail(1)[['MACD', 'MACD_Sign', 'MACD_Hist']].iloc[0, 1],
-            'macd_diff': data.tail(1)[['MACD', 'MACD_Sign', 'MACD_Hist']].iloc[0, 2]
-        }
-        return macddata
-
-    def check_macd_negative(self):
-        data = libs.technical_indicators.macd(self.prices.reset_index())
-        df = data.tail(1)
-        rez = 0
-        if df['MACD'].values[0] < 0 and df['MACD_Hist'].values[0] < 0:
-            rez = 1
-            self.msg.append('MACD and MACD_HIST are negative')
-
-        return rez
-
-
-    def check_macd(self):
-        """
-        https://mindspace.ru/abcinvest/shozhdenie-rashozhdenie-skolzyashhih-srednih-moving-average-convergence-divergence-macd/
-        https://mindspace.ru/abcinvest/aleksandr-elder-o-rashozhdeniyah-tseny-i-macd/
-        https://mindspace.ru/30305-kak-ispolzovat-divergentsii-macd-dlya-vyyavleniya-razvorota-na-rynke/
-        """
-        data = libs.technical_indicators.macd(self.prices.reset_index())
-        data = data.set_index('date')
-        macddata = data.tail(5).to_dict()
-
-        last = None
-        rez = 0
-        grows = 0
-
-        for macd_date in macddata['MACD_Hist']:
-            macd_hist_value = macddata['MACD_Hist'][macd_date]
-            if not last:
-                last = macd_hist_value
-                continue
-
-            if last < 0 < macd_hist_value:
-                self.msg.append('BUY: MACD crossed signal line from DOWN')
-                rez += 4
-
-            if last > 0 > macd_hist_value:
-                self.msg.append('Warning: MACD crossed signal line from UP')
-                rez -= 4
-
-            if macd_hist_value > 0 and macddata['MACD'][macd_date] > 0:
-                self.msg.append('Short grows: MACD and Hist are positive')
-                grows = 1
-            else:
-                self.msg.append('Warning: MACD and Hist are negative')
-                grows = -2
-
-            last = macd_hist_value
-
-        self.buy += rez + grows
-        return rez + grows
