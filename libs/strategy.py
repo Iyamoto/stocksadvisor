@@ -68,6 +68,10 @@ def price_above_ema100(df, pricetype='Adjusted close'):
     return price_above_ma(df, pricetype=pricetype, indicator='EMA', period=100)
 
 
+def price_above_ema50(df, pricetype='Adjusted close'):
+    return price_above_ma(df, pricetype=pricetype, indicator='EMA', period=50)
+
+
 def rsi_bellow_x(df, pricetype='Adjusted close', indicator='RSI', period=5, x=40):
     price = df[pricetype].values
     method = getattr(talib, indicator)
@@ -89,5 +93,28 @@ def rsi5_bellow_40(df, pricetype='Adjusted close'):
 def rsi14_bellow_40(df, pricetype='Adjusted close'):
     return rsi_bellow_x(df, pricetype=pricetype, indicator='RSI', period=14, x=40)
 
+
 def rsi14_bellow_30(df, pricetype='Adjusted close'):
     return rsi_bellow_x(df, pricetype=pricetype, indicator='RSI', period=14, x=30)
+
+
+def rsi_above_x(df, pricetype='Adjusted close', indicator='RSI', period=5, x=60):
+    price = df[pricetype].values
+    method = getattr(talib, indicator)
+    output = method(price, timeperiod=period)
+    rsi = pd.Series(output, name='RSI')
+    df = df.join(rsi)
+
+    df['buy'] = df['RSI'] > x
+
+    df.pop('RSI')
+
+    return df
+
+
+def rsi14_above_60(df, pricetype='Adjusted close'):
+    return rsi_bellow_x(df, pricetype=pricetype, indicator='RSI', period=14, x=60)
+
+
+def rsi14_above_70(df, pricetype='Adjusted close'):
+    return rsi_bellow_x(df, pricetype=pricetype, indicator='RSI', period=14, x=70)

@@ -189,6 +189,9 @@ class RESOURCE(object):
     def price_above_ema100(self):
         return self.price_above_ma(indicator='EMA', period=100)
 
+    def price_above_ema50(self):
+        return self.price_above_ma(indicator='EMA', period=50)
+
     def get_rsi_last(self, period=5, name='Adjusted close'):
         pricedata = self.prices
         output = talib.RSI(pricedata[name].values, timeperiod=period)
@@ -212,3 +215,16 @@ class RESOURCE(object):
 
     def rsi14_bellow_30(self):
         return self.rsi_bellow_x(period=14, x=30)
+
+    def rsi_above_x(self, period=5, x=70):
+        rsi = self.get_rsi_last(period=period)
+        rez = 0
+
+        if rsi > x:
+            self.msg.append('BUY: RSI{} above {}'.format(period, x))
+            rez = 1
+
+        return rez
+
+    def rsi14_above_70(self):
+        return self.rsi_above_x(period=14, x=70)

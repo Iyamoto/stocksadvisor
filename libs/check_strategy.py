@@ -14,15 +14,22 @@ import libs.strategy
 
 watchdata = configs.alphaconf.symbols
 
-window = 90
-profit = 10
-# strategy_name = libs.strategy.ema20_close_to_ema50
-# strategy_name = libs.strategy.price_above_ema100
-strategy_name = libs.strategy.rsi14_bellow_30
+window = 10
+profit = 5
+max_ratio = 0.5
 
+# strategy_name = libs.strategy.ema20_close_to_ema50
+# strategy_name = libs.strategy.ema50_close_to_ema100
+
+# strategy_name = libs.strategy.price_above_ema50
+strategy_name = libs.strategy.price_above_ema100
+
+# strategy_name = libs.strategy.rsi14_above_70
+# strategy_name = libs.strategy.rsi14_bellow_30
 
 price_type = 'Adjusted close'
 ratios = dict()
+good_ratio = 0
 for item in watchdata:
 
     # Parse watchlist
@@ -78,10 +85,18 @@ for item in watchdata:
     else:
         ratio = round(good / (good + bad), 2)
     ratios[symbol] = ratio
-    if ratio > 0.75:
+    if ratio > max_ratio:
+        good_ratio += 1
         print(symbol, ratio)
 
+print(good_ratio, len(watchdata))
+
+if good_ratio < 10:
+    for symbol in ratios.keys():
+        ratios[symbol] = round((1 - ratios[symbol]) * -1, 2)
+
 print(ratios)
+
 ratiopath = os.path.join('..', 'data', strategy_name.__name__ + '.json')
 with open(ratiopath, 'w') as outfile:
     json.dump(ratios, outfile, indent=4)
