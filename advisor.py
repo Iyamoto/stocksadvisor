@@ -19,7 +19,7 @@ class ADVISOR(object):
         self.tosell = dict()
 
         self.incomelimit = 9
-        self.luck = 0.5
+        self.luck = 0.6
 
     def check_watchlist(self):
         """Checks indicators"""

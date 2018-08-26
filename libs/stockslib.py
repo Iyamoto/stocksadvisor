@@ -187,4 +187,4 @@ class RESOURCE(object):
         return self.price_above_ma(indicator='EMA', period=200)
 
     def price_above_ema100(self):
-        return self.price_above_ma(indicator='SMA', period=100)
+        return self.price_above_ma(indicator='EMA', period=100)
