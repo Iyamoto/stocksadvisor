@@ -126,10 +126,6 @@ class RESOURCE(object):
 
         return profit
 
-    def get_last_price(self):
-        prices = self.prices[self.price_header].tail(1)
-        return prices.to_frame().iloc[0, 0]
-
     def get_ema_last(self, period=20, name='Adjusted close'):
         pricedata = self.prices
         output = talib.EMA(pricedata[name].values, timeperiod=period)
@@ -164,6 +160,10 @@ class RESOURCE(object):
     def ema20_close_to_ema50(self):
         return self.max_close_to_may(indicator='EMA', x=20, y=50)
 
+    def get_last_price(self):
+        prices = self.prices[self.price_header].tail(1)
+        return prices.to_frame().iloc[0, 0]
+
     def price_above_ma(self, indicator='SMA', period=100):
         indicator = indicator.lower()
         method = getattr(self, 'get_{}_last'.format(indicator))
@@ -188,3 +188,24 @@ class RESOURCE(object):
 
     def price_above_ema100(self):
         return self.price_above_ma(indicator='EMA', period=100)
+
+    def get_rsi_last(self, period=5, name='Adjusted close'):
+        pricedata = self.prices
+        output = talib.RSI(pricedata[name].values, timeperiod=period)
+        return output[-1]
+
+    def rsi_bellow_x(self, period=5, x=40):
+        rsi = self.get_rsi_last(period=period)
+        rez = 0
+
+        if rsi < x:
+            self.msg.append('BUY: RSI{} bellow {}'.format(period, x))
+            rez = 1
+
+        return rez
+
+    def rsi5_bellow_40(self):
+        return self.rsi_bellow_x(period=5, x=40)
+
+    def rsi14_bellow_40(self):
+        return self.rsi_bellow_x(period=14, x=40)
