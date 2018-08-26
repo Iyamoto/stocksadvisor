@@ -141,13 +141,13 @@ class RESOURCE(object):
         return output[-1]
 
     def ema50_close_to_ema100(self):
-        ema200 = self.get_ema_last(period=100)
+        ema100 = self.get_ema_last(period=100)
         ema50 = self.get_ema_last(period=50)
         price = self.get_last_price()
         rez = 0
 
-        if (ema50 > ema200) and abs(ema200 - ema50) < price * 0.01:
-            self.msg.append('BUY: EMA50 {} close to EMA100 {}'.format(ema50, ema200))
+        if (ema50 > ema100) and abs(ema100 - ema50) < price * 0.01:
+            self.msg.append('BUY: EMA50 {} close to EMA100 {}'.format(ema50, ema100))
             rez = 1
 
         return rez
@@ -193,6 +193,16 @@ class RESOURCE(object):
 
         if price > ma:
             self.msg.append('BUY: Price {} above EMA200 {}'.format(price, ma))
+            rez = 1
+
+        return rez
+
+    def price_above_ema100(self):
+        ma = self.get_ema_last(period=100)
+        price = self.get_last_price()
+        rez = 0
+        if price > ma:
+            self.msg.append('BUY: Price {} above EMA100 {}'.format(price, ma))
             rez = 1
 
         return rez
