@@ -221,7 +221,7 @@ class RESOURCE(object):
         rez = 0
 
         if rsi > x:
-            self.msg.append('BUY: RSI{} above {}'.format(period, x))
+            self.msg.append('SELL: RSI{} above {}'.format(period, x))
             rez = 1
 
         return rez
