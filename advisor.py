@@ -19,7 +19,7 @@ class ADVISOR(object):
         self.tosell = dict()
 
         self.incomelimit = 5
-        self.luck = 0.25
+        self.luck = 0.3
 
     def check_watchlist(self):
         """Checks indicators"""
@@ -43,6 +43,8 @@ class ADVISOR(object):
 
             # res.get_history_from_alpha(key=self.key)
             # res.fix_alpha_history_columns()
+
+            res.price_header = 'Close'
 
             lastprice = res.get_last_price()
 

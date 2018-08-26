@@ -26,7 +26,7 @@ class RESOURCE(object):
         self.history = dict()
         self.df = None
 
-        self.price_header = 'Close'
+        self.price_header = 'Adjusted close'
 
         self.msg = list()
         self.buy = 0
@@ -106,7 +106,7 @@ class RESOURCE(object):
 
         df = pd.DataFrame(dfraw['date'])
         df = df.rename({'date': 'ds'}, axis=1)
-        df['y'] = dfraw['Adjusted close']
+        df['y'] = dfraw[self.price_header]
 
         last = df['y'].tail(1).values[0]
 
@@ -126,12 +126,16 @@ class RESOURCE(object):
 
         return profit
 
-    def get_ema_last(self, period=20, name='Adjusted close'):
+    def get_ema_last(self, period=20, name=''):
+        if not name:
+            name = self.price_header
         pricedata = self.prices
         output = talib.EMA(pricedata[name].values, timeperiod=period)
         return output[-1]
 
-    def get_sma_last(self, period=20, name='Adjusted close'):
+    def get_sma_last(self, period=20, name=''):
+        if not name:
+            name = self.price_header
         pricedata = self.prices
         output = talib.SMA(pricedata[name].values, timeperiod=period)
         return output[-1]
@@ -192,7 +196,9 @@ class RESOURCE(object):
     def price_above_ema50(self):
         return self.price_above_ma(indicator='EMA', period=50)
 
-    def get_rsi_last(self, period=5, name='Adjusted close'):
+    def get_rsi_last(self, period=5, name=''):
+        if not name:
+            name = self.price_header
         pricedata = self.prices
         output = talib.RSI(pricedata[name].values, timeperiod=period)
         return output[-1]
