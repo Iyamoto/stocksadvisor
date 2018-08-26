@@ -5,6 +5,7 @@ Trade strategy checker
 import sys
 import os
 sys.path.insert(0, os.path.abspath('..'))
+import json
 from pprint import pprint
 import pandas as pd
 import configs.alphaconf
@@ -36,7 +37,7 @@ for item in watchdata:
     res.fix_alpha_columns()
     res.fix_alpha_history_columns()
 
-    # Cut some data
+    # Cut last data
     df = res.history.tail(365*5)
     df = df.reset_index()
     df = df.drop(axis=1, columns='date')
@@ -49,7 +50,7 @@ for item in watchdata:
     df = df.drop(axis=1, columns='index')
 
     # Apply strategy
-    df = strategy_name(df, pricetype='Adjusted close')
+    df = strategy_name(df, pricetype=price_type)
 
     # Calculate profit
     df['profit'] = 100 * (df['MAX'] - df[price_type]) / df[price_type]
@@ -78,3 +79,6 @@ for item in watchdata:
         print(symbol, ratio)
 
 print(ratios)
+ratiopath = os.path.join('..', 'data', strategy_name.__name__ + '.json')
+with open(ratiopath, 'w') as outfile:
+    json.dump(ratios, outfile, indent=4)

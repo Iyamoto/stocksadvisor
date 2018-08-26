@@ -1,0 +1,134 @@
+[
+    "MSFT",
+    "TTM",
+    "TCS",
+    "STX",
+    {
+        "INTC": 50.52
+    },
+    {
+        "BK": 51.03
+    },
+    {
+        "CAT": 139.12
+    },
+    {
+        "F": 9.73
+    },
+    {
+        "KO": 46.15
+    },
+    {
+        "GE": 12.81
+    },
+    {
+        "GM": 36.36
+    },
+    {
+        "HRB": 26.14
+    },
+    {
+        "HOG": 42.38
+    },
+    {
+        "IBM": 143.31
+    },
+    {
+        "SJM": 112.83
+    },
+    {
+        "KIM": 16.55
+    },
+    {
+        "KMI": 17.96
+    },
+    {
+        "LPL": 9.39
+    },
+    {
+        "MET": 46.27
+    },
+    {
+        "NFLX": 417.4
+    },
+    {
+        "OMC": 68.18
+    },
+    {
+        "PG": 81.52
+    },
+    {
+        "SKM": 25.42
+    },
+    {
+        "SBUX": 52.05
+    },
+    {
+        "TXN": 114.84
+    },
+    {
+        "VEON": 2.98
+    },
+    {
+        "WDC": 65.7
+    },
+    "AEE",
+    "QCOM",
+    "VIAB",
+    "VNO",
+    "TTM",
+    "CCL",
+    "BBBY",
+    "CEA",
+    "LYB",
+    "M",
+    "HCP",
+    "PEP",
+    "FLS",
+    "KEP",
+    "AMD",
+    "CHA",
+    "ZNH",
+    "TCS",
+    "HNP",
+    "CELG",
+    "CHL",
+    "IBN",
+    "ABBV",
+    "AES",
+    "CTL",
+    "BAC",
+    "ICE",
+    "O",
+    "FCX",
+    "WELL",
+    "SLG",
+    "ETP",
+    "BBT",
+    "LFC",
+    "WFC",
+    "FTR",
+    "CMCSA",
+    "R",
+    "LMT",
+    "GC",
+    "APD",
+    "UPS",
+    "PPL",
+    "AVGO",
+    "PFE",
+    "XOM",
+    "CSCO",
+    "WMT",
+    "TGT",
+    "VZ",
+    "BA",
+    "MRK",
+    "CVX",
+    "NVDA",
+    "ZTS",
+    "PSA",
+    "GD",
+    "RTN",
+    "NOC"
+]

@@ -2,11 +2,21 @@
 Config for alphavantage.co
 """
 
-key = 'demo'
+import json
+import os
 
-symbols = [
-    'MSFT',
-    'INTC',
-]
+key = '5RYU6OKBCV5KWQM7'
 
-ema200_ratios = {'MSFT': 0.79, 'TTM': 0.34, 'TCS': 0.7, 'STX': 0.53, 'INTC': 0.7, 'BK': 0.67, 'CAT': 0.54, 'F': 0.34, 'KO': 0.24, 'GE': 0.52, 'GM': 0.53, 'HRB': 0.7, 'HOG': 0.42, 'IBM': 0.29, 'SJM': 0.63, 'KIM': 0.59, 'KMI': 0.21, 'LPL': 0.76, 'MET': 0.69, 'NFLX': 0.86, 'OMC': 0.39, 'PG': 0.23, 'SKM': 0.6, 'SBUX': 0.39, 'TXN': 0.88, 'VEON': 0.22, 'WDC': 0.58, 'AEE': 0.71, 'QCOM': 0.62, 'VIAB': 0.0, 'VNO': 0.27, 'CCL': 0.74, 'BBBY': 0.47, 'CEA': 0.57, 'LYB': 0.53, 'M': 0.27, 'HCP': 0.18, 'PEP': 0.61, 'FLS': 0.43, 'KEP': 0.9, 'AMD': 0.89, 'CHA': 0.27, 'ZNH': 0.72, 'HNP': 0.62, 'CELG': 0.73, 'CHL': 0.16, 'IBN': 0.59, 'ABBV': 0.71, 'AES': 0.24, 'CTL': 0.45, 'BAC': 0.78, 'ICE': 0.86, 'O': 0.25, 'FCX': 0.79, 'WELL': 0, 'SLG': 0.22, 'ETP': 0.31, 'BBT': 0.43, 'LFC': 0.78, 'WFC': 0.62, 'FTR': 0.34, 'CMCSA': 0.76, 'R': 0.72, 'LMT': 0, 'GC': 0.0, 'APD': 0.17, 'UPS': 0.55, 'PPL': 0.62, 'AVGO': 0.61, 'PFE': 0.49, 'XOM': 0.39, 'CSCO': 0.78, 'WMT': 0.62, 'TGT': 0.49, 'VZ': 0.41, 'BA': 0.8, 'MRK': 0.35, 'CVX': 0.91, 'NVDA': 0.45, 'ZTS': 0.34, 'PSA': 0.19, 'GD': 0.4, 'RTN': 1.0, 'NOC': 0}
+
+def readjsonratios(name):
+    path = os.path.join('data', name + '.json')
+    if not os.path.isfile(path):
+        path = os.path.join('..', 'data', name + '.json')
+    with open(path) as f:
+        data = json.load(f)
+    return data
+
+
+ema50_close_to_ema200_ratios = readjsonratios('ema50_close_to_ema200')
+
+symbols = readjsonratios('watchlist')

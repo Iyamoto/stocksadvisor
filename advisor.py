@@ -49,7 +49,7 @@ class ADVISOR(object):
             #     buy += 1
 
             # EMA200 close to EMA50
-            weight = configs.alphaconf.ema200_ratios[symbol]
+            weight = configs.alphaconf.ema50_close_to_ema200_ratios[symbol]
             buy += weight * res.check_ema200_closeto_ema50()
 
             if buy > 0:
