@@ -1,17 +1,15 @@
 """
-S-advisor
+Stocks Advisor
 """
 
 import configs.alphaconf
 import libs.stockslib as sl
 import fire
 import json
-import libs.technical_indicators as ti
-from pprint import pprint
 
 
 class ADVISOR(object):
-    """CLI S-Advisor"""
+    """Stocks Advisor"""
 
     def __init__(self):
         self.key = configs.alphaconf.key
@@ -50,7 +48,9 @@ class ADVISOR(object):
             # if res.get_prophet_prediction() > 30:
             #     buy += 1
 
-            buy += res.check_ema200_closeto_ema50()
+            # EMA200 close to EMA50
+            weight = configs.alphaconf.ema200_ratios[symbol]
+            buy += weight * res.check_ema200_closeto_ema50()
 
             if buy > 0:
                 res.buy = buy

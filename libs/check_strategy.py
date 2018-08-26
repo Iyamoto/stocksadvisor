@@ -15,9 +15,9 @@ watchdata = configs.alphaconf.symbols
 
 window = 90
 profit = 10
+strategy_name = libs.strategy.ema50_close_to_ema200
 
 ratios = dict()
-
 for item in watchdata:
 
     # Parse watchlist
@@ -48,7 +48,7 @@ for item in watchdata:
     df = df.drop(axis=1, columns='index')
 
     # Apply strategy
-    df = libs.strategy.price_close_to_sma200(df)
+    df = strategy_name(df)
 
     # Calculate profit
     df['profit'] = 100 * (df['MAX'] - df['Close']) / df['Close']
@@ -73,7 +73,7 @@ for item in watchdata:
     else:
         ratio = round(good / (good + bad), 2)
     ratios[symbol] = ratio
-    if ratio > 0.7:
+    if ratio > 0.75:
         print(symbol, ratio)
 
 print(ratios)

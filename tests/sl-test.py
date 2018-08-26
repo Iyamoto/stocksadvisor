@@ -56,18 +56,6 @@ class ResourceTests(unittest.TestCase):
         self.assertLessEqual(abs(self.res.get_ema_last(period=50) - self.ema50), self.diff*100)
         self.assertLessEqual(abs(self.res.get_ema_last(period=100) - self.ema100), self.diff*1000)
 
-    # def test_get_last_rsi(self):
-    #     self.assertLessEqual(abs(self.res.get_last_rsi(period=3) - self.rsi3), self.diff*10000)
-    #     self.assertLessEqual(abs(self.res.get_last_rsi(period=5) - self.rsi5), self.diff*10000)
-    #     self.assertLessEqual(abs(self.res.get_last_rsi(period=14) - self.rsi14), self.diff*10000)
-    #
-    # def test_get_last_macd(self):
-    #     macddata = self.res.get_last_macd()
-    #
-    #     self.assertLessEqual(abs(macddata['macd'] - self.macd['macd']), self.diff*10)
-    #     self.assertLessEqual(abs(macddata['macd_signal'] - self.macd['macd_signal']), self.diff*10)
-    #     self.assertLessEqual(abs(macddata['macd_diff'] - self.macd['macd_diff']), self.diff*10)
-
 
 if __name__ == '__main__':
     unittest.main()

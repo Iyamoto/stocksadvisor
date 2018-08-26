@@ -10,7 +10,7 @@ from pprint import pprint
 import pandas as pd
 
 
-def price_close_to_sma200(df, pricetype='Close'):
+def ema50_close_to_ema200(df, pricetype='Close'):
     price = df[pricetype].values
 
     output = talib.EMA(price, timeperiod=50)
