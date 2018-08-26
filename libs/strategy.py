@@ -10,14 +10,14 @@ from pprint import pprint
 import pandas as pd
 
 
-def ema50_close_to_ema200(df, pricetype='Adjusted close'):
+def ema50_close_to_ema100(df, pricetype='Adjusted close'):
     price = df[pricetype].values
 
     output = talib.EMA(price, timeperiod=50)
     EMA = pd.Series(output, name='EMA50')
     df = df.join(EMA)
 
-    output = talib.EMA(price, timeperiod=200)
+    output = talib.EMA(price, timeperiod=100)
     EMA = pd.Series(output, name='EMA200')
     df = df.join(EMA)
 
@@ -28,10 +28,10 @@ def ema50_close_to_ema200(df, pricetype='Adjusted close'):
 
     return df
 
-def price_above_sma200(df, pricetype='Adjusted close'):
+def price_above_sma100(df, pricetype='Adjusted close'):
     price = df[pricetype].values
 
-    output = talib.SMA(price, timeperiod=200)
+    output = talib.SMA(price, timeperiod=100)
     SMA = pd.Series(output, name='SMA200')
     df = df.join(SMA)
 

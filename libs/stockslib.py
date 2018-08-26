@@ -105,7 +105,7 @@ class RESOURCE(object):
 
         df = pd.DataFrame(dfraw['date'])
         df = df.rename({'date': 'ds'}, axis=1)
-        df['y'] = dfraw['5. adjusted close']
+        df['y'] = dfraw['Adjusted close']
 
         last = df['y'].tail(1).values[0]
 
@@ -129,35 +129,35 @@ class RESOURCE(object):
         prices = self.prices[self.price_header].tail(1)
         return prices.to_frame().iloc[0, 0]
 
-    def get_ema_last(self, period=20, name='Close'):
+    def get_ema_last(self, period=20, name='Adjusted close'):
         pricedata = self.prices
-        output = talib.EMA(pricedata[name], timeperiod=period)
-        return output.tail(1).values[0]
+        output = talib.EMA(pricedata[name].values, timeperiod=period)
+        return output[-1]
 
-    def get_sma_last(self, period=20, name='Close'):
+    def get_sma_last(self, period=20, name='Adjusted close'):
         pricedata = self.prices
-        output = talib.SMA(pricedata[name], timeperiod=period)
-        return output.tail(1).values[0]
+        output = talib.SMA(pricedata[name].values, timeperiod=period)
+        return output[-1]
 
-    def ema50_close_to_ema200(self):
-        ema200 = self.get_ema_last(period=200)
+    def ema50_close_to_ema100(self):
+        ema200 = self.get_ema_last(period=100)
         ema50 = self.get_ema_last(period=50)
         price = self.get_last_price()
         rez = 0
 
-        if abs(ema200 - ema50) < price * 0.01:
-            self.msg.append('BUY: EMA200 close to EMA50')
+        if (ema50 > ema200) and abs(ema200 - ema50) < price * 0.01:
+            self.msg.append('BUY: EMA50 {} close to EMA100 {}'.format(ema50, ema200))
             rez = 1
 
         return rez
 
-    def price_above_sma200(self):
-        sma200 = self.get_sma_last(period=200)
+    def price_above_sma100(self):
+        sma200 = self.get_sma_last(period=100)
         price = self.get_last_price()
         rez = 0
 
         if price > sma200:
-            self.msg.append('BUY: Price above SMA200')
+            self.msg.append('BUY: Price {} above SMA100 {}'.format(price, sma200))
             rez = 1
 
         return rez

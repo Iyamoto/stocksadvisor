@@ -46,15 +46,15 @@ class ResourceTests(unittest.TestCase):
         self.assertEqual(self.res.get_last_price(), self.close)
 
     def test_get_sma_last(self):
-        self.assertLessEqual(abs(self.res.get_sma_last(period=20) - self.sma20), self.diff)
-        self.assertLessEqual(abs(self.res.get_sma_last(period=50) - self.sma50), self.diff)
-        self.assertLessEqual(abs(self.res.get_sma_last(period=100) - self.sma100), self.diff)
+        self.assertLessEqual(abs(self.res.get_sma_last(name='Close', period=20) - self.sma20), self.diff)
+        self.assertLessEqual(abs(self.res.get_sma_last(name='Close', period=50) - self.sma50), self.diff)
+        self.assertLessEqual(abs(self.res.get_sma_last(name='Close', period=100) - self.sma100), self.diff)
 
     def test_get_ema_last(self):
-        self.assertLessEqual(abs(self.res.get_ema_last(period=5) - self.ema5), self.diff)
-        self.assertLessEqual(abs(self.res.get_ema_last(period=20) - self.ema20), self.diff)
-        self.assertLessEqual(abs(self.res.get_ema_last(period=50) - self.ema50), self.diff*100)
-        self.assertLessEqual(abs(self.res.get_ema_last(period=100) - self.ema100), self.diff*1000)
+        self.assertLessEqual(abs(self.res.get_ema_last(name='Close', period=5) - self.ema5), self.diff)
+        self.assertLessEqual(abs(self.res.get_ema_last(name='Close', period=20) - self.ema20), self.diff)
+        self.assertLessEqual(abs(self.res.get_ema_last(name='Close', period=50) - self.ema50), self.diff*100)
+        self.assertLessEqual(abs(self.res.get_ema_last(name='Close', period=100) - self.ema100), self.diff*1000)
 
 
 if __name__ == '__main__':

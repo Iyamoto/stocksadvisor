@@ -54,7 +54,7 @@ class ADVISOR(object):
                 strategy_method = getattr(res, strategy_name)
                 buy += weight * strategy_method()
 
-            if buy > 0:
+            if buy > 1:
                 res.buy = buy
                 self.tobuy[symbol] = [buy, lastprice, res.msg]
 
