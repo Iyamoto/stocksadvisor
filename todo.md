@@ -16,6 +16,8 @@ https://quantrum.me/743-bektesting-kupi-i-derzhi-so-skolzyashhimi-srednimi/
 
 https://spbexchange.ru/ru/about/news2.aspx?b=8
 
+https://www.barchart.com/etfs-funds/quotes/SPY/constituents
+
 # Results
 
 ## check_ema200_moves thru_ema50
