@@ -10,7 +10,7 @@ from pprint import pprint
 import pandas as pd
 
 
-def ema50_close_to_ema200(df, pricetype='Close'):
+def ema50_close_to_ema200(df, pricetype='Adjusted close'):
     price = df[pricetype].values
 
     output = talib.EMA(price, timeperiod=50)
@@ -21,10 +21,23 @@ def ema50_close_to_ema200(df, pricetype='Close'):
     EMA = pd.Series(output, name='EMA200')
     df = df.join(EMA)
 
-    df['buy'] = (df['EMA50'] - df['EMA200']).abs() < (df[pricetype] * 0.01)
+    df['buy'] = (df['EMA50'] > df['EMA200']) & (df['EMA50'] - df['EMA200']) < (df[pricetype] * 0.01)
 
     df.pop('EMA50')
     df.pop('EMA200')
+
+    return df
+
+def price_above_sma200(df, pricetype='Adjusted close'):
+    price = df[pricetype].values
+
+    output = talib.SMA(price, timeperiod=200)
+    SMA = pd.Series(output, name='SMA200')
+    df = df.join(SMA)
+
+    df['buy'] = df[pricetype] > df['SMA200']
+
+    df.pop('SMA200')
 
     return df
 

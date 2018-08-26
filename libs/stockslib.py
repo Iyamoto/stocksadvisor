@@ -139,7 +139,7 @@ class RESOURCE(object):
         output = talib.SMA(pricedata[name], timeperiod=period)
         return output.tail(1).values[0]
 
-    def check_ema200_closeto_ema50(self):
+    def ema50_close_to_ema200(self):
         ema200 = self.get_ema_last(period=200)
         ema50 = self.get_ema_last(period=50)
         price = self.get_last_price()
@@ -147,6 +147,17 @@ class RESOURCE(object):
 
         if abs(ema200 - ema50) < price * 0.01:
             self.msg.append('BUY: EMA200 close to EMA50')
+            rez = 1
+
+        return rez
+
+    def price_above_sma200(self):
+        sma200 = self.get_sma_last(period=200)
+        price = self.get_last_price()
+        rez = 0
+
+        if price > sma200:
+            self.msg.append('BUY: Price above SMA200')
             rez = 1
 
         return rez

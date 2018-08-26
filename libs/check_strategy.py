@@ -16,7 +16,9 @@ watchdata = configs.alphaconf.symbols
 
 window = 90
 profit = 10
-strategy_name = libs.strategy.ema50_close_to_ema200
+# strategy_name = libs.strategy.ema50_close_to_ema200
+strategy_name = libs.strategy.price_above_sma200
+
 
 price_type = 'Adjusted close'
 ratios = dict()

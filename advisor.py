@@ -48,9 +48,11 @@ class ADVISOR(object):
             # if res.get_prophet_prediction() > 30:
             #     buy += 1
 
-            # EMA200 close to EMA50
-            weight = configs.alphaconf.ema50_close_to_ema200_ratios[symbol]
-            buy += weight * res.check_ema200_closeto_ema50()
+            # Calculate strategies
+            for strategy_name in configs.alphaconf.ratios.keys():
+                weight = configs.alphaconf.ratios[strategy_name][symbol]
+                strategy_method = getattr(res, strategy_name)
+                buy += weight * strategy_method()
 
             if buy > 0:
                 res.buy = buy
