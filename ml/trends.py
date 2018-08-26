@@ -17,8 +17,8 @@ import matplotlib.pyplot as plt
 sybmol = 'KO'
 
 res = sl.RESOURCE(symbol=sybmol)
-res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*7)
-res.get_history_from_alpha(key=configs.alphaconf.key)
+res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*7, cachedir='..\cache')
+res.get_history_from_alpha(key=configs.alphaconf.key, cachedir='..\history')
 res.fix_alpha_columns()
 res.fix_alpha_history_columns()
 
