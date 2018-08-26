@@ -209,3 +209,6 @@ class RESOURCE(object):
 
     def rsi14_bellow_40(self):
         return self.rsi_bellow_x(period=14, x=40)
+
+    def rsi14_bellow_30(self):
+        return self.rsi_bellow_x(period=14, x=30)

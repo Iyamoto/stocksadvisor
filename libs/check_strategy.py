@@ -18,7 +18,7 @@ window = 90
 profit = 10
 # strategy_name = libs.strategy.ema20_close_to_ema50
 # strategy_name = libs.strategy.price_above_ema100
-strategy_name = libs.strategy.rsi14_bellow_40
+strategy_name = libs.strategy.rsi14_bellow_30
 
 
 price_type = 'Adjusted close'
