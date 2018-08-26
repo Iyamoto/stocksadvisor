@@ -18,7 +18,7 @@ class ADVISOR(object):
         self.tobuy = dict()
         self.tosell = dict()
 
-        self.incomelimit = 9
+        self.incomelimit = 5
         self.luck = 0.25
 
     def check_watchlist(self):
@@ -65,14 +65,12 @@ class ADVISOR(object):
             if lastprice > price > 0:
                 income = round((lastprice / price - 1) * 100, 1)
                 if income > self.incomelimit:
-                    sell = 0
-                    if sell >= 0:
-                        self.tosell[symbol] = [sell, income]
+                    self.tosell[symbol] = [buy, income, res.msg]
 
         print('BUY:')
         print(json.dumps(self.tobuy, indent=4))
         print('SELL:')
-        print(self.tosell)
+        print(json.dumps(self.tosell, indent=4))
 
 
 if __name__ == "__main__":
