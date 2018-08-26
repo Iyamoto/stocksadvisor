@@ -28,16 +28,30 @@ def ema50_close_to_ema100(df, pricetype='Adjusted close'):
 
     return df
 
-def price_above_sma100(df, pricetype='Adjusted close'):
+def price_above_sma200(df, pricetype='Adjusted close'):
     price = df[pricetype].values
 
-    output = talib.SMA(price, timeperiod=100)
-    SMA = pd.Series(output, name='SMA200')
-    df = df.join(SMA)
+    output = talib.SMA(price, timeperiod=200)
+    MA = pd.Series(output, name='MA')
+    df = df.join(MA)
 
-    df['buy'] = df[pricetype] > df['SMA200']
+    df['buy'] = df[pricetype] > df['MA']
 
-    df.pop('SMA200')
+    df.pop('MA')
+
+    return df
+
+
+def price_above_ema200(df, pricetype='Adjusted close'):
+    price = df[pricetype].values
+
+    output = talib.EMA(price, timeperiod=200)
+    MA = pd.Series(output, name='MA')
+    df = df.join(MA)
+
+    df['buy'] = df[pricetype] > df['MA']
+
+    df.pop('MA')
 
     return df
 

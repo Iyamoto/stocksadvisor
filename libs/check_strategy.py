@@ -16,8 +16,8 @@ watchdata = configs.alphaconf.symbols
 
 window = 90
 profit = 10
-strategy_name = libs.strategy.ema50_close_to_ema100
-# strategy_name = libs.strategy.price_above_sma100
+# strategy_name = libs.strategy.ema50_close_to_ema100
+strategy_name = libs.strategy.price_above_ema200
 
 
 price_type = 'Adjusted close'
