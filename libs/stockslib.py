@@ -140,70 +140,51 @@ class RESOURCE(object):
         output = talib.SMA(pricedata[name].values, timeperiod=period)
         return output[-1]
 
-    def ema50_close_to_ema100(self):
-        ema100 = self.get_ema_last(period=100)
-        ema50 = self.get_ema_last(period=50)
+    def max_close_to_may(self, indicator='EMA', x=50, y=100):
+        indicator = indicator.lower()
+        method = getattr(self, 'get_{}_last'.format(indicator))
+        max = method(period=x)
+        may = method(period=y)
         price = self.get_last_price()
         rez = 0
 
-        if (ema50 > ema100) and abs(ema100 - ema50) < price * 0.01:
-            self.msg.append('BUY: EMA50 {} close to EMA100 {}'.format(ema50, ema100))
+        if (max > may) and abs(max - may) < price * 0.01:
+            self.msg.append('BUY: {}{} {} close to {}{} {}'.
+                            format(indicator, x, max, indicator, y, may))
+            rez = 1
+
+        return rez
+
+    def ema50_close_to_ema100(self):
+        return self.max_close_to_may(indicator='EMA', x=50, y=100)
+
+    def ema50_close_to_ema200(self):
+        return self.max_close_to_may(indicator='EMA', x=50, y=200)
+
+    def ema20_close_to_ema50(self):
+        return self.max_close_to_may(indicator='EMA', x=20, y=50)
+
+    def price_above_ma(self, indicator='SMA', period=100):
+        indicator = indicator.lower()
+        method = getattr(self, 'get_{}_last'.format(indicator))
+        ma = method(period=period)
+        price = self.get_last_price()
+        rez = 0
+
+        if price > ma:
+            self.msg.append('BUY: Price {} above {}{} {}'.format(price, indicator, period, ma))
             rez = 1
 
         return rez
 
     def price_above_sma100(self):
-        sma200 = self.get_sma_last(period=100)
-        price = self.get_last_price()
-        rez = 0
-
-        if price > sma200:
-            self.msg.append('BUY: Price {} above SMA100 {}'.format(price, sma200))
-            rez = 1
-
-        return rez
-
-    def ema50_close_to_ema200(self):
-        ema200 = self.get_ema_last(period=200)
-        ema50 = self.get_ema_last(period=50)
-        price = self.get_last_price()
-        rez = 0
-
-        if (ema50 > ema200) and abs(ema200 - ema50) < price * 0.01:
-            self.msg.append('BUY: EMA50 {} close to EMA200 {}'.format(ema50, ema200))
-            rez = 1
-
-        return rez
+        return self.price_above_ma(indicator='SMA', period=100)
 
     def price_above_sma200(self):
-        ma = self.get_sma_last(period=200)
-        price = self.get_last_price()
-        rez = 0
-
-        if price > ma:
-            self.msg.append('BUY: Price {} above SMA200 {}'.format(price, ma))
-            rez = 1
-
-        return rez
+        return self.price_above_ma(indicator='SMA', period=200)
 
     def price_above_ema200(self):
-        ma = self.get_ema_last(period=200)
-        price = self.get_last_price()
-        rez = 0
-
-        if price > ma:
-            self.msg.append('BUY: Price {} above EMA200 {}'.format(price, ma))
-            rez = 1
-
-        return rez
+        return self.price_above_ma(indicator='EMA', period=200)
 
     def price_above_ema100(self):
-        ma = self.get_ema_last(period=100)
-        price = self.get_last_price()
-        rez = 0
-        if price > ma:
-            self.msg.append('BUY: Price {} above EMA100 {}'.format(price, ma))
-            rez = 1
-
-        return rez
-
+        return self.price_above_ma(indicator='SMA', period=100)
