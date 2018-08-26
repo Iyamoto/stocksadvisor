@@ -39,6 +39,8 @@ class RESOURCE(object):
         df = df.rename(index=str, columns={'1. open': 'Open'})
         df = df.rename(index=str, columns={'4. close': 'Close'})
         df = df.rename(index=str, columns={'6. volume': 'Volume'})
+        df = df.rename(index=str, columns={'5. adjusted close': 'Adjusted close'})
+
         self.prices = df
         self.df = df.reset_index()
 
@@ -49,6 +51,7 @@ class RESOURCE(object):
         df = df.rename(index=str, columns={'1. open': 'Open'})
         df = df.rename(index=str, columns={'4. close': 'Close'})
         df = df.rename(index=str, columns={'6. volume': 'Volume'})
+        df = df.rename(index=str, columns={'5. adjusted close': 'Adjusted close'})
         self.history = df
 
     def get_history_from_alpha(self, key='', cachedir='history', cacheage=3600*24*365*10):

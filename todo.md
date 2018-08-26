@@ -14,6 +14,8 @@ https://mrjbq7.github.io/ta-lib/install.html
 
 https://quantrum.me/743-bektesting-kupi-i-derzhi-so-skolzyashhimi-srednimi/
 
+https://spbexchange.ru/ru/about/news2.aspx?b=8
+
 # Results
 
 ## check_ema200_moves thru_ema50

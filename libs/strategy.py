@@ -21,7 +21,7 @@ def ema50_close_to_ema200(df, pricetype='Close'):
     EMA = pd.Series(output, name='EMA200')
     df = df.join(EMA)
 
-    df['buy'] = (df['EMA50'] - df['EMA200']).abs() < (df['Close'] * 0.01)
+    df['buy'] = (df['EMA50'] - df['EMA200']).abs() < (df[pricetype] * 0.01)
 
     df.pop('EMA50')
     df.pop('EMA200')
