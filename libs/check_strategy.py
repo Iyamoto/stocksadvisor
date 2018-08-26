@@ -22,10 +22,10 @@ max_ratio = 0.5
 # strategy_name = libs.strategy.ema50_close_to_ema100
 
 # strategy_name = libs.strategy.price_above_ema50
-strategy_name = libs.strategy.price_above_ema100
+# strategy_name = libs.strategy.price_above_ema100
 
 # strategy_name = libs.strategy.rsi14_above_70
-# strategy_name = libs.strategy.rsi14_bellow_30
+strategy_name = libs.strategy.rsi14_bellow_30
 
 price_type = 'Adjusted close'
 ratios = dict()
