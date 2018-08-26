@@ -38,7 +38,9 @@ class ADVISOR(object):
             # Init
             res = sl.RESOURCE(symbol=symbol)
             res.get_prices_from_alpha(key=self.key, cacheage=3600*24*3)
+            res.get_history_from_alpha(key=self.key)
             res.fix_alpha_columns()
+            res.fix_alpha_history_columns()
 
             lastprice = res.get_last_price()
 
@@ -54,7 +56,7 @@ class ADVISOR(object):
                 strategy_method = getattr(res, strategy_name)
                 buy += weight * strategy_method()
 
-            if buy > 1:
+            if buy > 1.5:
                 res.buy = buy
                 self.tobuy[symbol] = [buy, lastprice, res.msg]
 

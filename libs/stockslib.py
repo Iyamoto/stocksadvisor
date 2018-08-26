@@ -53,6 +53,7 @@ class RESOURCE(object):
         df = df.rename(index=str, columns={'6. volume': 'Volume'})
         df = df.rename(index=str, columns={'5. adjusted close': 'Adjusted close'})
         self.history = df
+        self.prices = self.history.tail(200)
 
     def get_history_from_alpha(self, key='', cachedir='history', cacheage=3600*24*365*10):
         if not os.path.isdir(cachedir):
@@ -158,6 +159,29 @@ class RESOURCE(object):
 
         if price > sma200:
             self.msg.append('BUY: Price {} above SMA100 {}'.format(price, sma200))
+            rez = 1
+
+        return rez
+
+    def ema50_close_to_ema200(self):
+        ema200 = self.get_ema_last(period=200)
+        ema50 = self.get_ema_last(period=50)
+        price = self.get_last_price()
+        rez = 0
+
+        if (ema50 > ema200) and abs(ema200 - ema50) < price * 0.01:
+            self.msg.append('BUY: EMA50 {} close to EMA200 {}'.format(ema50, ema200))
+            rez = 1
+
+        return rez
+
+    def price_above_sma200(self):
+        sma200 = self.get_sma_last(period=200)
+        price = self.get_last_price()
+        rez = 0
+
+        if price > sma200:
+            self.msg.append('BUY: Price {} above SMA200 {}'.format(price, sma200))
             rez = 1
 
         return rez
