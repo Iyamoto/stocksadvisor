@@ -10,7 +10,7 @@ import pandas as pd
 from alpha_vantage.timeseries import TimeSeries
 import libs.technical_indicators
 from pprint import pprint
-from fbprophet import Prophet
+# from fbprophet import Prophet
 import talib
 import logging
 logging.getLogger('fbprophet').setLevel(logging.WARNING)

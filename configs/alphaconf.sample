@@ -5,7 +5,7 @@ Config for alphavantage.co
 import json
 import os
 
-key = '5RYU6OKBCV5KWQM7'
+key = 'demo'
 
 
 def readjsonratios(name):
