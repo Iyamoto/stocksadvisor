@@ -1,7 +1,6 @@
 # TODOs
 
 Read https://mindspace.ru/abcinvest/indikatory-v-tehnicheskom-analize/
-Implement MACD
 
 # Research
 https://github.com/quantopian/zipline
@@ -16,3 +15,4 @@ New Concepts in Technical Trading Systems
 
 https://www.barchart.com/etfs-funds/quotes/SPY/constituents
 https://spbexchange.ru/ru/about/news2.aspx?b=8
+https://mrjbq7.github.io/ta-lib/func_groups/momentum_indicators.html

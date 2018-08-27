@@ -14,7 +14,7 @@ import libs.strategy
 
 watchdata = configs.alphaconf.symbols
 
-window = 20
+window = 10
 profit = 5
 max_ratio = 0.5
 
@@ -27,7 +27,10 @@ max_ratio = 0.5
 # strategy_name = libs.strategy.rsi14_above_70
 # strategy_name = libs.strategy.rsi14_bellow_30
 
-strategy_name = libs.strategy.price_bellow_kc
+# strategy_name = libs.strategy.price_bellow_kc
+strategy_name = libs.strategy.price_above_kc
+
+# strategy_name = libs.strategy.macd_hist_positive
 
 price_type = 'Adjusted close'
 ratios = dict()

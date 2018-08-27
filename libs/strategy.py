@@ -132,12 +132,48 @@ def price_bellow_kc(df, pricetype='Adjusted close'):
     ema = pd.Series(output, name='EMA')
     df = df.join(ema)
 
-    df['KC_low'] = df['EMA'] - 2 * df['ATR']
+    df['KC_low'] = df['EMA'] - 1.4 * df['ATR']
 
     df['buy'] = df['Close'] < df['KC_low']
 
     df.pop('EMA')
     df.pop('ATR')
     df.pop('KC_low')
+
+    return df
+
+
+def price_above_kc(df, pricetype='Adjusted close'):
+    low = df['Low'].values
+    high = df['High'].values
+    close = df[pricetype].values
+    output = talib.ATR(high, low, close, timeperiod=10)
+    atr = pd.Series(output, name='ATR')
+    df = df.join(atr)
+
+    output = talib.EMA(close, timeperiod=20)
+    ema = pd.Series(output, name='EMA')
+    df = df.join(ema)
+
+    df['KC_high'] = df['EMA'] + 1.4 * df['ATR']
+
+    df['buy'] = df['Close'] > df['KC_high']
+
+    df.pop('EMA')
+    df.pop('ATR')
+    df.pop('KC_high')
+
+    return df
+
+
+def macd_hist_positive(df, pricetype='Adjusted close'):
+    close = df[pricetype].values
+    macd, macdsignal, macdhist = talib.MACD(close)
+    ma = pd.Series(macdhist, name='MACD_Hist')
+    df = df.join(ma)
+
+    df['buy'] = (abs(df['MACD_Hist']) < 0.1 * df['Close']) & (df['MACD_Hist'] > 0)
+
+    df.pop('MACD_Hist')
 
     return df

@@ -19,7 +19,6 @@ class RESOURCE(object):
 
     def __init__(self, symbol='', price_header='Adjusted close'):
         self.symbol = symbol
-        # self.price_type = price_type
         self.prices = dict()
         self.history = dict()
         self.df = None
@@ -217,9 +216,9 @@ class RESOURCE(object):
         rez = 0
 
         if rsi < x:
-            print('RSI', self.symbol, rsi, x)
+            print('RSI BUY', self.symbol, rsi, x)
             self.msg.append('BUY: RSI{} bellow {}'.format(period, x))
-            rez = 1
+            rez = 2
 
         return rez
 
@@ -237,6 +236,7 @@ class RESOURCE(object):
         rez = 0
 
         if rsi > x:
+            # print('RSI SELL', self.symbol, rsi, x)
             self.msg.append('SELL: RSI{} above {}'.format(period, x))
             rez = 1
 
@@ -255,10 +255,42 @@ class RESOURCE(object):
         output = talib.EMA(close, timeperiod=20)
         ema = output[-1]
         price = self.get_last_price()
-        kc = ema - 2 * atr
+        kc = ema - 1.4 * atr
         if price < kc:
-            rez = 1
-            print('KC', self.symbol, price, ema, atr, kc)
+            rez = 2
+            print('KC buy', self.symbol, price, ema, atr, kc)
             self.msg.append('BUY: Price {} bellow Keltner channel {}'.format(price, kc))
+
+        return rez
+
+    def price_above_kc(self):
+        rez = 0
+        low = self.prices['Low'].values
+        high = self.prices['High'].values
+        close = self.prices[self.price_header].values
+        output = talib.ATR(high, low, close, timeperiod=10)
+        atr = output[-1]
+        output = talib.EMA(close, timeperiod=20)
+        ema = output[-1]
+        price = self.get_last_price()
+        kc = ema + 1.4 * atr
+
+        if price > kc:
+            rez = 2
+            # print('KC Sell', self.symbol, price, ema, atr, kc)
+            self.msg.append('SELL: Price {} above Keltner channel {}'.format(price, kc))
+
+        return rez
+
+    def macd_hist_positive(self):
+        rez = 0
+        close = self.prices[self.price_header].values
+        _, _, macdhist = talib.MACD(close)
+        macd = macdhist [-1]
+        price = self.get_last_price()
+        if (abs(macd) < 0.1 * price) and (macd > 0):
+            rez = 1
+            # print('MACD Buy', self.symbol, price, macd)
+            self.msg.append('BUY: MACD_Hist {} positive'.format(macd))
 
         return rez
