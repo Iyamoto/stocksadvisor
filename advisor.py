@@ -38,7 +38,7 @@ class ADVISOR(object):
 
             # Init
             res = sl.RESOURCE(symbol=symbol)
-            res.get_prices_from_alpha(key=self.key, cacheage=3600*24*3)
+            res.get_prices_from_alpha(key=self.key, cacheage=3600*6)
             res.fix_alpha_columns()
 
             # res.get_history_from_alpha(key=self.key)
