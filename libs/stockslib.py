@@ -285,12 +285,14 @@ class RESOURCE(object):
     def macd_hist_positive(self):
         rez = 0
         close = self.prices[self.price_header].values
-        _, _, macdhist = talib.MACD(close)
-        macd = macdhist [-1]
+        macd, macdsign, macdhist = talib.MACD(close)
+        macd = macd[-1]
+        macdsign = macdsign[-1]
+        macdhist = macdhist[-1]
         price = self.get_last_price()
-        if abs(macd) < 0.075 * price:
+        if abs(macdhist) < 0.075 * price and macdhist <= 0 and macd <= macdsign:
             rez = 1
             # print('MACD Buy', self.symbol, price, macd)
-            self.msg.append('BUY: MACD_Hist {} is close to zero'.format(macd))
+            self.msg.append('BUY: MACD_Hist {} is close to zero'.format(macdhist))
 
         return rez

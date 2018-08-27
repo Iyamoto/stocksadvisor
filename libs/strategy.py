@@ -171,9 +171,17 @@ def macd_hist_positive(df, pricetype='Adjusted close'):
     macd, macdsignal, macdhist = talib.MACD(close)
     ma = pd.Series(macdhist, name='MACD_Hist')
     df = df.join(ma)
+    ma = pd.Series(macd, name='MACD')
+    df = df.join(ma)
+    ma = pd.Series(macdsignal, name='MACD_Sign')
+    df = df.join(ma)
 
-    df['buy'] = (abs(df['MACD_Hist']) < 0.075 * df[pricetype])
+    df['module'] = abs(df['MACD_Hist']) < 0.075 * df[pricetype]
+    df['buy'] = df['module'] & (df['MACD_Hist'] <= 0) & (df['MACD'] <= df['MACD_Sign'])
 
+    df.pop('module')
     df.pop('MACD_Hist')
+    df.pop('MACD')
+    df.pop('MACD_Sign')
 
     return df
