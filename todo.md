@@ -1,6 +1,7 @@
 # TODOs
 
 Read https://mindspace.ru/abcinvest/indikatory-v-tehnicheskom-analize/
+Add weekly data?
 
 # Research
 https://github.com/quantopian/zipline
