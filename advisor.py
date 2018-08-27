@@ -37,14 +37,12 @@ class ADVISOR(object):
             # print(symbol)
 
             # Init
-            res = sl.RESOURCE(symbol=symbol)
+            res = sl.RESOURCE(symbol=symbol, price_header='Close')
             res.get_prices_from_alpha(key=self.key, cacheage=3600*6)
             res.fix_alpha_columns()
 
             # res.get_history_from_alpha(key=self.key)
             # res.fix_alpha_history_columns()
-
-            res.price_header = 'Close'
 
             lastprice = res.get_last_price()
 

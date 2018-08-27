@@ -118,3 +118,26 @@ def rsi14_above_60(df, pricetype='Adjusted close'):
 
 def rsi14_above_70(df, pricetype='Adjusted close'):
     return rsi_bellow_x(df, pricetype=pricetype, indicator='RSI', period=14, x=70)
+
+
+def price_bellow_kc(df, pricetype='Adjusted close'):
+    low = df['Low'].values
+    high = df['High'].values
+    close = df[pricetype].values
+    output = talib.ATR(high, low, close, timeperiod=10)
+    atr = pd.Series(output, name='ATR')
+    df = df.join(atr)
+
+    output = talib.EMA(close, timeperiod=20)
+    ema = pd.Series(output, name='EMA')
+    df = df.join(ema)
+
+    df['KC_low'] = df['EMA'] - 2 * df['ATR']
+
+    df['buy'] = df['Close'] < df['KC_low']
+
+    df.pop('EMA')
+    df.pop('ATR')
+    df.pop('KC_low')
+
+    return df

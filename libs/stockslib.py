@@ -17,14 +17,14 @@ logging.getLogger('fbprophet').setLevel(logging.WARNING)
 class RESOURCE(object):
     """Single resource"""
 
-    def __init__(self, symbol='', price_type='close'):
+    def __init__(self, symbol='', price_header='Adjusted close'):
         self.symbol = symbol
-        self.price_type = price_type
+        # self.price_type = price_type
         self.prices = dict()
         self.history = dict()
         self.df = None
 
-        self.price_header = 'Adjusted close'
+        self.price_header = price_header
 
         self.msg = list()
         self.buy = 0
@@ -217,6 +217,7 @@ class RESOURCE(object):
         rez = 0
 
         if rsi < x:
+            print('RSI', self.symbol, rsi, x)
             self.msg.append('BUY: RSI{} bellow {}'.format(period, x))
             rez = 1
 
@@ -243,3 +244,21 @@ class RESOURCE(object):
 
     def rsi14_above_70(self):
         return self.rsi_above_x(period=14, x=70)
+
+    def price_bellow_kc(self):
+        rez = 0
+        low = self.prices['Low'].values
+        high = self.prices['High'].values
+        close = self.prices[self.price_header].values
+        output = talib.ATR(high, low, close, timeperiod=10)
+        atr = output[-1]
+        output = talib.EMA(close, timeperiod=20)
+        ema = output[-1]
+        price = self.get_last_price()
+        kc = ema - 2 * atr
+        if price < kc:
+            rez = 1
+            print('KC', self.symbol, price, ema, atr, kc)
+            self.msg.append('BUY: Price {} bellow Keltner channel {}'.format(price, kc))
+
+        return rez

@@ -1,7 +1,7 @@
 # TODOs
 
-Get spb data
-Use one history data and cache
+Read https://mindspace.ru/abcinvest/indikatory-v-tehnicheskom-analize/
+Implement MACD
 
 # Research
 https://github.com/quantopian/zipline
@@ -10,18 +10,9 @@ sma50 crosses sma200
 https://github.com/iamraa/backtest.rsi3/blob/master/backtest.rsi2.py
 https://quantrum.me/842-bektesting-torgovlya-na-impulse-s-pomoshhyu-atr/
 https://quantrum.me/819-bektesting-algoritm-na-osnove-macd/
-https://mrjbq7.github.io/ta-lib/install.html
+New Concepts in Technical Trading Systems
 
-https://quantrum.me/743-bektesting-kupi-i-derzhi-so-skolzyashhimi-srednimi/
-
-https://spbexchange.ru/ru/about/news2.aspx?b=8
+# Info
 
 https://www.barchart.com/etfs-funds/quotes/SPY/constituents
-
-# Results
-
-## check_ema200_moves thru_ema50
-
-
-
-
+https://spbexchange.ru/ru/about/news2.aspx?b=8
