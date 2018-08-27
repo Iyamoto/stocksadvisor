@@ -288,9 +288,9 @@ class RESOURCE(object):
         _, _, macdhist = talib.MACD(close)
         macd = macdhist [-1]
         price = self.get_last_price()
-        if (abs(macd) < 0.1 * price) and (macd > 0):
+        if abs(macd) < 0.075 * price:
             rez = 1
             # print('MACD Buy', self.symbol, price, macd)
-            self.msg.append('BUY: MACD_Hist {} positive'.format(macd))
+            self.msg.append('BUY: MACD_Hist {} is close to zero'.format(macd))
 
         return rez

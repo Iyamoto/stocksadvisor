@@ -172,7 +172,7 @@ def macd_hist_positive(df, pricetype='Adjusted close'):
     ma = pd.Series(macdhist, name='MACD_Hist')
     df = df.join(ma)
 
-    df['buy'] = (abs(df['MACD_Hist']) < 0.1 * df['Close']) & (df['MACD_Hist'] > 0)
+    df['buy'] = (abs(df['MACD_Hist']) < 0.075 * df[pricetype])
 
     df.pop('MACD_Hist')
 
