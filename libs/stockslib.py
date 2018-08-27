@@ -8,8 +8,6 @@ import os
 sys.path.insert(0, os.path.abspath('..'))
 import pandas as pd
 from alpha_vantage.timeseries import TimeSeries
-import libs.technical_indicators
-from pprint import pprint
 # from fbprophet import Prophet
 import talib
 import logging
@@ -55,7 +53,22 @@ class RESOURCE(object):
         self.history = df
         self.prices = self.history.tail(200)
 
-    def get_history_from_alpha(self, key='', cachedir='history', cacheage=3600*24*365*10):
+    def fetch_alpha(self, key='demo', size='compact'):
+        ts = TimeSeries(key=key, output_format='pandas')
+        retry = 0
+        while True:
+            try:
+                data, meta_data = ts.get_daily_adjusted(symbol=self.symbol, outputsize=size)
+                break
+            except:
+                retry += 1
+                if retry > 10:
+                    exit('Can not fetch ' + self.symbol)
+                time.sleep(10)
+                continue
+        return data
+
+    def get_history_from_alpha(self, key='demo', cachedir='history', cacheage=3600*24*365*10):
         if not os.path.isdir(cachedir):
             os.mkdir(cachedir)
         filename = self.symbol + '.csv'
@@ -69,10 +82,8 @@ class RESOURCE(object):
                 self.history = data
                 return data
 
-        ts = TimeSeries(key=key, output_format='pandas')
-        data, meta_data = ts.get_daily_adjusted(symbol=self.symbol, outputsize='full')
+        data = self.fetch_alpha(key=key, size='full')
         data.to_csv(filepath)
-        time.sleep(10)
 
         self.history = data
         return data
@@ -91,10 +102,8 @@ class RESOURCE(object):
                 self.prices = data
                 return data
 
-        ts = TimeSeries(key=key, output_format='pandas')
-        data, meta_data = ts.get_daily_adjusted(symbol=self.symbol, outputsize='compact')
+        data = self.fetch_alpha(key=key, size='compact')
         data.to_csv(filepath)
-        time.sleep(10)
 
         self.prices = data
         return data
