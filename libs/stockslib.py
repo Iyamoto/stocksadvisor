@@ -28,6 +28,7 @@ class RESOURCE(object):
         self.msg = list()
         self.buy = 0
         self.sell = 0
+        self.turn_weight = 2
 
     def fix_alpha_columns(self):
         df = self.prices
@@ -52,7 +53,7 @@ class RESOURCE(object):
         self.history = df
         self.prices = self.history.tail(200)
 
-    def fetch_alpha(self, key='demo', size='compact'):
+    def fetch_alpha(self, key='demo', size='compact', timeout=5):
         ts = TimeSeries(key=key, output_format='pandas')
         retry = 0
         while True:
@@ -63,7 +64,7 @@ class RESOURCE(object):
                 retry += 1
                 if retry > 10:
                     exit('Can not fetch ' + self.symbol)
-                time.sleep(10)
+                time.sleep(timeout)
                 continue
         return data
 
@@ -218,7 +219,7 @@ class RESOURCE(object):
         if rsi < x:
             print('RSI BUY', self.symbol, rsi, x)
             self.msg.append('BUY: RSI{} bellow {}'.format(period, x))
-            rez = 2
+            rez = self.turn_weight
 
         return rez
 
@@ -254,10 +255,12 @@ class RESOURCE(object):
         atr = output[-1]
         output = talib.EMA(close, timeperiod=20)
         ema = output[-1]
+        output = talib.EMA(close, timeperiod=50)
+        ema50 = output[-1]
         price = self.get_last_price()
         kc = ema - 1.4 * atr
-        if price < kc:
-            rez = 2
+        if price < kc and ema > ema50:
+            rez = self.turn_weight
             print('KC buy', self.symbol, price, ema, atr, kc)
             self.msg.append('BUY: Price {} bellow Keltner channel {}'.format(price, kc))
 
@@ -276,13 +279,13 @@ class RESOURCE(object):
         kc = ema + 1.4 * atr
 
         if price > kc:
-            rez = 2
+            rez = self.turn_weight
             # print('KC Sell', self.symbol, price, ema, atr, kc)
             self.msg.append('SELL: Price {} above Keltner channel {}'.format(price, kc))
 
         return rez
 
-    def macd_hist_positive(self):
+    def macd_hist_close_zero(self):
         rez = 0
         close = self.prices[self.price_header].values
         macd, macdsign, macdhist = talib.MACD(close)
@@ -290,9 +293,47 @@ class RESOURCE(object):
         macdsign = macdsign[-1]
         macdhist = macdhist[-1]
         price = self.get_last_price()
-        if abs(macdhist) < 0.075 * price and macdhist <= 0 and macd <= macdsign:
+        if abs(macdhist) <= 0.075 * price:
             rez = 1
             # print('MACD Buy', self.symbol, price, macd)
             self.msg.append('BUY: MACD_Hist {} is close to zero'.format(macdhist))
+
+        return rez
+
+    def macd_uptrend(self):
+        rez = 0
+        close = self.prices[self.price_header].values
+        macd, macdsign, macdhist = talib.MACD(close)
+
+        output = talib.EMA(macd, timeperiod=20)
+        ema20 = output[-1]
+
+        output = talib.EMA(macd, timeperiod=5)
+        ema5 = output[-1]
+
+        macd = macd[-1]
+        macdsign = macdsign[-1]
+
+        if (macd > macdsign) and (ema5 > ema20):
+            rez = 1
+            self.msg.append('BUY: MACD is in up trend')
+
+        return rez
+
+    def is_anomaly(self):
+        rez = False
+        low = self.prices['Low'].values
+        high = self.prices['High'].values
+        close = self.prices[self.price_header].values
+        output = talib.ATR(high, low, close, timeperiod=10)
+        atr = output[-1]
+        output = talib.EMA(close, timeperiod=20)
+        ema = output[-1]
+        price = self.get_last_price()
+
+        if price < (ema - 2 * atr):
+            rez = True
+            print('Anomaly detected', self.symbol, price, (ema - 2 * atr))
+            self.msg.append('Anomaly: Price {} bellow 2*ATR'.format(price))
 
         return rez

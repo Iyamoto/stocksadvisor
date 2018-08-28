@@ -132,11 +132,16 @@ def price_bellow_kc(df, pricetype='Adjusted close'):
     ema = pd.Series(output, name='EMA')
     df = df.join(ema)
 
+    output = talib.EMA(close, timeperiod=50)
+    ema = pd.Series(output, name='EMA50')
+    df = df.join(ema)
+
     df['KC_low'] = df['EMA'] - 1.4 * df['ATR']
 
-    df['buy'] = df['Close'] < df['KC_low']
+    df['buy'] = (df['Close'] < df['KC_low']) & (df['EMA'] > df['EMA50'])
 
     df.pop('EMA')
+    df.pop('EMA50')
     df.pop('ATR')
     df.pop('KC_low')
 
@@ -166,7 +171,7 @@ def price_above_kc(df, pricetype='Adjusted close'):
     return df
 
 
-def macd_hist_positive(df, pricetype='Adjusted close'):
+def macd_hist_close_zero(df, pricetype='Adjusted close'):
     close = df[pricetype].values
     macd, macdsignal, macdhist = talib.MACD(close)
     ma = pd.Series(macdhist, name='MACD_Hist')
@@ -176,12 +181,40 @@ def macd_hist_positive(df, pricetype='Adjusted close'):
     ma = pd.Series(macdsignal, name='MACD_Sign')
     df = df.join(ma)
 
-    df['module'] = abs(df['MACD_Hist']) < 0.075 * df[pricetype]
-    df['buy'] = df['module'] & (df['MACD_Hist'] <= 0) & (df['MACD'] <= df['MACD_Sign'])
+    df['buy'] = abs(df['MACD_Hist']) < 0.075 * df[pricetype]
 
-    df.pop('module')
     df.pop('MACD_Hist')
     df.pop('MACD')
     df.pop('MACD_Sign')
+
+    return df
+
+
+def macd_uptrend(df, pricetype='Adjusted close'):
+    close = df[pricetype].values
+    macd, macdsignal, macdhist = talib.MACD(close)
+    ma = pd.Series(macdhist, name='MACD_Hist')
+    df = df.join(ma)
+    ma = pd.Series(macd, name='MACD')
+    df = df.join(ma)
+    ma = pd.Series(macdsignal, name='MACD_Sign')
+    df = df.join(ma)
+
+    close = df['MACD'].values
+    output = talib.EMA(close, timeperiod=20)
+    ema20 = pd.Series(output, name='MACD_EMA20')
+    df = df.join(ema20)
+
+    output = talib.EMA(close, timeperiod=5)
+    ema5 = pd.Series(output, name='MACD_EMA5')
+    df = df.join(ema5)
+
+    df['buy'] = (df['MACD'] >= df['MACD_Sign']) & (df['MACD_EMA5'] > df['MACD_EMA20'])
+
+    df.pop('MACD_Hist')
+    df.pop('MACD')
+    df.pop('MACD_Sign')
+    df.pop('MACD_EMA5')
+    df.pop('MACD_EMA20')
 
     return df

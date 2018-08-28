@@ -30,7 +30,7 @@ max_ratio = 0.5
 # strategy_name = libs.strategy.price_bellow_kc
 # strategy_name = libs.strategy.price_above_kc
 
-strategy_name = libs.strategy.macd_hist_positive
+strategy_name = libs.strategy.macd_uptrend
 
 price_type = 'Adjusted close'
 ratios = dict()

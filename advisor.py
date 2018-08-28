@@ -52,6 +52,9 @@ class ADVISOR(object):
             # if res.get_prophet_prediction() > 30:
             #     buy += 1
 
+            # Check for anomaly
+            res.is_anomaly()
+
             # Calculate strategies
             for strategy_name in configs.alphaconf.ratios.keys():
                 weight = configs.alphaconf.ratios[strategy_name][symbol]
