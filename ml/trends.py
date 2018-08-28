@@ -33,10 +33,12 @@ df['y'] = dfraw['Adjusted close']
 
 last = df['y'].tail(1).values[0]
 
-m = Prophet()
+m = Prophet(weekly_seasonality=True, changepoint_prior_scale=0.05)
 m.fit(df)
 
 future = m.make_future_dataframe(periods=90)
+
+# print(m.changepoints.tail(5))
 
 forecast = m.predict(future)
 
