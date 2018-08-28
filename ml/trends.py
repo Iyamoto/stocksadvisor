@@ -14,11 +14,11 @@ import pandas as pd
 from fbprophet import Prophet
 import matplotlib.pyplot as plt
 
-sybmol = 'KO'
+sybmol = 'ABBV'
 
 res = sl.RESOURCE(symbol=sybmol)
-res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*7, cachedir='..\cache')
-res.get_history_from_alpha(key=configs.alphaconf.key, cachedir='..\history')
+res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*1, cachedir='..\cache')
+res.get_history_from_alpha(key=configs.alphaconf.key, cacheage=3600*24, cachedir='..\history')
 res.fix_alpha_columns()
 res.fix_alpha_history_columns()
 
@@ -29,7 +29,7 @@ dfraw = dfraw.reset_index()
 
 df = pd.DataFrame(dfraw['date'])
 df = df.rename({'date': 'ds'}, axis=1)
-df['y'] = dfraw['5. adjusted close']
+df['y'] = dfraw['Adjusted close']
 
 last = df['y'].tail(1).values[0]
 

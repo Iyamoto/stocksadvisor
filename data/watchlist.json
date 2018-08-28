@@ -94,7 +94,9 @@
     "CELG",
     "CHL",
     "IBN",
-    "ABBV",
+    {
+        "ABBV": 97.76
+    },
     "AES",
     "CTL",
     "BAC",
