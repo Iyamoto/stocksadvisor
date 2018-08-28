@@ -17,3 +17,4 @@ New Concepts in Technical Trading Systems
 https://www.barchart.com/etfs-funds/quotes/SPY/constituents
 https://spbexchange.ru/ru/about/news2.aspx?b=8
 https://mrjbq7.github.io/ta-lib/func_groups/momentum_indicators.html
+https://www.investing.com/equities/fsk-ees_rts-chart

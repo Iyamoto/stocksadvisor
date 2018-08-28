@@ -230,7 +230,7 @@ class RESOURCE(object):
         return self.rsi_bellow_x(period=14, x=40)
 
     def rsi14_bellow_30(self):
-        return self.rsi_bellow_x(period=14, x=30)
+        return self.rsi_bellow_x(period=14, x=33)
 
     def rsi_above_x(self, period=5, x=70):
         rsi = self.get_rsi_last(period=period)
