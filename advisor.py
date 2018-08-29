@@ -6,14 +6,21 @@ import configs.alphaconf
 import libs.stockslib as sl
 import fire
 import json
+import os
 
 
 class ADVISOR(object):
     """Stocks Advisor"""
 
-    def __init__(self):
+    def __init__(self, datatype='m'):
         self.key = configs.alphaconf.key
-        self.watchdata = configs.alphaconf.symbols
+
+        self.datatype = datatype
+
+        if self.datatype == 'm':
+            self.watchdata = configs.alphaconf.symbols_m
+        else:
+            self.watchdata = configs.alphaconf.symbols
 
         self.tobuy = dict()
         self.tosell = dict()
@@ -38,11 +45,14 @@ class ADVISOR(object):
 
             # Init
             res = sl.RESOURCE(symbol=symbol, price_header='Close')
-            res.get_prices_from_alpha(key=self.key, cacheage=3600*6)
-            res.fix_alpha_columns()
+            if self.datatype == 'm':
+                res.get_prices_from_moex(cachedir=os.path.join('history-m'))
+            else:
+                res.get_prices_from_alpha(key=self.key, cacheage=3600*6)
+                res.fix_alpha_columns()
 
-            # res.get_history_from_alpha(key=self.key)
-            # res.fix_alpha_history_columns()
+                # res.get_history_from_alpha(key=self.key)
+                # res.fix_alpha_history_columns()
 
             lastprice = res.get_last_price()
 
@@ -57,7 +67,10 @@ class ADVISOR(object):
 
             # Calculate strategies
             for strategy_name in configs.alphaconf.ratios.keys():
-                weight = configs.alphaconf.ratios[strategy_name][symbol]
+                if self.datatype == 'm':
+                    weight = configs.alphaconf.ratios_m[strategy_name][symbol]
+                else:
+                    weight = configs.alphaconf.ratios[strategy_name][symbol]
                 strategy_method = getattr(res, strategy_name)
                 buy += weight * strategy_method()
 
@@ -77,5 +90,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR()
+    adv = ADVISOR(datatype='m')
     fire.Fire(adv.check_watchlist)
