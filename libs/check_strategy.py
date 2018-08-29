@@ -35,7 +35,7 @@ def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.5, dataty
         res = sl.RESOURCE(symbol=symbol)
 
         if datatype == 'm':
-            res.get_prices_from_moex(cachedir=os.path.join('..', 'cache-m'), historydir=os.path.join('..', 'history-m'))
+            res.history = res.get_prices_from_moex(days=365 * 5, cachedir=os.path.join('..', 'history-m'))
         else:
             res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*7, cachedir=os.path.join('..', 'cache'))
             res.get_history_from_alpha(key=configs.alphaconf.key, cachedir=os.path.join('..', 'history'))

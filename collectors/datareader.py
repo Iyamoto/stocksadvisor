@@ -10,12 +10,12 @@ from pandas_datareader import data, wb
 
 import pandas_datareader as pdr
 
-symbol = 'AFLT'
+symbol = 'GMKN'
 
 stock = pdr.get_data_moex(symbol)
 print(stock.head())
 
-filepath = os.path.join('..', 'data', symbol + '-moex.csv')
+filepath = os.path.join('..', 'cache-m', symbol + '.csv')
 stock.to_csv(filepath)
 
 # import pandas_datareader.data as web

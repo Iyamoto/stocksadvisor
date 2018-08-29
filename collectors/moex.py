@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath('..'))
 import pandas as pd
 from pprint import pprint
 
-sybmol = 'AFLT'
+sybmol = 'GMKN'
 
 filename = sybmol + '.csv'
 filepath = os.path.join('..', 'cache-m', filename)

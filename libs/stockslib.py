@@ -12,6 +12,7 @@ from alpha_vantage.timeseries import TimeSeries
 import talib
 import pandas_datareader as pdr
 import logging
+from datetime import datetime, timedelta
 logging.getLogger('fbprophet').setLevel(logging.WARNING)
 
 
@@ -109,31 +110,13 @@ class RESOURCE(object):
         self.prices = data
         return data
 
-    def get_prices_from_moex(self, cachedir='cache-m', cacheage=3600*24*8, historydir='history-m'):
-        if not os.path.isdir(historydir):
-            os.mkdir(historydir)
-        filename = self.symbol + '.csv'
-        filepath = os.path.join(historydir, filename)
-        if os.path.isfile(filepath):
-            age = time.time() - os.path.getmtime(filepath)
-            if age > cacheage:
-                os.remove(filepath)
-            else:
-                data = pd.read_csv(filepath, index_col='date')
-                self.prices = data
-                self.history = data
-                return data
+    def fetch_moex(self, days=100, timeout=1):
 
-        stock = pdr.get_data_moex(self.symbol)
-        filepath = os.path.join(cachedir, self.symbol + '.csv')
-        stock.to_csv(filepath)
+        date_N_days_ago =datetime.now() - timedelta(days=days)
+        start = date_N_days_ago.strftime('%m/%d/%Y')
 
-        filename = self.symbol + '.csv'
-        filepath = os.path.join(cachedir, filename)
-
-        df = pd.read_csv(filepath)
-
-        # pprint(df.columns)
+        df = pdr.get_data_moex(self.symbol, pause=timeout, start=start)
+        df = df.reset_index()
         df = df.query('BOARDID == "TQBR"')
 
         filtered = pd.DataFrame()
@@ -144,15 +127,30 @@ class RESOURCE(object):
         filtered['Close'] = df['CLOSE']
         filtered['Volume'] = df['VOLUME']
 
-        filepath = os.path.join(historydir, filename)
-        filtered.to_csv(filepath)
-
-        self.prices = filtered
-        self.history = filtered
-
-        time.sleep(5)
-
         return filtered
+
+    def get_prices_from_moex(self, cachedir='cache-m', cacheage=3600*24*8, timeout=3, days=100):
+        if not os.path.isdir(cachedir):
+            os.mkdir(cachedir)
+        filename = self.symbol + '.csv'
+        filepath = os.path.join(cachedir, filename)
+        if os.path.isfile(filepath):
+            age = time.time() - os.path.getmtime(filepath)
+            if age > cacheage:
+                os.remove(filepath)
+            else:
+                data = pd.read_csv(filepath, index_col='date')
+                self.prices = data
+                self.history = data
+                return data
+
+        data = self.fetch_moex(days=days, timeout=timeout)
+        filepath = os.path.join(cachedir, filename)
+        data.to_csv(filepath)
+
+        time.sleep(timeout)
+
+        return data
 
     def get_prophet_prediction(self, periods=30):
 

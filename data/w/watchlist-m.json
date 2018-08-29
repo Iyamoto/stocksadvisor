@@ -1,4 +1,74 @@
 [
     "AFLT",
-    "SBER"
+    {
+        "GMKN": 10980.11
+    },
+    {
+        "PRTK": 81.1411
+    },
+    {
+        "SBER": 192.3245
+    },
+    {
+        "PIKK": 353.115
+    },
+    {
+        "POLY": 550.258
+    },
+    {
+        "MTSS": 251.889
+    },
+    {
+        "SIBN": 339.4
+    },
+    {
+        "RUAL": 24.4526
+    },
+    {
+        "MOEX": 98.722
+    },
+    {
+        "MSTT": 105.082
+    },
+    {
+        "DSKY": 87.651
+    },
+    {
+        "LSRG": 758.82
+    },
+    {
+        "RSTI": 0.72607
+    },
+    {
+        "BSPB": 47.333
+    },
+    {
+        "VTBR": 0.042866
+    },
+    "AFKS",
+    "MRKV",
+    "LSNG",
+    "LSNGP",
+    "RTKM",
+    "RTKMP",
+    "NMTP",
+    "MAGN",
+    "BANE",
+    "BANEP",
+    "TATN",
+    "OGKB",
+    "FIVE",
+    "TTLK",
+    "IRKT",
+    "TGKA",
+    "PHOR",
+    "CHMF",
+    "FEES",
+    "ENRU",
+    "HYDR",
+    "SNGSP",
+    "MTLRP",
+    "MRKP",
+    "SBERP",
+    "MGNT"
 ]
