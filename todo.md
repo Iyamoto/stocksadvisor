@@ -10,11 +10,18 @@ Candle patterns (morning star)
 
 # To watch
 
-WDC
+WDC + november
+HOG -- check ROC
+LYB + check ROC
+ABBV + check ROC
+
+# To buy
+
+LSNG -- (bad trend) check ROC
 
 # Watchlist
 
-Add MCD?
+
 
 # Research
 

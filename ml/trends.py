@@ -14,13 +14,22 @@ import pandas as pd
 from fbprophet import Prophet
 import matplotlib.pyplot as plt
 
-sybmol = 'ABBV'
+sybmol = 'LSNGP'
+datatype = 'm'
+
+if datatype == 'm':
+    price_type = 'Close'
+else:
+    price_type = 'Adjusted close'
 
 res = sl.RESOURCE(symbol=sybmol)
-res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*1, cachedir='..\cache')
-res.get_history_from_alpha(key=configs.alphaconf.key, cacheage=3600*24, cachedir='..\history')
-res.fix_alpha_columns()
-res.fix_alpha_history_columns()
+if datatype == 'a':
+    res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*1, cachedir='..\cache')
+    res.get_history_from_alpha(key=configs.alphaconf.key, cacheage=3600*24, cachedir='..\history')
+    res.fix_alpha_columns()
+    res.fix_alpha_history_columns()
+else:
+    res.history = res.get_prices_from_moex(days=365 * 5, cachedir=os.path.join('..', 'history-m'))
 
 # Prepare data for the Prophet
 
@@ -29,7 +38,7 @@ dfraw = dfraw.reset_index()
 
 df = pd.DataFrame(dfraw['date'])
 df = df.rename({'date': 'ds'}, axis=1)
-df['y'] = dfraw['Adjusted close']
+df['y'] = dfraw[price_type]
 
 last = df['y'].tail(1).values[0]
 

@@ -84,11 +84,9 @@ def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.51, datat
         ratios[symbol] = ratio
         if ratio > max_ratio:
             good_ratio += 1
-            print(symbol, ratio)
+            # print(symbol, ratio)
 
-    print(good_ratio, len(watchdata))
-
-    print(strategy_name)
+    print(strategy_name, good_ratio, len(watchdata))
 
     print(ratios)
     print()
@@ -100,4 +98,4 @@ def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.51, datat
 
 for strategy in configs.alphaconf.ratios.keys():
     strategy = getattr(libs.strategy, strategy)
-    checkstrategy(strategy_name=strategy, datatype='m')
+    checkstrategy(strategy_name=strategy, datatype='a')
