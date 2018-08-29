@@ -108,6 +108,29 @@ class RESOURCE(object):
         self.prices = data
         return data
 
+    def get_prices_from_moex(self, cachedir='cache-m', cacheage=3600*24*8):
+        if not os.path.isdir(cachedir):
+            os.mkdir(cachedir)
+        filename = self.symbol + '.csv'
+        filepath = os.path.join(cachedir, filename)
+        if os.path.isfile(filepath):
+            age = time.time() - os.path.getmtime(filepath)
+            if age > cacheage:
+                os.remove(filepath)
+            else:
+                data = pd.read_csv(filepath, index_col='date')
+                self.prices = data
+                self.history = data
+                return data
+
+        # data = self.fetch_alpha(key=key, size='compact')
+        # data.to_csv(filepath)
+
+        data = None
+
+        self.prices = data
+        return data
+
     def get_prophet_prediction(self, periods=30):
 
         dfraw = self.prices

@@ -1,5 +1,5 @@
 # TODOs
-
+Fix get_prices_from_moex
 Read https://mindspace.ru/abcinvest/indikatory-v-tehnicheskom-analize/
 Add weekly data?
 Add Peter Lynch Chart - https://www.gurufocus.com/news/220155/how-to-construct-peter-lynchs-valuation-charts-with-gurufocus-financials-charts-in-two-clicks

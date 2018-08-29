@@ -12,7 +12,7 @@ from pprint import pprint
 sybmol = 'AFLT'
 
 filename = sybmol + '.csv'
-filepath = os.path.join('..', 'data', 'm', filename)
+filepath = os.path.join('..', 'cache-m', filename)
 
 df = pd.read_csv(filepath)
 
