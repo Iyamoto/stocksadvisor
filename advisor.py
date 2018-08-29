@@ -7,6 +7,7 @@ import libs.stockslib as sl
 import fire
 import json
 import os
+from pprint import pprint
 
 
 class ADVISOR(object):
@@ -46,7 +47,8 @@ class ADVISOR(object):
             # Init
             res = sl.RESOURCE(symbol=symbol, price_header='Close')
             if self.datatype == 'm':
-                res.prices = res.get_prices_from_moex(days=100, cachedir=os.path.join('cache-m'))
+                res.prices = res.get_prices_from_moex(cacheage=3600*24, days=100, cachedir=os.path.join('cache-m'))
+                res.prices = res.prices.tail(100)
             else:
                 res.get_prices_from_alpha(key=self.key, cacheage=3600*6)
                 res.fix_alpha_columns()
@@ -72,7 +74,11 @@ class ADVISOR(object):
                 else:
                     weight = configs.alphaconf.ratios[strategy_name][symbol]
                 strategy_method = getattr(res, strategy_name)
-                buy += weight * strategy_method()
+                rez = strategy_method()
+                if rez > 0:
+                    buy += weight * rez
+                else:
+                    buy += rez
 
             if buy > self.luck * len(configs.alphaconf.ratios.keys()):
                 res.buy = buy
@@ -90,5 +96,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='a')
+    adv = ADVISOR(datatype='m')
     fire.Fire(adv.check_watchlist)

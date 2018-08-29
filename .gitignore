@@ -5,4 +5,5 @@ configs/*.py
 configs/*.cfg
 history
 history-m
+cache-m
 

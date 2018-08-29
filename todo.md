@@ -8,6 +8,10 @@ https://trends.google.com/trends/explore?q=abbv%20stock
 https://trends.google.com/trends/explore?cat=7&date=now%207-d&geo=US&q=stock%20price
 Candle patterns (morning star)
 
+# To watch
+
+WDC
+
 # Watchlist
 
 Add MCD?

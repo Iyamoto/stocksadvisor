@@ -13,7 +13,7 @@ import libs.stockslib as sl
 import libs.strategy
 
 
-def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.5, datatype='m'):
+def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.51, datatype='m'):
     if datatype == 'm':
         watchdata = configs.alphaconf.symbols_m
         price_type = 'Close'
@@ -88,11 +88,10 @@ def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.5, dataty
 
     print(good_ratio, len(watchdata))
 
-    if good_ratio < round(0.1 * len(watchdata)):
-        for symbol in ratios.keys():
-            ratios[symbol] = round((1 - ratios[symbol]) * -1, 2)
+    print(strategy_name)
 
     print(ratios)
+    print()
 
     ratiopath = os.path.join('..', 'data', datatype, strategy_name.__name__ + '.json')
     with open(ratiopath, 'w') as outfile:

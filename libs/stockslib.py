@@ -13,6 +13,7 @@ import talib
 import pandas_datareader as pdr
 import logging
 from datetime import datetime, timedelta
+from pprint import pprint
 logging.getLogger('fbprophet').setLevel(logging.WARNING)
 
 
@@ -140,7 +141,7 @@ class RESOURCE(object):
                 os.remove(filepath)
             else:
                 data = pd.read_csv(filepath, index_col='date')
-                self.prices = data
+                self.prices = data.tail(days)
                 self.history = data
                 return data
 
@@ -261,7 +262,7 @@ class RESOURCE(object):
         rez = 0
 
         if rsi < x:
-            print('RSI BUY', self.symbol, rsi, x)
+            # print('RSI BUY', self.symbol, rsi, x)
             self.msg.append('BUY: RSI{} bellow {}'.format(period, x))
             rez = self.turn_weight
 
@@ -283,7 +284,7 @@ class RESOURCE(object):
         if rsi > x:
             # print('RSI SELL', self.symbol, rsi, x)
             self.msg.append('SELL: RSI{} above {}'.format(period, x))
-            rez = 1
+            rez = -2
 
         return rez
 
@@ -323,7 +324,7 @@ class RESOURCE(object):
         kc = ema + 1.4 * atr
 
         if price > kc:
-            rez = self.turn_weight
+            rez = -2
             # print('KC Sell', self.symbol, price, ema, atr, kc)
             self.msg.append('SELL: Price {} above Keltner channel {}'.format(price, kc))
 
@@ -348,7 +349,6 @@ class RESOURCE(object):
         rez = 0
         close = self.prices[self.price_header].values
         macd, macdsign, macdhist = talib.MACD(close)
-
         output = talib.EMA(macd, timeperiod=20)
         ema20 = output[-1]
 
