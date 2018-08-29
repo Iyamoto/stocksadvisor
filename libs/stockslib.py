@@ -10,6 +10,7 @@ import pandas as pd
 from alpha_vantage.timeseries import TimeSeries
 # from fbprophet import Prophet
 import talib
+import pandas_datareader as pdr
 import logging
 logging.getLogger('fbprophet').setLevel(logging.WARNING)
 
@@ -108,11 +109,11 @@ class RESOURCE(object):
         self.prices = data
         return data
 
-    def get_prices_from_moex(self, cachedir='cache-m', cacheage=3600*24*8):
-        if not os.path.isdir(cachedir):
-            os.mkdir(cachedir)
+    def get_prices_from_moex(self, cachedir='cache-m', cacheage=3600*24*8, historydir='history-m'):
+        if not os.path.isdir(historydir):
+            os.mkdir(historydir)
         filename = self.symbol + '.csv'
-        filepath = os.path.join(cachedir, filename)
+        filepath = os.path.join(historydir, filename)
         if os.path.isfile(filepath):
             age = time.time() - os.path.getmtime(filepath)
             if age > cacheage:
@@ -123,13 +124,35 @@ class RESOURCE(object):
                 self.history = data
                 return data
 
-        # data = self.fetch_alpha(key=key, size='compact')
-        # data.to_csv(filepath)
+        stock = pdr.get_data_moex(self.symbol)
+        filepath = os.path.join(cachedir, self.symbol + '.csv')
+        stock.to_csv(filepath)
 
-        data = None
+        filename = self.symbol + '.csv'
+        filepath = os.path.join(cachedir, filename)
 
-        self.prices = data
-        return data
+        df = pd.read_csv(filepath)
+
+        # pprint(df.columns)
+        df = df.query('BOARDID == "TQBR"')
+
+        filtered = pd.DataFrame()
+        filtered['date'] = df['TRADEDATE']
+        filtered['Open'] = df['OPEN']
+        filtered['Low'] = df['LOW']
+        filtered['High'] = df['HIGH']
+        filtered['Close'] = df['CLOSE']
+        filtered['Volume'] = df['VOLUME']
+
+        filepath = os.path.join(historydir, filename)
+        filtered.to_csv(filepath)
+
+        self.prices = filtered
+        self.history = filtered
+
+        time.sleep(5)
+
+        return filtered
 
     def get_prophet_prediction(self, periods=30):
 

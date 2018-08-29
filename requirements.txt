@@ -1,3 +1,4 @@
 fire
 pandas
 alpha_vantage
+pandas_datareader

@@ -27,17 +27,15 @@ def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.5, dataty
 
         # Parse watchlist
         if type(item) == dict:
-            price = list(item.values())[0]
             symbol = list(item.keys())[0]
         else:
             symbol = item
-            price = 0
 
         # Get prices
         res = sl.RESOURCE(symbol=symbol)
 
         if datatype == 'm':
-            res.get_prices_from_moex(cachedir=os.path.join('..', 'history-m'))
+            res.get_prices_from_moex(cachedir=os.path.join('..', 'cache-m'), historydir=os.path.join('..', 'history-m'))
         else:
             res.get_prices_from_alpha(key=configs.alphaconf.key, cacheage=3600*24*7, cachedir=os.path.join('..', 'cache'))
             res.get_history_from_alpha(key=configs.alphaconf.key, cachedir=os.path.join('..', 'history'))
@@ -103,4 +101,4 @@ def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.5, dataty
 
 for strategy in configs.alphaconf.ratios.keys():
     strategy = getattr(libs.strategy, strategy)
-    checkstrategy(strategy_name=strategy)
+    checkstrategy(strategy_name=strategy, datatype='m')
