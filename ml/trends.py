@@ -14,8 +14,8 @@ import pandas as pd
 from fbprophet import Prophet
 import matplotlib.pyplot as plt
 
-sybmol = 'LSNGP'
-datatype = 'm'
+sybmol = 'HOG'
+datatype = 'a'
 
 if datatype == 'm':
     price_type = 'Close'

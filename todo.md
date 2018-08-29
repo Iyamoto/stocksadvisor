@@ -1,9 +1,8 @@
 # TODOs
-Fix get_prices_from_moex
+Analyze FXIT and USD
 Read https://mindspace.ru/abcinvest/indikatory-v-tehnicheskom-analize/
 Add weekly data?
 Add Peter Lynch Chart - https://www.gurufocus.com/news/220155/how-to-construct-peter-lynchs-valuation-charts-with-gurufocus-financials-charts-in-two-clicks
-Check trends 
 https://trends.google.com/trends/explore?q=abbv%20stock
 https://trends.google.com/trends/explore?cat=7&date=now%207-d&geo=US&q=stock%20price
 Candle patterns (morning star)
@@ -11,17 +10,25 @@ Candle patterns (morning star)
 # To watch
 
 WDC + november
-HOG -- check ROC
+HOG -- (bad trend) check ROC
 LYB + check ROC
 ABBV + check ROC
+LSNG -- (bad trend) check ROC
+POLY -- (bad trend)
 
 # To buy
 
-LSNG -- (bad trend) check ROC
+
 
 # Watchlist
 
+# Checklist
 
+https://www.gurufocus.com/stock/WDC
+https://www.morningstar.com/stocks/xnas/wdc/quote.html
+https://www.reuters.com/finance/stocks/company-news/WDC.O
+https://finviz.com/quote.ashx?t=WDC&ty=c&ta=0&p=w
+https://www.zacks.com/stock/quote/WDC?q=WDC
 
 # Research
 
@@ -48,7 +55,6 @@ https://www.barchart.com/etfs-funds/quotes/SPY/constituents
 https://spbexchange.ru/ru/about/news2.aspx?b=8
 https://mrjbq7.github.io/ta-lib/func_groups/momentum_indicators.html
 https://www.investing.com/equities/fsk-ees_rts-chart
-https://www.gurufocus.com/stock/HST
 
 # Predictions in 90 days
 
