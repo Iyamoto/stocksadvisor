@@ -184,7 +184,9 @@ class RESOURCE(object):
         if not name:
             name = self.price_header
         pricedata = self.prices
-        output = talib.EMA(pricedata[name].values, timeperiod=period)
+        p = pricedata[name].values
+        p = p.astype(float)
+        output = talib.EMA(p, timeperiod=period)
         return output[-1]
 
     def get_sma_last(self, period=20, name=''):
@@ -228,8 +230,8 @@ class RESOURCE(object):
         ma = method(period=period)
         price = self.get_last_price()
         rez = 0
-
-        if price > ma:
+        print(price, ma)
+        if float(price) > ma:
             self.msg.append('BUY: Price {} above {}{} {}'.format(price, indicator, period, ma))
             rez = 1
 
@@ -254,7 +256,9 @@ class RESOURCE(object):
         if not name:
             name = self.price_header
         pricedata = self.prices
-        output = talib.RSI(pricedata[name].values, timeperiod=period)
+        p = pricedata[name].values
+        p = p.astype(float)
+        output = talib.RSI(p, timeperiod=period)
         return output[-1]
 
     def rsi_bellow_x(self, period=5, x=40):
@@ -294,8 +298,11 @@ class RESOURCE(object):
     def price_bellow_kc(self):
         rez = 0
         low = self.prices['Low'].values
+        low = low.astype(float)
         high = self.prices['High'].values
+        high = high.astype(float)
         close = self.prices[self.price_header].values
+        close = close.astype(float)
         output = talib.ATR(high, low, close, timeperiod=10)
         atr = output[-1]
         output = talib.EMA(close, timeperiod=20)
@@ -314,8 +321,11 @@ class RESOURCE(object):
     def price_above_kc(self):
         rez = 0
         low = self.prices['Low'].values
+        low = low.astype(float)
         high = self.prices['High'].values
+        high = high.astype(float)
         close = self.prices[self.price_header].values
+        close = close.astype(float)
         output = talib.ATR(high, low, close, timeperiod=10)
         atr = output[-1]
         output = talib.EMA(close, timeperiod=20)
@@ -333,6 +343,7 @@ class RESOURCE(object):
     def macd_hist_close_zero(self):
         rez = 0
         close = self.prices[self.price_header].values
+        close = close.astype(float)
         macd, macdsign, macdhist = talib.MACD(close)
         macd = macd[-1]
         macdsign = macdsign[-1]
@@ -348,6 +359,7 @@ class RESOURCE(object):
     def macd_uptrend(self):
         rez = 0
         close = self.prices[self.price_header].values
+        close = close.astype(float)
         macd, macdsign, macdhist = talib.MACD(close)
         output = talib.EMA(macd, timeperiod=20)
         ema20 = output[-1]
@@ -367,8 +379,11 @@ class RESOURCE(object):
     def is_anomaly(self):
         rez = False
         low = self.prices['Low'].values
+        low = low.astype(float)
         high = self.prices['High'].values
+        high = high.astype(float)
         close = self.prices[self.price_header].values
+        close = close.astype(float)
         output = talib.ATR(high, low, close, timeperiod=10)
         atr = output[-1]
         output = talib.EMA(close, timeperiod=20)

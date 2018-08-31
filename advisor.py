@@ -47,8 +47,8 @@ class ADVISOR(object):
             # Init
             res = sl.RESOURCE(symbol=symbol, price_header='Close')
             if self.datatype == 'm':
-                res.prices = res.get_prices_from_moex(cacheage=3600*24, days=100, cachedir=os.path.join('cache-m'))
-                res.prices = res.prices.tail(100)
+                res.prices = res.get_prices_from_moex(cacheage=3600*24, days=200, cachedir=os.path.join('cache-m'))
+                res.prices = res.prices.tail(200)
             else:
                 res.get_prices_from_alpha(key=self.key, cacheage=3600*6)
                 res.fix_alpha_columns()

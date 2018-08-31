@@ -6,6 +6,7 @@ Add Peter Lynch Chart - https://www.gurufocus.com/news/220155/how-to-construct-p
 https://trends.google.com/trends/explore?q=abbv%20stock
 https://trends.google.com/trends/explore?cat=7&date=now%207-d&geo=US&q=stock%20price
 Candle patterns (morning star)
+% отката от 52-нед. максимума
 
 # To watch
 
@@ -15,6 +16,9 @@ LYB + check ROC
 ABBV + check ROC
 LSNG -- (bad trend) check ROC
 POLY -- (bad trend)
+KO
+РусГидро
+ФосАгро
 
 # To buy
 
