@@ -230,7 +230,6 @@ class RESOURCE(object):
         ma = method(period=period)
         price = self.get_last_price()
         rez = 0
-        print(price, ma)
         if float(price) > ma:
             self.msg.append('BUY: Price {} above {}{} {}'.format(price, indicator, period, ma))
             rez = 1

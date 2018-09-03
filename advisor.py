@@ -74,7 +74,11 @@ class ADVISOR(object):
                 else:
                     weight = configs.alphaconf.ratios[strategy_name][symbol]
                 strategy_method = getattr(res, strategy_name)
-                rez = strategy_method()
+                try:
+                    rez = strategy_method()
+                except:
+                    print(symbol, 'failed', strategy_method)
+                    rez = 0
                 if rez > 0:
                     buy += weight * rez
                 else:
@@ -96,5 +100,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='m')
+    adv = ADVISOR(datatype='a')
     fire.Fire(adv.check_watchlist)
