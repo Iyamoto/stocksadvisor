@@ -47,7 +47,7 @@ class ADVISOR(object):
             # Init
             res = sl.RESOURCE(symbol=symbol, price_header='Close')
             if self.datatype == 'm':
-                res.prices = res.get_prices_from_moex(cacheage=3600*24, days=200, cachedir=os.path.join('cache-m'))
+                res.prices = res.get_prices_from_moex(cacheage=3600*12, days=200, cachedir=os.path.join('cache-m'))
                 res.prices = res.prices.tail(200)
             else:
                 res.get_prices_from_alpha(key=self.key, cacheage=3600*6)
@@ -100,5 +100,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='a')
+    adv = ADVISOR(datatype='m')
     fire.Fire(adv.check_watchlist)

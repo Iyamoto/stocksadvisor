@@ -11,6 +11,8 @@ Candle patterns (morning star)
 # To watch
 
 WDC + november
+STX when to buy?
+AES when to buy?
 HOG -- (bad trend) check ROC
 LYB + check ROC
 ABBV + check ROC
@@ -19,6 +21,12 @@ POLY -- (bad trend)
 KO
 РусГидро
 ФосАгро
+SBER
+
+# Sold
+
+SKM 27.23
+SBUX 54.89
 
 # To buy
 
