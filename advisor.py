@@ -69,10 +69,13 @@ class ADVISOR(object):
 
             # Calculate strategies
             for strategy_name in configs.alphaconf.ratios.keys():
-                if self.datatype == 'm':
-                    weight = configs.alphaconf.ratios_m[strategy_name][symbol]
-                else:
-                    weight = configs.alphaconf.ratios[strategy_name][symbol]
+                try:
+                    if self.datatype == 'm':
+                        weight = configs.alphaconf.ratios_m[strategy_name][symbol]
+                    else:
+                        weight = configs.alphaconf.ratios[strategy_name][symbol]
+                except:
+                    weight = 0
                 strategy_method = getattr(res, strategy_name)
                 try:
                     rez = strategy_method()
@@ -100,5 +103,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='m')
+    adv = ADVISOR(datatype='a')
     fire.Fire(adv.check_watchlist)

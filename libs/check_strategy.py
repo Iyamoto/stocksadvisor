@@ -98,4 +98,7 @@ def checkstrategy(strategy_name=None, window=20, profit=5, max_ratio=0.51, datat
 
 for strategy in configs.alphaconf.ratios.keys():
     strategy = getattr(libs.strategy, strategy)
-    checkstrategy(strategy_name=strategy, datatype='m')
+    try:
+        checkstrategy(strategy_name=strategy, datatype='a')
+    except:
+        pass
