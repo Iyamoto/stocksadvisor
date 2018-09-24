@@ -27,6 +27,9 @@ SBER
 ▪️НЛМК
 ▪️ФосАго 
 
+DSKY
+MTSS
+
 # Sold
 
 SKM 27.23
