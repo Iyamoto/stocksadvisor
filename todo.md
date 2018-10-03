@@ -7,6 +7,7 @@ https://trends.google.com/trends/explore?q=abbv%20stock
 https://trends.google.com/trends/explore?cat=7&date=now%207-d&geo=US&q=stock%20price
 Candle patterns (morning star)
 % отката от 52-нед. максимума
+Индекс москбиржи
 
 # To watch
 
@@ -30,6 +31,12 @@ SBER
 DSKY
 MTSS
 
+# To sell
+
+MTSS
+SIBN
+RSTI
+
 # Sold
 
 SKM 27.23
@@ -51,8 +58,10 @@ https://www.zacks.com/stock/quote/WDC?q=WDC
 
 # Research
 
+Открытие видеокурс
+The Psychology of Trading: Tools and Techniques for Minding the Markets
 https://pandas-datareader.readthedocs.io/en/latest/readers/moex.html
-
+https://top250.platts.com/Top250Rankings
 https://github.com/quantopian/zipline
 Элдер — «Трейдинг с доктором Элдером»
 sma50 crosses sma200
