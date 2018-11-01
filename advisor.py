@@ -103,5 +103,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='m')
+    adv = ADVISOR(datatype='a')
     fire.Fire(adv.check_watchlist)

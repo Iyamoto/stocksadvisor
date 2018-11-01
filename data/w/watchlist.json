@@ -1,14 +1,16 @@
 [
     "MSFT",
-    "TTM",
-    "LON:TCS",
     "STX",
+    "NTAP",
     {
         "INTC": 50.52
     },
     {
         "BK": 51.03
     },
+    "C",
+    "JPM",
+    "PCAR",
     "CAT",
     {
         "F": 9.73
@@ -80,7 +82,6 @@
     "PEP",
     "FLS",
     "KEP",
-    "AMD",
     "CHA",
     "ZNH",
     "TCS",
@@ -121,7 +122,6 @@
     "BA",
     "MRK",
     "CVX",
-    "NVDA",
     "ZTS",
     "PSA",
     "GD",
