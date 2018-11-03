@@ -13,6 +13,7 @@ import pandas as pd
 import pandas_datareader as pdr
 from datetime import datetime, timedelta
 from pprint import pprint
+import matplotlib.pyplot as plt
 
 class FUTURES(object):
     """Single futures"""
@@ -62,3 +63,13 @@ class FUTURES(object):
         time.sleep(timeout)
 
         return data
+
+    def plot(self):
+        df = self.df
+        df.pop('Open')
+        df.pop('High')
+        df.pop('Low')
+        df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
+        df = df.set_index('date')
+        df.plot(subplots=True, grid=True, figsize=(15, 5), title=self.symbol)
+        plt.show()

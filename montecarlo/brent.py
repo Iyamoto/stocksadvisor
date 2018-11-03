@@ -18,12 +18,6 @@ symbol = 'SiZ8'
 futures = libs.futures.FUTURES(symbol=symbol)
 futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
 df = futures.df
-df.pop('Open')
-df.pop('High')
-df.pop('Low')
-df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
-df = df.set_index('date')
 print(df.tail(10))
 
-df.plot(subplots=True, grid=True, figsize=(15,5))
-plt.show()
+futures.plot()
