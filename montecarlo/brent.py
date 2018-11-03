@@ -10,15 +10,20 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath('..'))
 import pandas as pd
-import pandas_datareader as pdr
-from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
 import libs.futures
 
 # symbol = 'BRZ8'
 symbol = 'SiZ8'
 futures = libs.futures.FUTURES(symbol=symbol)
 futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
-data = futures.df
-print(data)
+df = futures.df
+df.pop('Open')
+df.pop('High')
+df.pop('Low')
+df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
+df = df.set_index('date')
+print(df.tail(10))
 
-
+df.plot(subplots=True, grid=True, figsize=(15,5))
+plt.show()
