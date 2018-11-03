@@ -15,11 +15,13 @@ import libs.futures
 symbol = 'BRZ8'
 futures = libs.futures.FUTURES(symbol=symbol)
 futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
-# futures.plot()
 
 futures.get_atr(period=14)
+futures.get_ema(period=14)
 
-futures.df['Diff'] = futures.df['High'] - futures.df['Low']
+futures.df['KC_LOW'] = futures.df['EMA'] - 2 * futures.df['ATR']
+futures.df['KC_HIGH'] = futures.df['EMA'] + 2 * futures.df['ATR']
+
 futures.df.pop('Open')
 futures.df.pop('High')
 futures.df.pop('Low')
@@ -29,20 +31,4 @@ print(futures.df.corr())
 
 print(futures.df.tail(10))
 
-
-
-# symbol = 'SiZ8'
-# futures = libs.futures.FUTURES(symbol=symbol)
-# futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
-# futures.plot()
-#
-# df_si = futures.df
-#
-# print(df_si.tail(10))
-#
-# print(df_si['Close'].corr(df_br['Close']))
-# print(df_si['Volume'].corr(df_br['Volume']))
-
-
-
-
+futures.plot()

@@ -69,15 +69,49 @@ class FUTURES(object):
         return data
 
     def plot(self):
-        df = self.df
-        df.pop('Open')
-        df.pop('High')
-        df.pop('Low')
-        df['Close'] = df.Close.replace(to_replace=0, method='ffill')
-        df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
+        columns = self.df.columns
+        df = pd.concat([self.df['date'], self.df['Close'], self.df['Volume']], axis=1)
         df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
         df = df.set_index('date')
-        df.plot(subplots=True, grid=True, figsize=(15, 5), title=self.symbol)
+        df['Close'] = df.Close.replace(to_replace=0, method='ffill')
+        df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
+        fig = plt.figure(figsize=(15, 8))
+        plt.subplot(3, 1, 1)
+        plt.title(self.symbol)
+
+        plt.plot(df.index, df.Close, 'k', label='Price')
+
+        if 'ATR' in columns:
+            df['ATR'] = self.df.ATR.values
+
+        if 'EMA' in columns:
+            df['EMA'] = self.df.EMA.values
+            plt.plot(df.index, df.EMA, 'b', label='EMA')
+
+        if 'KC_LOW' in columns:
+            df['KC_LOW'] = self.df.KC_LOW.values
+
+        if 'KC_HIGH' in columns:
+            df['KC_HIGH'] = self.df.KC_HIGH.values
+
+        if 'KC_LOW' in columns and 'KC_HIGH' in columns:
+            plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.2)
+
+        plt.legend()
+        plt.grid()
+
+        plt.subplot(3, 1, 2)
+        plt.plot(df.index, df.Volume, 'g', label='Volume')
+        plt.legend()
+        plt.grid()
+
+        if 'ATR' in columns:
+            plt.subplot(3, 1, 3)
+            plt.plot(df.index, df.ATR, 'r', label='ATR')
+            plt.legend()
+            plt.grid()
+
+        fig.tight_layout()
         plt.show()
 
     def get_atr(self, period=5):
@@ -90,4 +124,12 @@ class FUTURES(object):
         close = close.astype(float)
         output = talib.ATR(high, low, close, timeperiod=period)
         self.df['ATR'] = output
+        return output
+
+    def get_ema(self, period=5):
+        pricedata = self.df
+        close = pricedata['Close'].values
+        close = close.astype(float)
+        output = talib.EMA(close, timeperiod=period)
+        self.df['EMA'] = output
         return output
