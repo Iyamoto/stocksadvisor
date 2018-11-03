@@ -27,8 +27,12 @@ futures.df.pop('High')
 futures.df.pop('Low')
 futures.df.pop('Openpositionsvalue')
 
+futures.plot()
+
+futures.df.pop('KC_LOW')
+futures.df.pop('KC_HIGH')
+
 print(futures.df.corr())
 
 print(futures.df.tail(10))
 
-futures.plot()

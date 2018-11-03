@@ -100,10 +100,18 @@ class FUTURES(object):
         plt.legend()
         plt.grid()
 
-        plt.subplot(3, 1, 2)
-        plt.plot(df.index, df.Volume, 'g', label='Volume')
-        plt.legend()
-        plt.grid()
+        ax1 = plt.subplot(3, 1, 2)
+        ax2 = ax1.twinx()
+
+        ax1.plot(df.index, df.Volume, 'g', label='Volume')
+        ax1.set_ylabel('Volume', color='g')
+
+        if 'Openpositions' in columns:
+            df['Openpositions'] = self.df.Openpositions.values
+            ax2.plot(df.index, df.Openpositions, 'b', label='Openpositions')
+            ax2.legend()
+
+        ax1.grid()
 
         if 'ATR' in columns:
             plt.subplot(3, 1, 3)
