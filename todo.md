@@ -1,7 +1,5 @@
 # TODOs
 
-option.ru
-
 CHD?
 
 # To buy

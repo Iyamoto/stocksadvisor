@@ -141,3 +141,7 @@ class FUTURES(object):
         output = talib.EMA(close, timeperiod=period)
         self.df['EMA'] = output
         return output
+
+    def get_kc(self):
+        self.df['KC_LOW'] = self.df['EMA'] - 2 * self.df['ATR']
+        self.df['KC_HIGH'] = self.df['EMA'] + 2 * self.df['ATR']
