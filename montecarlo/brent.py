@@ -37,11 +37,11 @@ print(futures.df.corr())
 print()
 
 # Stop loss and reward-risk ratio
-futures.df['StopLoss'] = futures.df['Close'] - 2.1 * futures.df['ATR']
+futures.df['StopLoss'] = futures.df['Close'] - 10 * futures.df['ATR']
 futures.df['StopLossPercent'] = 1 - futures.df['StopLoss'] / futures.df['Close']
-pprint(futures.df['StopLossPercent'].describe())
+# pprint(futures.df['StopLossPercent'].describe())
 
-# futures.df['RewardRiskRatio'] = 0.11 * futures.df['Close'] / (futures.df['Close'] - futures.df['StopLoss'])
+futures.df['RewardRiskRatio'] = 0.41 * futures.df['Close'] / (futures.df['Close'] - futures.df['StopLoss'])
 #
 # print(futures.df.tail())
 # print()
@@ -49,13 +49,19 @@ pprint(futures.df['StopLossPercent'].describe())
 
 # Monte-Carlo
 futures.df['Return'] = futures.df['Close'].pct_change().fillna(0)
-pprint(futures.df.tail())
+
+print('Real returns stats:')
+pprint(futures.df['Return'].describe())
+# pprint(futures.df.tail())
 print()
 
-mc = futures.df['Return'].montecarlo(sims=100, bust=-0.06, goal=0.0)
+mc = futures.df['Return'].montecarlo(sims=10000, bust=-0.2, goal=0.41)
 
+print('Monte-Carlo stats:')
 pprint(mc.stats)
-print()
-pprint(mc.maxdd)
+# print()
+# pprint(mc.maxdd)
 
-mc.plot(title=symbol, figsize=(15, 5))
+# mc.plot(title=symbol, figsize=(15, 5))
+
+# pprint(mc.data)
