@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.abspath('..'))
 import pandas as pd
 import pandas_datareader as pdr
 from datetime import datetime, timedelta
+from pprint import pprint
 
 class FUTURES(object):
     """Single futures"""
@@ -27,7 +28,6 @@ class FUTURES(object):
         df = pdr.get_data_moex(self.symbol, pause=timeout, start=start)
         df = df.reset_index()
         df = df.query('BOARDID == @boardid')
-
         filtered = pd.DataFrame()
         filtered['date'] = df['TRADEDATE']
         filtered['Open'] = df['OPEN']
@@ -35,6 +35,8 @@ class FUTURES(object):
         filtered['High'] = df['HIGH']
         filtered['Close'] = df['CLOSE']
         filtered['Volume'] = df['VOLUME']
+        # filtered['Openpositions'] = df['OPENPOSITION']
+        # filtered['Openpositionsvalue'] = df['OPENPOSITIONVALUE']
 
         return filtered
 
