@@ -18,24 +18,26 @@ import matplotlib.pyplot as plt
 class FUTURES(object):
     """Single futures"""
 
-    def __init__(self, symbol=''):
+    def __init__(self, symbol='', boardid='RFUD', volumefield='VOLUME'):
         self.symbol = symbol
         self.df = None
+        self.boardid = boardid
+        self.volumefield = volumefield
 
-    def fetch_moex(self, days=100, timeout=1, boardid='RFUD'):
+    def fetch_moex(self, days=100, timeout=1):
         date_N_days_ago = datetime.now() - timedelta(days=days)
         start = date_N_days_ago.strftime('%m/%d/%Y')
 
         df = pdr.get_data_moex(self.symbol, pause=timeout, start=start)
         df = df.reset_index()
-        df = df.query('BOARDID == @boardid')
+        df = df.query('BOARDID == @self.boardid')
         filtered = pd.DataFrame()
         filtered['date'] = df['TRADEDATE']
         filtered['Open'] = df['OPEN']
         filtered['Low'] = df['LOW']
         filtered['High'] = df['HIGH']
         filtered['Close'] = df['CLOSE']
-        filtered['Volume'] = df['VOLUME']
+        filtered['Volume'] = df[self.volumefield]
         # filtered['Openpositions'] = df['OPENPOSITION']
         # filtered['Openpositionsvalue'] = df['OPENPOSITIONVALUE']
 
@@ -69,6 +71,8 @@ class FUTURES(object):
         df.pop('Open')
         df.pop('High')
         df.pop('Low')
+        df['Close'] = df.Close.replace(to_replace=0, method='ffill')
+        df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
         df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
         df = df.set_index('date')
         df.plot(subplots=True, grid=True, figsize=(15, 5), title=self.symbol)
