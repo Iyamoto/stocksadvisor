@@ -14,6 +14,7 @@ import pandas_datareader as pdr
 from datetime import datetime, timedelta
 from pprint import pprint
 import matplotlib.pyplot as plt
+import talib
 
 class FUTURES(object):
     """Single futures"""
@@ -38,8 +39,9 @@ class FUTURES(object):
         filtered['High'] = df['HIGH']
         filtered['Close'] = df['CLOSE']
         filtered['Volume'] = df[self.volumefield]
-        # filtered['Openpositions'] = df['OPENPOSITION']
-        # filtered['Openpositionsvalue'] = df['OPENPOSITIONVALUE']
+        if self.boardid =='RFUD':
+            filtered['Openpositions'] = df['OPENPOSITION']
+            filtered['Openpositionsvalue'] = df['OPENPOSITIONVALUE']
 
         return filtered
 
@@ -77,3 +79,15 @@ class FUTURES(object):
         df = df.set_index('date')
         df.plot(subplots=True, grid=True, figsize=(15, 5), title=self.symbol)
         plt.show()
+
+    def get_atr(self, period=5):
+        pricedata = self.df
+        high = pricedata['High'].values
+        low = pricedata['Low'].values
+        close = pricedata['Close'].values
+        low = low.astype(float)
+        high = high.astype(float)
+        close = close.astype(float)
+        output = talib.ATR(high, low, close, timeperiod=period)
+        self.df['ATR'] = output
+        return output

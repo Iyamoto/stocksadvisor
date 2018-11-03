@@ -15,22 +15,33 @@ import libs.futures
 symbol = 'BRZ8'
 futures = libs.futures.FUTURES(symbol=symbol)
 futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
-futures.plot()
+# futures.plot()
 
-df_br = futures.df
-print(df_br.tail(10))
+futures.get_atr(period=14)
 
-symbol = 'SiZ8'
-futures = libs.futures.FUTURES(symbol=symbol)
-futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
-futures.plot()
+futures.df['Diff'] = futures.df['High'] - futures.df['Low']
+futures.df.pop('Open')
+futures.df.pop('High')
+futures.df.pop('Low')
+futures.df.pop('Openpositionsvalue')
 
-df_si = futures.df
+print(futures.df.corr())
 
-print(df_si.tail(10))
+print(futures.df.tail(10))
 
-print(df_si['Close'].corr(df_br['Close']))
-print(df_si['Volume'].corr(df_br['Volume']))
+
+
+# symbol = 'SiZ8'
+# futures = libs.futures.FUTURES(symbol=symbol)
+# futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
+# futures.plot()
+#
+# df_si = futures.df
+#
+# print(df_si.tail(10))
+#
+# print(df_si['Close'].corr(df_br['Close']))
+# print(df_si['Volume'].corr(df_br['Volume']))
 
 
 
