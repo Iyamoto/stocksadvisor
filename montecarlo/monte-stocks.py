@@ -20,7 +20,7 @@ min_RewardRiskRatio = 50
 atr_multiplier = 5
 
 results = dict()
-datatype = 'a'
+datatype = 'm'
 
 if datatype == 'm':
     watchdata = configs.alphaconf.symbols_m
@@ -37,8 +37,6 @@ for item in watchdata:
     else:
         symbol = item
         price = 0
-
-    print(symbol)
 
     futures = libs.futures.FUTURES(symbol=symbol, boardid='TQBR')
     if datatype == 'm':
@@ -65,9 +63,13 @@ for item in watchdata:
     futures.df['StopLossPercent'] = 1 - futures.df['StopLoss'] / futures.df['Close']
     bust = futures.df['StopLossPercent'].max()
 
+    stop_loss = round(futures.df.Close[-1:].values[0]*(1-bust), 2)
+    if stop_loss <= 0:
+        continue
+
     print('Last price:', round(futures.df.Close[-1:].values[0], 2))
     print('Bust:', bust)
-    print('StopLoss:', round(futures.df.Close[-1:].values[0]*(1-bust), 2))
+    print('StopLoss:', stop_loss)
     print()
 
     bust_chance, goal_chance = futures.get_bust_chance(bust=bust, sims=10000, goal=min_goal)
@@ -97,8 +99,8 @@ for item in watchdata:
         # print()
     else:
         results[symbol] = collections.OrderedDict()
-        results[symbol]['last_price'] = round(futures.df.Close[-1:].values[0], 2)
-        results[symbol]['stop_loss'] = round(futures.df.Close[-1:].values[0] * (1 - bust), 2)
+        results[symbol]['last_price'] = float(round(futures.df.Close[-1:].values[0], 2))
+        results[symbol]['stop_loss'] = stop_loss
         results[symbol]['exit_price'] = round(futures.df.Close[-1:].values[0] * (1 + goal), 2)
         results[symbol]['goal'] = goal
         results[symbol]['goal_chance'] = round(goal_chance, 2)
