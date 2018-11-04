@@ -157,7 +157,7 @@ class FUTURES(object):
 
         mc = self.df['Return'].montecarlo(sims=sims, bust=-1 * bust, goal=goal)
 
-        pprint(mc.stats)
+        # pprint(mc.stats)
         bust_chance = mc.stats['bust']
         goal_chance = mc.stats['goal']
 
