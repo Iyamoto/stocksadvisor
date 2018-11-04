@@ -14,7 +14,9 @@ min_goal = 0.1
 min_RewardRiskRatio = 2
 atr_multiplier = 5
 
-symbol = 'GMKN'
+symbol = 'MOEX'
+
+print(symbol)
 
 futures = libs.futures.FUTURES(symbol=symbol, boardid='TQBR')
 futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
@@ -57,11 +59,11 @@ for i in range(1, 10):
 
 print('Reward-Risk ratio:', futures.df['RewardRiskRatio'].mean())
 print('Goal:', goal)
-print('Exit price:', round(futures.df.Close[-1:].values[0] * (1 + min_goal), 2))
+print('Exit price:', round(futures.df.Close[-1:].values[0] * (1 + goal), 2))
+print()
 
 if goal > min_goal:
-    print('RewardRiskRatio is to low')
+    print('RewardRiskRatio is to low, calculating new goal chances')
     bust_chance, goal_chance = futures.get_bust_chance(bust=bust, goal=goal)
-    print('Bust chance:', round(bust_chance, 2))
     print('Goal chance:', round(goal_chance, 2))
     print()
