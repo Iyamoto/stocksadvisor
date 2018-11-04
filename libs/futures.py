@@ -21,20 +21,21 @@ from alpha_vantage.timeseries import TimeSeries
 class FUTURES(object):
     """Single futures"""
 
-    def __init__(self, symbol='', boardid='RFUD', volumefield='VOLUME', days=100):
+    def __init__(self, symbol='', boardid='RFUD', volumefield='VOLUME', cacheage=3600*24*5):
         self.symbol = symbol
         self.df = None
         self.boardid = boardid
         self.volumefield = volumefield
+        self.cacheage = cacheage
 
-    def get_prices_from_alpha(self, key='', cachedir='cache', cacheage=3600*24):
+    def get_prices_from_alpha(self, key='', cachedir='cache'):
         if not os.path.isdir(cachedir):
             os.mkdir(cachedir)
         filename = self.symbol + '.csv'
         filepath = os.path.join(cachedir, filename)
         if os.path.isfile(filepath):
             age = time.time() - os.path.getmtime(filepath)
-            if age > cacheage:
+            if age > self.cacheage:
                 os.remove(filepath)
             else:
                 data = pd.read_csv(filepath, index_col='date')
@@ -94,14 +95,14 @@ class FUTURES(object):
 
         return filtered
 
-    def get_data_from_moex(self, cachedir='cache-m', cacheage=3600*24, timeout=3, days=100):
+    def get_data_from_moex(self, cachedir='cache-m', timeout=3, days=100):
         if not os.path.isdir(cachedir):
             os.mkdir(cachedir)
         filename = self.symbol + '.csv'
         filepath = os.path.join(cachedir, filename)
         if os.path.isfile(filepath):
             age = time.time() - os.path.getmtime(filepath)
-            if age > cacheage:
+            if age > self.cacheage:
                 os.remove(filepath)
             else:
                 data = pd.read_csv(filepath)

@@ -91,10 +91,10 @@ for item in watchdata:
     print()
 
     if goal > min_goal:
-        print('RewardRiskRatio is to low, calculating new goal chances')
-        bust_chance, goal_chance = futures.get_bust_chance(bust=bust, goal=goal)
-        print('Goal chance:', round(goal_chance, 2))
-        print()
+        print('RewardRiskRatio is to low')
+        # bust_chance, goal_chance = futures.get_bust_chance(bust=bust, goal=goal)
+        # print('Goal chance:', round(goal_chance, 2))
+        # print()
     else:
         results[symbol] = collections.OrderedDict()
         results[symbol]['last_price'] = round(futures.df.Close[-1:].values[0], 2)
@@ -111,7 +111,7 @@ pprint(results)
 
 # Save results
 today = datetime.today()
-filename = datatype + '-' + str(today) + '.json'
-filepath = os.path.join('', 'recomendations', filename)
+filename = datatype + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
+filepath = os.path.join('..', 'recomendations', filename)
 with open(filepath, 'w') as outfile:
-    json.dump(results, outfile)
+    json.dump(results, outfile, indent=4)
