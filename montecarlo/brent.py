@@ -43,19 +43,26 @@ futures.df['StopLoss'] = futures.df['Close'] - 5 * futures.df['ATR']
 futures.df['StopLossPercent'] = 1 - futures.df['StopLoss'] / futures.df['Close']
 bust = futures.df['StopLossPercent'].max()
 print('Bust:', bust)
+print('StopLoss:', round(futures.df.Close[-1:].values[0]*(1-bust), 2))
+print()
 
-bust_chance, goal_chance = futures.get_bust_chance(bust=bust)
-print('Bust chance:', bust_chance)
-print('Goal chance:', goal_chance)
+bust_chance, goal_chance = futures.get_bust_chance(bust=bust, sims=10000)
+print('Bust chance:', round(bust_chance, 2))
+print('Goal chance:', round(goal_chance, 2))
 print()
 
 # Reward-risk ratio
 for i in range(1, 10):
     goal = i * 0.1
-    futures.df['RewardRiskRatio'] = goal_chance * goal * futures.df['Close'] / \
+    futures.df['RewardRiskRatio'] = (goal_chance/i) * goal * futures.df['Close'] / \
         (bust_chance * (futures.df['Close'] - futures.df['StopLoss']))
     if futures.df['RewardRiskRatio'].mean() > 3:
         print('Reward-Risk ratio:', futures.df['RewardRiskRatio'].mean())
         print('Goal:', goal)
         break
 
+if goal > 0.1:
+    bust_chance, goal_chance = futures.get_bust_chance(bust=bust, goal=goal)
+    print('Bust chance:', round(bust_chance, 2))
+    print('Goal chance:', round(goal_chance, 2))
+    print()

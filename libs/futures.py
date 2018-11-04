@@ -147,7 +147,7 @@ class FUTURES(object):
         self.df['KC_LOW'] = self.df['EMA'] - 2 * self.df['ATR']
         self.df['KC_HIGH'] = self.df['EMA'] + 2 * self.df['ATR']
 
-    def get_bust_chance(self, bust=0.1, plot=False):
+    def get_bust_chance(self, sims=1000, bust=0.1, goal=0.1, plot=False):
         # Monte-Carlo
         self.df['Return'] = self.df['Close'].pct_change().fillna(0)
 
@@ -155,7 +155,7 @@ class FUTURES(object):
         # pprint(self.df['Return'].describe())
         # print()
 
-        mc = self.df['Return'].montecarlo(sims=10000, bust=-1 * bust, goal=0.1)
+        mc = self.df['Return'].montecarlo(sims=sims, bust=-1 * bust, goal=goal)
 
         pprint(mc.stats)
         bust_chance = mc.stats['bust']
