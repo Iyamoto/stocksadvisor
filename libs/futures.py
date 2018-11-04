@@ -11,6 +11,7 @@ import os
 sys.path.insert(0, os.path.abspath('..'))
 import pandas as pd
 import pandas_datareader as pdr
+import numpy
 from datetime import datetime, timedelta
 from pprint import pprint
 import matplotlib.pyplot as plt
@@ -134,9 +135,13 @@ class FUTURES(object):
         if 'ATR' in columns:
             df['ATR'] = self.df.ATR.values
 
-        if 'EMA' in columns:
-            df['EMA'] = self.df.EMA.values
-            plt.plot(df.index, df.EMA, 'b', label='EMA')
+        if 'EMA5' in columns:
+            df['EMA5'] = self.df.EMA5.values
+            plt.plot(df.index, df.EMA5, 'b', label='EMA5')
+
+        if 'EMA20' in columns:
+            df['EMA20'] = self.df.EMA20.values
+            plt.plot(df.index, df.EMA20, 'r', label='EMA20')
 
         if 'KC_LOW' in columns:
             df['KC_LOW'] = self.df.KC_LOW.values
@@ -189,12 +194,12 @@ class FUTURES(object):
         close = pricedata['Close'].values
         close = close.astype(float)
         output = talib.EMA(close, timeperiod=period)
-        self.df['EMA'] = output
+        self.df['EMA' + str(period)] = output
         return output
 
-    def get_kc(self):
-        self.df['KC_LOW'] = self.df['EMA'] - 2 * self.df['ATR']
-        self.df['KC_HIGH'] = self.df['EMA'] + 2 * self.df['ATR']
+    def get_kc(self, period=5):
+        self.df['KC_LOW'] = self.df['EMA' + str(period)] - 2 * self.df['ATR']
+        self.df['KC_HIGH'] = self.df['EMA' + str(period)] + 2 * self.df['ATR']
 
     def get_bust_chance(self, sims=1000, bust=0.1, goal=0.1, plot=False):
         # Monte-Carlo
@@ -217,3 +222,22 @@ class FUTURES(object):
             mc.plot(title=self.symbol, figsize=(15, 5))
 
         return bust_chance, goal_chance
+
+    def count_anomalies(self, period=5, ratio=2):
+        low = self.df['Low'].values
+        low = low.astype(float)
+        high = self.df['High'].values
+        high = high.astype(float)
+        close = self.df['Close'].values
+        close = close.astype(float)
+        atr = talib.ATR(high, low, close, timeperiod=period)
+        ema = talib.EMA(close, timeperiod=period)
+
+        ema = ema[period:]
+        atr = atr[period:]
+        close = close[period:]
+
+        count = (close < (ema - ratio * atr)).sum()
+        count += (close > (ema + ratio * atr)).sum()
+
+        return count

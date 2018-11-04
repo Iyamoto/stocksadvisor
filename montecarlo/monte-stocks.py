@@ -20,7 +20,7 @@ min_RewardRiskRatio = 50
 atr_multiplier = 5
 
 results = dict()
-datatype = 'm'
+datatype = 'a'
 
 if datatype == 'm':
     watchdata = configs.alphaconf.symbols_m
@@ -38,6 +38,8 @@ for item in watchdata:
         symbol = item
         price = 0
 
+    print(symbol)
+
     futures = libs.futures.FUTURES(symbol=symbol, boardid='TQBR')
     if datatype == 'm':
         futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
@@ -47,7 +49,30 @@ for item in watchdata:
 
     futures.get_atr(period=5)
     futures.get_ema(period=5)
+
+    # Calculate trend
+    futures.get_ema(period=20)
+
+    futures.df['UpTrend'] = futures.df.EMA5.fillna(0) >= futures.df.EMA20.fillna(0)
+    futures.df['DownTrend'] = futures.df.EMA5.fillna(0) <= futures.df.EMA20.fillna(0)
+
+    # EMA5 > EMA20
+    if futures.df['UpTrend'].sum() >= 0.85 * len(futures.df['UpTrend']):
+        trend = 'Up'
+    elif futures.df['DownTrend'].sum() >= 0.85 * len(futures.df['DownTrend']):
+        trend = 'Down'
+    else:
+        trend = 'Sideways'
+
+    print('Trend:', trend)
+
     futures.get_kc()
+
+    anomalies = futures.count_anomalies()
+    if anomalies > 0:
+        print('Anomaly detected', anomalies)
+        futures.plot()
+        # exit()
 
     futures.df.pop('Open')
     futures.df.pop('High')
@@ -107,6 +132,8 @@ for item in watchdata:
         results[symbol]['bust'] = round(bust, 2)
         results[symbol]['bust_chance'] = round(bust_chance, 2)
         results[symbol]['reward_risk_ratio'] = round(futures.df['RewardRiskRatio'].mean(), 2)
+        results[symbol]['trend'] = trend
+        results[symbol]['anomalies'] = float(anomalies)
 
 print('Results')
 pprint(results)
