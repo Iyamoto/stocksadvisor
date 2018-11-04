@@ -15,11 +15,12 @@ from datetime import datetime, timedelta
 from pprint import pprint
 import matplotlib.pyplot as plt
 import talib
+import pandas_montecarlo
 
 class FUTURES(object):
     """Single futures"""
 
-    def __init__(self, symbol='', boardid='RFUD', volumefield='VOLUME'):
+    def __init__(self, symbol='', boardid='RFUD', volumefield='VOLUME', days=100):
         self.symbol = symbol
         self.df = None
         self.boardid = boardid
@@ -145,3 +146,25 @@ class FUTURES(object):
     def get_kc(self):
         self.df['KC_LOW'] = self.df['EMA'] - 2 * self.df['ATR']
         self.df['KC_HIGH'] = self.df['EMA'] + 2 * self.df['ATR']
+
+    def get_bust_chance(self, bust=0.1, plot=False):
+        # Monte-Carlo
+        self.df['Return'] = self.df['Close'].pct_change().fillna(0)
+
+        # print('Real returns stats:')
+        # pprint(self.df['Return'].describe())
+        # print()
+
+        mc = self.df['Return'].montecarlo(sims=10000, bust=-1 * bust, goal=0.1)
+
+        pprint(mc.stats)
+        bust_chance = mc.stats['bust']
+        goal_chance = mc.stats['goal']
+
+        # print(mc.data[1].describe())
+        # print(mc.data)
+
+        if plot:
+            mc.plot(title=self.symbol, figsize=(15, 5))
+
+        return bust_chance, goal_chance

@@ -13,20 +13,22 @@ import matplotlib.pyplot as plt
 import libs.futures
 import pandas_montecarlo
 from pprint import pprint
+import math
+import numpy as np
 
-symbol = 'BRZ8'
+symbol = 'SBER'  # 'SiZ8'  # 'SBER'  # 'BRZ8'
 expiration = '03.12.2018'
-futures = libs.futures.FUTURES(symbol=symbol)
+futures = libs.futures.FUTURES(symbol=symbol) # boardid='TQBR'
 futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
 
-futures.get_atr(period=14)
-futures.get_ema(period=14)
+futures.get_atr(period=5)
+futures.get_ema(period=5)
 futures.get_kc()
 
 futures.df.pop('Open')
 futures.df.pop('High')
 futures.df.pop('Low')
-futures.df.pop('Openpositionsvalue')
+# futures.df.pop('Openpositionsvalue')
 
 # futures.plot()
 
@@ -36,32 +38,24 @@ futures.df.pop('KC_HIGH')
 print(futures.df.corr())
 print()
 
-# Stop loss and reward-risk ratio
-futures.df['StopLoss'] = futures.df['Close'] - 10 * futures.df['ATR']
+# Stop loss
+futures.df['StopLoss'] = futures.df['Close'] - 5 * futures.df['ATR']
 futures.df['StopLossPercent'] = 1 - futures.df['StopLoss'] / futures.df['Close']
-# pprint(futures.df['StopLossPercent'].describe())
+bust = futures.df['StopLossPercent'].max()
+print('Bust:', bust)
 
-futures.df['RewardRiskRatio'] = 0.41 * futures.df['Close'] / (futures.df['Close'] - futures.df['StopLoss'])
-#
-# print(futures.df.tail())
-# print()
-# print(futures.df['RewardRiskRatio'].describe())
-
-# Monte-Carlo
-futures.df['Return'] = futures.df['Close'].pct_change().fillna(0)
-
-print('Real returns stats:')
-pprint(futures.df['Return'].describe())
-# pprint(futures.df.tail())
+bust_chance, goal_chance = futures.get_bust_chance(bust=bust)
+print('Bust chance:', bust_chance)
+print('Goal chance:', goal_chance)
 print()
 
-mc = futures.df['Return'].montecarlo(sims=10000, bust=-0.2, goal=0.41)
+# Reward-risk ratio
+for i in range(1, 10):
+    goal = i * 0.1
+    futures.df['RewardRiskRatio'] = goal_chance * goal * futures.df['Close'] / \
+        (bust_chance * (futures.df['Close'] - futures.df['StopLoss']))
+    if futures.df['RewardRiskRatio'].mean() > 3:
+        print('Reward-Risk ratio:', futures.df['RewardRiskRatio'].mean())
+        print('Goal:', goal)
+        break
 
-print('Monte-Carlo stats:')
-pprint(mc.stats)
-# print()
-# pprint(mc.maxdd)
-
-# mc.plot(title=symbol, figsize=(15, 5))
-
-# pprint(mc.data)
