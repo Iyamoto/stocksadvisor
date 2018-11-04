@@ -12,18 +12,21 @@ sys.path.insert(0, os.path.abspath('..'))
 import libs.futures
 import configs.alphaconf
 from pprint import pprint
+from datetime import datetime
+import collections
 
 min_goal = 0.1
-min_RewardRiskRatio = 5
+min_RewardRiskRatio = 50
 atr_multiplier = 5
 
 results = dict()
-datatype = 'm'
+datatype = 'a'
 
 if datatype == 'm':
     watchdata = configs.alphaconf.symbols_m
 else:
     watchdata = configs.alphaconf.symbols
+    key = configs.alphaconf.key
 
 for item in watchdata:
 
@@ -38,7 +41,11 @@ for item in watchdata:
     print(symbol)
 
     futures = libs.futures.FUTURES(symbol=symbol, boardid='TQBR')
-    futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
+    if datatype == 'm':
+        futures.get_data_from_moex(cachedir=os.path.join('..', 'cache-m'))
+    else:
+        futures.get_prices_from_alpha(key=key, cachedir=os.path.join('..', 'cache'))
+        futures.fix_alpha_columns()
 
     futures.get_atr(period=5)
     futures.get_ema(period=5)
@@ -89,15 +96,22 @@ for item in watchdata:
         print('Goal chance:', round(goal_chance, 2))
         print()
     else:
-        results[symbol] = dict()
+        results[symbol] = collections.OrderedDict()
+        results[symbol]['last_price'] = round(futures.df.Close[-1:].values[0], 2)
+        results[symbol]['stop_loss'] = round(futures.df.Close[-1:].values[0] * (1 - bust), 2)
+        results[symbol]['exit_price'] = round(futures.df.Close[-1:].values[0] * (1 + goal), 2)
         results[symbol]['goal'] = goal
         results[symbol]['goal_chance'] = round(goal_chance, 2)
         results[symbol]['bust'] = round(bust, 2)
         results[symbol]['bust_chance'] = round(bust_chance, 2)
-        results[symbol]['last_price'] = round(futures.df.Close[-1:].values[0], 2)
-        results[symbol]['stop_loss'] = round(futures.df.Close[-1:].values[0]*(1-bust), 2)
-        results[symbol]['exit_price'] = round(futures.df.Close[-1:].values[0] * (1 + goal), 2)
         results[symbol]['reward_risk_ratio'] = round(futures.df['RewardRiskRatio'].mean(), 2)
 
 print('Results')
 pprint(results)
+
+# Save results
+today = datetime.today()
+filename = datatype + '-' + str(today) + '.json'
+filepath = os.path.join('', 'recomendations', filename)
+with open(filepath, 'w') as outfile:
+    json.dump(results, outfile)

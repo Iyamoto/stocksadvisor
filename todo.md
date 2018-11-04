@@ -1,12 +1,9 @@
 # TODOs
 
-CHD?
-
 # To buy
 
 Мосбиржа?
 
-Норникель
 
 
 Username:	vejameg@banit.me
@@ -28,6 +25,7 @@ https://www.morningstar.com/stocks/xnas/wdc/quote.html
 https://www.reuters.com/finance/stocks/company-news/WDC.O
 https://finviz.com/quote.ashx?t=WDC&ty=c&ta=0&p=w
 https://www.zacks.com/stock/quote/WDC?q=WDC
+https://www.zacks.com/zer/report/WDC
 
 # Research
 

@@ -16,6 +16,7 @@ from pprint import pprint
 import matplotlib.pyplot as plt
 import talib
 import pandas_montecarlo
+from alpha_vantage.timeseries import TimeSeries
 
 class FUTURES(object):
     """Single futures"""
@@ -25,6 +26,53 @@ class FUTURES(object):
         self.df = None
         self.boardid = boardid
         self.volumefield = volumefield
+
+    def get_prices_from_alpha(self, key='', cachedir='cache', cacheage=3600*24):
+        if not os.path.isdir(cachedir):
+            os.mkdir(cachedir)
+        filename = self.symbol + '.csv'
+        filepath = os.path.join(cachedir, filename)
+        if os.path.isfile(filepath):
+            age = time.time() - os.path.getmtime(filepath)
+            if age > cacheage:
+                os.remove(filepath)
+            else:
+                data = pd.read_csv(filepath, index_col='date')
+                self.df = data
+                return data
+
+        data = self.fetch_alpha(key=key, size='compact')
+        data.to_csv(filepath)
+
+        self.df = data
+        return data
+
+    def fetch_alpha(self, key='demo', size='compact', timeout=5):
+        ts = TimeSeries(key=key, output_format='pandas')
+        retry = 0
+        while True:
+            try:
+                data, meta_data = ts.get_daily_adjusted(symbol=self.symbol, outputsize=size)
+                break
+            except:
+                retry += 1
+                if retry > 10:
+                    exit('Can not fetch ' + self.symbol)
+                time.sleep(timeout)
+                continue
+        return data
+
+    def fix_alpha_columns(self):
+        df = self.df
+        df = df.rename(index=str, columns={'3. low': 'Low'})
+        df = df.rename(index=str, columns={'2. high': 'High'})
+        df = df.rename(index=str, columns={'1. open': 'Open'})
+        df = df.rename(index=str, columns={'4. close': 'Close'})
+        df = df.rename(index=str, columns={'6. volume': 'Volume'})
+        df = df.rename(index=str, columns={'5. adjusted close': 'Adjusted close'})
+
+        self.df = df
+        self.df = df.reset_index()
 
     def fetch_moex(self, days=100, timeout=1):
         date_N_days_ago = datetime.now() - timedelta(days=days)
@@ -46,7 +94,7 @@ class FUTURES(object):
 
         return filtered
 
-    def get_data_from_moex(self, cachedir='cache-m', cacheage=3600*24*8, timeout=3, days=100):
+    def get_data_from_moex(self, cachedir='cache-m', cacheage=3600*24, timeout=3, days=100):
         if not os.path.isdir(cachedir):
             os.mkdir(cachedir)
         filename = self.symbol + '.csv'
