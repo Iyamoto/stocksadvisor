@@ -1,107 +1,125 @@
 """
-Stocks Advisor
+Stocks Advisor 1.1
+Based on randomness
 """
 
-import configs.alphaconf
-import libs.stockslib as sl
-import fire
-import json
+import time
+import sys
 import os
+import json
+sys.path.insert(0, os.path.abspath('..'))
+import libs.assets
+import configs.alphaconf
 from pprint import pprint
+from datetime import datetime
+import collections
 
+min_goal = 0.1
+min_RewardRiskRatio = 50
+atr_multiplier = 5
 
-class ADVISOR(object):
-    """Stocks Advisor"""
+datatype = 'm'
+asset_type = 'stock'
 
-    def __init__(self, datatype='m'):
-        self.key = configs.alphaconf.key
+if datatype == 'm':
+    watchdata = configs.alphaconf.symbols_m
+    source = 'moex'
+else:
+    watchdata = configs.alphaconf.symbols
+    source = 'alpha'
 
-        self.datatype = datatype
+key = configs.alphaconf.key
+results = dict()
+for item in watchdata:
 
-        if self.datatype == 'm':
-            self.watchdata = configs.alphaconf.symbols_m
-        else:
-            self.watchdata = configs.alphaconf.symbols
+    symbol, entry_price = configs.alphaconf.get_symbol(item)
 
-        self.tobuy = dict()
-        self.tosell = dict()
+    print(symbol)
 
-        self.incomelimit = 5
-        self.luck = 0.2
+    asset = libs.assets.ASSET(symbol=symbol, source=source, asset_type=asset_type, key=key)
 
-    def check_watchlist(self):
-        """Checks indicators"""
+    # Fetch data from the source
+    asset.get_data()
 
-        for item in self.watchdata:
+    # Calculate some stats
+    asset.get_atr(period=5)
+    asset.get_ema(period=5)
+    asset.get_ema(period=20)
+    asset.get_kc()
 
-            # Parse watchlist
-            if type(item) == dict:
-                price = list(item.values())[0]
-                symbol = list(item.keys())[0]
-            else:
-                symbol = item
-                price = 0
+    asset.plot()
 
-            # print(symbol)
+    # Calculate trend
+    trend = asset.detect_trend()
+    print('Trend:', trend)
 
-            # Init
-            res = sl.RESOURCE(symbol=symbol, price_header='Close')
-            if self.datatype == 'm':
-                res.prices = res.get_prices_from_moex(cacheage=3600*12, days=200, cachedir=os.path.join('cache-m'))
-                res.prices = res.prices.tail(200)
-            else:
-                res.get_prices_from_alpha(key=self.key, cacheage=3600*6)
-                res.fix_alpha_columns()
+    # Count anomalies
+    anomalies = asset.count_anomalies()
+    if anomalies > 0:
+        print('Anomaly detected:', anomalies)
 
-                # res.get_history_from_alpha(key=self.key)
-                # res.fix_alpha_history_columns()
+    # Stop loss
+    asset.df['StopLoss'] = asset.df['Close'] - atr_multiplier * asset.df['ATR']
+    asset.df['StopLossPercent'] = 1 - asset.df['StopLoss'] / asset.df['Close']
+    bust = asset.df['StopLossPercent'].max()
 
-            lastprice = res.get_last_price()
+    stop_loss = round(asset.df.Close[-1:].values[0] * (1 - bust), 2)
+    if stop_loss <= 0:
+        continue
 
-            buy = 0
+    print('Last price:', round(asset.df.Close[-1:].values[0], 2))
+    print('Bust:', bust)
+    print('StopLoss:', stop_loss)
+    print()
 
-            # FB Prophet
-            # if res.get_prophet_prediction() > 30:
-            #     buy += 1
+    bust_chance, goal_chance = asset.get_bust_chance(bust=bust, sims=10000, goal=min_goal)
+    print('Bust chance:', round(bust_chance, 2))
+    print('Goal chance:', round(goal_chance, 2))
+    print()
 
-            # Check for anomaly
-            res.is_anomaly()
+    # Reward-risk ratio
+    for i in range(1, 5):
+        goal = i * min_goal
+        if bust_chance < 0.001:
+            bust_chance = 0.001
+        asset.df['RewardRiskRatio'] = (goal_chance / i) * goal * asset.df['Close'] / \
+                                      (bust_chance * (asset.df['Close'] - asset.df['StopLoss']))
+        if asset.df['RewardRiskRatio'].mean() > min_RewardRiskRatio:
+            break
 
-            # Calculate strategies
-            for strategy_name in configs.alphaconf.ratios.keys():
-                try:
-                    if self.datatype == 'm':
-                        weight = configs.alphaconf.ratios_m[strategy_name][symbol]
-                    else:
-                        weight = configs.alphaconf.ratios[strategy_name][symbol]
-                except:
-                    weight = 0
-                strategy_method = getattr(res, strategy_name)
-                try:
-                    rez = strategy_method()
-                except:
-                    print(symbol, 'failed', strategy_method)
-                    rez = 0
-                if rez > 0:
-                    buy += weight * rez
-                else:
-                    buy += rez
+    print('Reward-Risk ratio:', asset.df['RewardRiskRatio'].mean())
+    print('Goal:', goal)
+    print('Exit price:', round(asset.df.Close[-1:].values[0] * (1 + goal), 2))
+    print()
 
-            if buy > self.luck * len(configs.alphaconf.ratios.keys()):
-                res.buy = buy
-                self.tobuy[symbol] = [buy, lastprice, res.msg]
+    if goal > min_goal:
+        print('RewardRiskRatio is to low')
+        # bust_chance, goal_chance = futures.get_bust_chance(bust=bust, goal=goal)
+        # print('Goal chance:', round(goal_chance, 2))
+        # print()
+    else:
+        results[symbol] = collections.OrderedDict()
+        results[symbol]['last_price'] = float(round(asset.df.Close[-1:].values[0], 2))
+        results[symbol]['stop_loss'] = stop_loss
+        results[symbol]['exit_price'] = round(asset.df.Close[-1:].values[0] * (1 + goal), 2)
+        results[symbol]['goal'] = goal
+        results[symbol]['goal_chance'] = round(goal_chance, 2)
+        results[symbol]['bust'] = round(bust, 2)
+        results[symbol]['bust_chance'] = round(bust_chance, 2)
+        results[symbol]['reward_risk_ratio'] = round(asset.df['RewardRiskRatio'].mean(), 2)
+        results[symbol]['trend'] = trend
+        results[symbol]['anomalies'] = float(anomalies)
 
-            if lastprice > price > 0:
-                income = round((lastprice / price - 1) * 100, 1)
-                if income > self.incomelimit:
-                    self.tosell[symbol] = [buy, income, res.msg]
+    break
 
-        print('BUY:')
-        print(json.dumps(self.tobuy, indent=4))
-        print('SELL:')
-        print(json.dumps(self.tosell, indent=4))
+print('Results')
+pprint(results)
 
+exit()
 
-if __name__ == "__main__":
-    adv = ADVISOR(datatype='a')
-    fire.Fire(adv.check_watchlist)
+# Save results
+today = datetime.today()
+filename = datatype + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
+filepath = os.path.join('..', 'recomendations', filename)
+with open(filepath, 'w') as outfile:
+    json.dump(results, outfile, indent=4)

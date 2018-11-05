@@ -1,9 +1,4 @@
-"""Working with Moex Futures
-https://iss.moex.com/iss/reference/
-https://iss.moex.com/iss/engines/futures/markets.xml
-https://iss.moex.com/iss/engines/futures/markets/forts.xml
-https://iss.moex.com/iss/engines/futures/markets/forts/securities.xml
-"""
+"""Main assets class"""
 
 import time
 import sys
@@ -18,17 +13,38 @@ import talib
 import pandas_montecarlo
 from alpha_vantage.timeseries import TimeSeries
 
-class FUTURES(object):
-    """Single futures"""
+class ASSET(object):
+    """Single asset"""
 
-    def __init__(self, symbol='', boardid='RFUD', volumefield='VOLUME', cacheage=3600*24*5):
+    def __init__(self, symbol='', source='moex', asset_type='stock', key='demo',
+                 volumefield='VOLUME', cacheage=3600*24*5, cachebase=''):
+        """
+        source: moex, alpha
+        type: stock, futures
+        """
         self.symbol = symbol
-        self.df = None
-        self.boardid = boardid
+        self.asset_type = asset_type
+        self.source = source
         self.volumefield = volumefield
         self.cacheage = cacheage
+        self.key = key
+        self.cachebase = cachebase
 
+        if self.asset_type == 'stock':
+            self.boardid = 'TQBR'
+        if self.asset_type == 'futures':
+            self.boardid = 'RFUD'
+
+        self.df = None
         self.trend = ''
+        self.anomalies = 0
+
+    def get_data(self):
+        if self.source == 'moex':
+            self.get_data_from_moex(cachedir=os.path.join(self.cachebase, 'cache-m'))
+        if self.source == 'alpha':
+            self.get_prices_from_alpha(key=self.key, cachedir=os.path.join(self.cachebase, 'cache'))
+            self.fix_alpha_columns()
 
     def get_prices_from_alpha(self, key='', cachedir='cache'):
         if not os.path.isdir(cachedir):
@@ -240,6 +256,7 @@ class FUTURES(object):
 
         count = (close < (ema - ratio * atr)).sum()
         count += (close > (ema + ratio * atr)).sum()
+        self.anomalies = count
 
         return count
 
