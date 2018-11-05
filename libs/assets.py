@@ -41,6 +41,11 @@ class ASSET(object):
         self.lastprice = 0
         self.stoploss = 0
         self.stoplosspercent = 0  # AKA Bust
+        self.goalprice = 0
+
+    def get_goalprice(self, profit=0.1):
+        self.goalprice = round(self.lastprice * (1 + profit), 2)
+        return self.goalprice
 
     def get_stoploss(self, atr_multiplier=5):
         """Returns stop loss and stop loss percent"""
@@ -160,7 +165,7 @@ class ASSET(object):
         df['Close'] = df.Close.replace(to_replace=0, method='ffill')
         df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
         fig = plt.figure(figsize=(15, 8))
-        plt.subplot(3, 1, 1)
+        plt.subplot2grid((4, 1), (0, 0), rowspan=2)
         plt.title(self.symbol)
 
         plt.plot(df.index, df.Close, 'k', label='Price')
@@ -188,16 +193,19 @@ class ASSET(object):
         if self.stoploss > 0:
             plt.axhline(y=self.stoploss, color='m', linestyle=':', label='StopLoss')
 
+        if self.goalprice > 0:
+            plt.axhline(y=self.goalprice, color='c', linestyle=':', label='Goal')
+
         plt.legend()
         plt.grid()
 
-        ax1 = plt.subplot(3, 1, 2)
-        ax2 = ax1.twinx()
+        ax1 = plt.subplot2grid((4, 1), (2, 0), rowspan=1)
 
         ax1.plot(df.index, df.Volume, 'g', label='Volume')
         ax1.set_ylabel('Volume', color='g')
 
         if 'Openpositions' in columns:
+            ax2 = ax1.twinx()
             df['Openpositions'] = self.df.Openpositions.values
             ax2.plot(df.index, df.Openpositions, 'b', label='Openpositions')
             ax2.legend()
@@ -205,7 +213,7 @@ class ASSET(object):
         ax1.grid()
 
         if 'ATR' in columns:
-            plt.subplot(3, 1, 3)
+            plt.subplot2grid((4, 1), (3, 0), rowspan=1)
             plt.plot(df.index, df.ATR, 'r', label='ATR')
             plt.legend()
             plt.grid()

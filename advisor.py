@@ -55,6 +55,7 @@ class ADVISOR(object):
 
             # Calculate some stats
             asset.get_lastprice()
+            asset.get_goalprice(profit=self.min_goal)
             asset.get_atr(period=5)
             asset.get_ema(period=5)
             asset.get_ema(period=20)
@@ -67,7 +68,8 @@ class ADVISOR(object):
 
             print('Last price:', asset.lastprice)
             print('Bust:', asset.stoplosspercent)
-            print('StopLoss:', asset.stoploss)
+            print('Stop loss:', asset.stoploss)
+            print('Exit price:', asset.goalprice)
             print()
 
             asset.plot()
@@ -98,7 +100,6 @@ class ADVISOR(object):
 
             print('Reward-Risk ratio:', asset.df['RewardRiskRatio'].mean())
             print('Goal:', goal)
-            print('Exit price:', round(asset.df.Close[-1:].values[0] * (1 + goal), 2))
             print()
 
             if goal > self.min_goal:
