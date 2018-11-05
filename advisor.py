@@ -34,7 +34,7 @@ class ADVISOR(object):
         self.tosell = dict()
 
         self.min_goal = 0.1
-        self.min_RewardRiskRatio = 50
+        self.min_RewardRiskRatio = 10
         self.atr_multiplier = 5
         self.accepted_goal_chance = 0.33
 
@@ -60,22 +60,23 @@ class ADVISOR(object):
 
             # Perform static analysis
             asset.static_analysis(printoutput=True)
+            if asset.stoploss <= 0:
+                continue
 
             # asset.plot()
 
             # Calculate chances
-            bust_chance, goal_chance = asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, goal=self.min_goal)
-            if bust_chance < 0.01:
-                bust_chance = 0.01
-            print('Bust chance:', round(bust_chance, 2))
-            print('Goal chance:', round(goal_chance, 2))
+            asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, goal=self.min_goal)
+            print('Bust chance:', round(asset.bust_chance, 2))
+            print('Goal chance:', round(asset.goal_chance, 2))
 
             # Reward-risk ratio
-            asset.get_reward_risk_ratio()
-            print('Reward-Risk ratio:', asset.rewardriskratio)
+            if asset.goal_chance > self.accepted_goal_chance:
+                asset.get_reward_risk_ratio()
+                print('Reward-Risk ratio:', asset.rewardriskratio)
 
             # Filter out too risky stuff
-            if asset.rewardriskratio >= self.min_RewardRiskRatio and goal_chance > self.accepted_goal_chance:
+            if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
                 results.append(asset.get_results())
                 asset.plot()
 

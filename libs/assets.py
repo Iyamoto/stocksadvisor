@@ -72,11 +72,12 @@ class ASSET(object):
         self.get_kc()
 
         # Stop loss
-        stop_loss, bust = self.get_stoploss()
-        if stop_loss <= 0:
-            self.get_results()
-            print(self)
-            raise ValueError('Negative stop-loss')  # Debug
+        self.get_stoploss()
+
+        # if stop_loss <= 0:
+        #     self.get_results()
+        #     print(self)
+        #     raise ValueError('Negative stop-loss')  # Debug
 
         # Calculate trend
         trend = self.detect_trend()
@@ -326,12 +327,17 @@ class ASSET(object):
         self.bust_chance = mc.stats['bust']
         self.goal_chance = mc.stats['goal']
 
-        # print(mc.data[1].describe())
+        # if self.goal_chance > 0.99:
+        #     pprint(mc.stats)
+        #     plot = True
+
         # print(mc.data)
 
         if plot:
             mc.plot(title=self.symbol, figsize=(15, 5))
 
+        if self.bust_chance < 0.01:
+            self.bust_chance = 0.01
         return self.bust_chance, self.goal_chance
 
     def count_anomalies(self, period=5, ratio=2):
