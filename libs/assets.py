@@ -56,7 +56,7 @@ class ASSET(object):
         return out
 
     def get_reward_risk_ratio(self):
-        self.df['RewardRiskRatio'] = self.goal_chance * self.min_goal * self.df['Close'] / \
+        self.df['RewardRiskRatio'] = self.goal_chance * self.min_goal * (self.goalprice - self.df['Close']) / \
                                       (self.bust_chance * (self.df['Close'] - self.df['StopLoss']))
 
         self.rewardriskratio = round(self.df['RewardRiskRatio'].mean(), 2)
@@ -114,7 +114,7 @@ class ASSET(object):
         """Returns stop loss and stop loss percent"""
         self.df['StopLoss'] = self.df['Close'] - self.atr_multiplier * self.df['ATR']
         self.df['StopLossPercent'] = 1 - self.df['StopLoss'] / self.df['Close']
-        self.stoplosspercent = self.df['StopLossPercent'].mean()
+        self.stoplosspercent = self.df['StopLossPercent'].max()
         self.stoploss = round(self.df.Close[-1:].values[0] * (1 - self.stoplosspercent), 2)
 
         return self.stoploss, self.stoplosspercent

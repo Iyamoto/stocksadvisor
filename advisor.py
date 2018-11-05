@@ -36,6 +36,7 @@ class ADVISOR(object):
         self.min_goal = 0.1
         self.min_RewardRiskRatio = 50
         self.atr_multiplier = 5
+        self.accepted_goal_chance = 0.33
 
     def check_watchlist(self):
         """Do magic"""
@@ -74,8 +75,9 @@ class ADVISOR(object):
             print('Reward-Risk ratio:', asset.rewardriskratio)
 
             # Filter out too risky stuff
-            if asset.rewardriskratio >= self.min_RewardRiskRatio:
+            if asset.rewardriskratio >= self.min_RewardRiskRatio and goal_chance > self.accepted_goal_chance:
                 results.append(asset.get_results())
+                asset.plot()
 
         print('Results:')
         pprint(results)
@@ -89,5 +91,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='a')
+    adv = ADVISOR(datatype='m')
     fire.Fire(adv.check_watchlist)
