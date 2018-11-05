@@ -378,18 +378,16 @@ class ASSET(object):
         return self.anomalies
 
     def detect_trend(self):
-        # EMA5 > EMA20 means up trend
+        # EMA5 > EMA20 means up trend?
         self.df['UpTrend'] = self.df.EMA5.fillna(0) >= self.df.EMA20.fillna(0)
         self.df['DownTrend'] = self.df.EMA5.fillna(0) <= self.df.EMA20.fillna(0)
 
         if self.df['UpTrend'].sum() >= 0.85 * len(self.df['UpTrend']):
-            trend = 'Up'
+            ema_trend = 'Up'
         elif self.df['DownTrend'].sum() >= 0.85 * len(self.df['DownTrend']):
-            trend = 'Down'
+            ema_trend = 'Down'
         else:
-            trend = 'Sideways'
-
-        self.trend = trend
+            ema_trend = 'Sideways'
 
         # Fit poly
         def trendline(data, order=1):
@@ -397,5 +395,13 @@ class ASSET(object):
             return coeffs
 
         self.trendline = trendline(self.df['Close'])
+        angle = self.trendline[0]
+        if angle > 0:
+            fit_trend = 'Up'
+        if angle < 0:
+            fit_trend = 'Down'
+        if angle == 0:
+            fit_trend = 'Sideways'
 
-        return trend
+        self.trend = ema_trend + ' ' + fit_trend
+        return self.trend

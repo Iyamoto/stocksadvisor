@@ -2,3 +2,5 @@ fire
 pandas
 alpha_vantage
 pandas_datareader
+pandas_montecarlo
+numpy

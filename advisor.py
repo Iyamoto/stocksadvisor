@@ -3,7 +3,6 @@ Stocks Advisor 1.1
 Based on randomness
 """
 
-import time
 import sys
 import os
 import json
@@ -76,7 +75,7 @@ class ADVISOR(object):
 
             if asset.anomalies > 0 and self.plot_anomaly:
                 print('Anomaly detected')
-            asset.plot()
+                asset.plot()
 
             # Filter out too risky stuff
             if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
