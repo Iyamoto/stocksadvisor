@@ -38,6 +38,22 @@ class ASSET(object):
         self.df = None
         self.trend = ''
         self.anomalies = 0
+        self.lastprice = 0
+        self.stoploss = 0
+        self.stoplosspercent = 0  # AKA Bust
+
+    def get_stoploss(self, atr_multiplier=5):
+        """Returns stop loss and stop loss percent"""
+        self.df['StopLoss'] = self.df['Close'] - atr_multiplier * self.df['ATR']
+        self.df['StopLossPercent'] = 1 - self.df['StopLoss'] / self.df['Close']
+        self.stoplosspercent = self.df['StopLossPercent'].max()
+        self.stoploss = round(self.df.Close[-1:].values[0] * (1 - self.stoplosspercent), 2)
+
+        return self.stoploss, self.stoplosspercent
+
+    def get_lastprice(self):
+        self.lastprice = float(round(self.df.Close[-1:].values[0], 2))
+        return self.lastprice
 
     def get_data(self):
         if self.source == 'moex':
@@ -154,11 +170,11 @@ class ASSET(object):
 
         if 'EMA5' in columns:
             df['EMA5'] = self.df.EMA5.values
-            plt.plot(df.index, df.EMA5, 'b', label='EMA5')
+            plt.plot(df.index, df.EMA5, 'b', label='EMA5', linestyle='--')
 
         if 'EMA20' in columns:
             df['EMA20'] = self.df.EMA20.values
-            plt.plot(df.index, df.EMA20, 'r', label='EMA20')
+            plt.plot(df.index, df.EMA20, 'r', label='EMA20', linestyle='--')
 
         if 'KC_LOW' in columns:
             df['KC_LOW'] = self.df.KC_LOW.values
@@ -168,6 +184,9 @@ class ASSET(object):
 
         if 'KC_LOW' in columns and 'KC_HIGH' in columns:
             plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.2)
+
+        if self.stoploss > 0:
+            plt.axhline(y=self.stoploss, color='m', linestyle=':', label='StopLoss')
 
         plt.legend()
         plt.grid()

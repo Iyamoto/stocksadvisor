@@ -13,113 +13,125 @@ import configs.alphaconf
 from pprint import pprint
 from datetime import datetime
 import collections
+import fire
 
-min_goal = 0.1
-min_RewardRiskRatio = 50
-atr_multiplier = 5
 
-datatype = 'm'
-asset_type = 'stock'
+class ADVISOR(object):
+    """Stocks Advisor"""
 
-if datatype == 'm':
-    watchdata = configs.alphaconf.symbols_m
-    source = 'moex'
-else:
-    watchdata = configs.alphaconf.symbols
-    source = 'alpha'
+    def __init__(self, datatype='m', asset_type='stock'):
+        self.asset_type = asset_type
 
-key = configs.alphaconf.key
-results = dict()
-for item in watchdata:
+        if datatype == 'm':
+            self.watchdata = configs.alphaconf.symbols_m
+            self.source = 'moex'
+        else:
+            self.watchdata = configs.alphaconf.symbols
+            self.source = 'alpha'
 
-    symbol, entry_price = configs.alphaconf.get_symbol(item)
+        self.key = configs.alphaconf.key
 
-    print(symbol)
+        self.tobuy = dict()
+        self.tosell = dict()
 
-    asset = libs.assets.ASSET(symbol=symbol, source=source, asset_type=asset_type, key=key)
+        self.min_goal = 0.1
+        self.min_RewardRiskRatio = 50
+        self.atr_multiplier = 5
 
-    # Fetch data from the source
-    asset.get_data()
+    def check_watchlist(self):
+        """Do magic"""
 
-    # Calculate some stats
-    asset.get_atr(period=5)
-    asset.get_ema(period=5)
-    asset.get_ema(period=20)
-    asset.get_kc()
+        results = dict()
+        for item in self.watchdata:
 
-    asset.plot()
+            symbol, entry_price = configs.alphaconf.get_symbol(item)
 
-    # Calculate trend
-    trend = asset.detect_trend()
-    print('Trend:', trend)
+            print(symbol)
 
-    # Count anomalies
-    anomalies = asset.count_anomalies()
-    if anomalies > 0:
-        print('Anomaly detected:', anomalies)
+            asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key)
 
-    # Stop loss
-    asset.df['StopLoss'] = asset.df['Close'] - atr_multiplier * asset.df['ATR']
-    asset.df['StopLossPercent'] = 1 - asset.df['StopLoss'] / asset.df['Close']
-    bust = asset.df['StopLossPercent'].max()
+            # Fetch data from the source
+            asset.get_data()
 
-    stop_loss = round(asset.df.Close[-1:].values[0] * (1 - bust), 2)
-    if stop_loss <= 0:
-        continue
+            # Calculate some stats
+            asset.get_lastprice()
+            asset.get_atr(period=5)
+            asset.get_ema(period=5)
+            asset.get_ema(period=20)
+            asset.get_kc()
 
-    print('Last price:', round(asset.df.Close[-1:].values[0], 2))
-    print('Bust:', bust)
-    print('StopLoss:', stop_loss)
-    print()
+            # Stop loss
+            stop_loss, bust = asset.get_stoploss(atr_multiplier=self.atr_multiplier)
+            if stop_loss <= 0:
+                exit('Negative stop-loss')  # Debug
 
-    bust_chance, goal_chance = asset.get_bust_chance(bust=bust, sims=10000, goal=min_goal)
-    print('Bust chance:', round(bust_chance, 2))
-    print('Goal chance:', round(goal_chance, 2))
-    print()
+            print('Last price:', asset.lastprice)
+            print('Bust:', asset.stoplosspercent)
+            print('StopLoss:', asset.stoploss)
+            print()
 
-    # Reward-risk ratio
-    for i in range(1, 5):
-        goal = i * min_goal
-        if bust_chance < 0.001:
-            bust_chance = 0.001
-        asset.df['RewardRiskRatio'] = (goal_chance / i) * goal * asset.df['Close'] / \
-                                      (bust_chance * (asset.df['Close'] - asset.df['StopLoss']))
-        if asset.df['RewardRiskRatio'].mean() > min_RewardRiskRatio:
+            asset.plot()
+
+            # Calculate trend
+            trend = asset.detect_trend()
+            print('Trend:', trend)
+
+            # Count anomalies
+            anomalies = asset.count_anomalies()
+            if anomalies > 0:
+                print('Anomaly detected:', anomalies)
+
+            bust_chance, goal_chance = asset.get_bust_chance(bust=bust, sims=10000, goal=self.min_goal)
+            print('Bust chance:', round(bust_chance, 2))
+            print('Goal chance:', round(goal_chance, 2))
+            print()
+
+            # Reward-risk ratio
+            for i in range(1, 5):
+                goal = i * self.min_goal
+                if bust_chance < 0.001:
+                    bust_chance = 0.001
+                asset.df['RewardRiskRatio'] = (goal_chance / i) * goal * asset.df['Close'] / \
+                                              (bust_chance * (asset.df['Close'] - asset.df['StopLoss']))
+                if asset.df['RewardRiskRatio'].mean() > self.min_RewardRiskRatio:
+                    break
+
+            print('Reward-Risk ratio:', asset.df['RewardRiskRatio'].mean())
+            print('Goal:', goal)
+            print('Exit price:', round(asset.df.Close[-1:].values[0] * (1 + goal), 2))
+            print()
+
+            if goal > self.min_goal:
+                print('RewardRiskRatio is to low')
+                # bust_chance, goal_chance = futures.get_bust_chance(bust=bust, goal=goal)
+                # print('Goal chance:', round(goal_chance, 2))
+                # print()
+            else:
+                results[symbol] = collections.OrderedDict()
+                results[symbol]['last_price'] = asset.lastprice
+                results[symbol]['stop_loss'] = stop_loss
+                results[symbol]['exit_price'] = round(asset.df.Close[-1:].values[0] * (1 + goal), 2)
+                results[symbol]['goal'] = goal
+                results[symbol]['goal_chance'] = round(goal_chance, 2)
+                results[symbol]['bust'] = round(bust, 2)
+                results[symbol]['bust_chance'] = round(bust_chance, 2)
+                results[symbol]['reward_risk_ratio'] = round(asset.df['RewardRiskRatio'].mean(), 2)
+                results[symbol]['trend'] = trend
+                results[symbol]['anomalies'] = float(anomalies)
+
             break
 
-    print('Reward-Risk ratio:', asset.df['RewardRiskRatio'].mean())
-    print('Goal:', goal)
-    print('Exit price:', round(asset.df.Close[-1:].values[0] * (1 + goal), 2))
-    print()
+        print('Results')
+        pprint(results)
 
-    if goal > min_goal:
-        print('RewardRiskRatio is to low')
-        # bust_chance, goal_chance = futures.get_bust_chance(bust=bust, goal=goal)
-        # print('Goal chance:', round(goal_chance, 2))
-        # print()
-    else:
-        results[symbol] = collections.OrderedDict()
-        results[symbol]['last_price'] = float(round(asset.df.Close[-1:].values[0], 2))
-        results[symbol]['stop_loss'] = stop_loss
-        results[symbol]['exit_price'] = round(asset.df.Close[-1:].values[0] * (1 + goal), 2)
-        results[symbol]['goal'] = goal
-        results[symbol]['goal_chance'] = round(goal_chance, 2)
-        results[symbol]['bust'] = round(bust, 2)
-        results[symbol]['bust_chance'] = round(bust_chance, 2)
-        results[symbol]['reward_risk_ratio'] = round(asset.df['RewardRiskRatio'].mean(), 2)
-        results[symbol]['trend'] = trend
-        results[symbol]['anomalies'] = float(anomalies)
+        # # Save results
+        # today = datetime.today()
+        # filename = datatype + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
+        # filepath = os.path.join('..', 'recomendations', filename)
+        # with open(filepath, 'w') as outfile:
+        #     json.dump(results, outfile, indent=4)
 
-    break
 
-print('Results')
-pprint(results)
-
-exit()
-
-# Save results
-today = datetime.today()
-filename = datatype + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
-filepath = os.path.join('..', 'recomendations', filename)
-with open(filepath, 'w') as outfile:
-    json.dump(results, outfile, indent=4)
+if __name__ == "__main__":
+    adv = ADVISOR(datatype='a')
+    fire.Fire(adv.check_watchlist)
