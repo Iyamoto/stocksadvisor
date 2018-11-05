@@ -15,11 +15,13 @@ from alpha_vantage.timeseries import TimeSeries
 import collections
 import json
 
+
 class ASSET(object):
     """Single asset"""
 
     def __init__(self, symbol='', source='moex', asset_type='stock', key='demo', min_goal=0.1,
-                 volumefield='VOLUME', atr_multiplier=5, cacheage=3600*24*5, cachebase=''):
+                 volumefield='VOLUME', atr_multiplier=5, cacheage=3600*24*5, cachebase='',
+                 kc_channel=2):
         """
         source: moex, alpha
         type: stock, futures
@@ -33,6 +35,7 @@ class ASSET(object):
         self.cachebase = cachebase
         self.min_goal = min_goal
         self.atr_multiplier = atr_multiplier
+        self.kc_channel = kc_channel
 
         if self.asset_type == 'stock':
             self.boardid = 'TQBR'
@@ -49,6 +52,8 @@ class ASSET(object):
         self.goalprice = 0
         self.goal_chance = 0
         self.rewardriskratio = 0
+        self.anomaly_filter_up = None
+        self.anomaly_filter_down = None
 
     def __str__(self):
         result = self.get_results()
@@ -80,18 +85,18 @@ class ASSET(object):
         #     raise ValueError('Negative stop-loss')  # Debug
 
         # Calculate trend
-        trend = self.detect_trend()
+        self.detect_trend()
 
         # Count anomalies
-        anomalies = self.count_anomalies()
+        self.count_anomalies()
 
         if printoutput:
             print('Last price:', self.lastprice)
             print('Exit price:', self.goalprice)
             print('Bust:', self.stoplosspercent)
             print('Stop loss:', self.stoploss)
-            print('Trend:', trend)
-            print('Anomalies:', anomalies)
+            print('Trend:', self.trend)
+            print('Anomalies:', self.anomalies)
 
     def get_results(self):
         result = dict()
@@ -227,7 +232,8 @@ class ASSET(object):
 
     def plot(self):
         columns = self.df.columns
-        df = pd.concat([self.df['date'], self.df['Close'], self.df['Volume']], axis=1)
+        df = pd.concat([self.df['date'], self.df['Close'], self.df['Volume'], self.df['BreakoutUp'],
+                        self.df['BreakoutDown']], axis=1)
         df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
         df = df.set_index('date')
         df['Close'] = df.Close.replace(to_replace=0, method='ffill')
@@ -256,13 +262,21 @@ class ASSET(object):
             df['KC_HIGH'] = self.df.KC_HIGH.values
 
         if 'KC_LOW' in columns and 'KC_HIGH' in columns:
-            plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.2)
+            plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.1)
 
         if self.stoploss > 0:
             plt.axhline(y=self.stoploss, color='m', linestyle=':', label='StopLoss')
 
         if self.goalprice > 0:
             plt.axhline(y=self.goalprice, color='c', linestyle=':', label='Goal')
+
+        if self.anomaly_filter_up.any():
+            plt.scatter(df[df['BreakoutUp']].index, df[df['BreakoutUp']].Close, marker='^', color='b',
+                        label='BreakoutUp')
+
+        if self.anomaly_filter_down.any():
+            plt.scatter(df[df['BreakoutDown']].index, df[df['BreakoutDown']].Close, marker='v', color='r',
+                        label='BreakoutDown')
 
         plt.legend()
         plt.grid()
@@ -310,8 +324,8 @@ class ASSET(object):
         return output
 
     def get_kc(self, period=5):
-        self.df['KC_LOW'] = self.df['EMA' + str(period)] - 2 * self.df['ATR']
-        self.df['KC_HIGH'] = self.df['EMA' + str(period)] + 2 * self.df['ATR']
+        self.df['KC_LOW'] = self.df['EMA' + str(period)] - self.kc_channel * self.df['ATR']
+        self.df['KC_HIGH'] = self.df['EMA' + str(period)] + self.kc_channel * self.df['ATR']
 
     def get_bust_chance(self, sims=1000, bust=0.1, goal=0.1, plot=False):
         # Monte-Carlo
@@ -344,25 +358,16 @@ class ASSET(object):
 
         return self.bust_chance, self.goal_chance
 
-    def count_anomalies(self, period=5, ratio=2):
-        low = self.df['Low'].values
-        low = low.astype(float)
-        high = self.df['High'].values
-        high = high.astype(float)
-        close = self.df['Close'].values
-        close = close.astype(float)
-        atr = talib.ATR(high, low, close, timeperiod=period)
-        ema = talib.EMA(close, timeperiod=period)
+    def count_anomalies(self):
 
-        ema = ema[period:]
-        atr = atr[period:]
-        close = close[period:]
+        self.anomaly_filter_up = self.df.Close > (self.df.EMA5 + self.kc_channel * self.df.ATR)
+        self.df['BreakoutUp'] = self.anomaly_filter_up
+        self.anomaly_filter_down = self.df.Close < (self.df.EMA5 - self.kc_channel * self.df.ATR)
+        self.df['BreakoutDown'] = self.anomaly_filter_down
 
-        count = (close < (ema - ratio * atr)).sum()
-        count += (close > (ema + ratio * atr)).sum()
-        self.anomalies = count
+        self.anomalies = self.anomaly_filter_up.sum() + self.anomaly_filter_down.sum()
 
-        return count
+        return self.anomalies
 
     def detect_trend(self):
         # EMA5 > EMA20 means up trend

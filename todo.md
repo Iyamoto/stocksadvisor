@@ -29,3 +29,4 @@ New Concepts in Technical Trading Systems
 https://www.barchart.com/etfs-funds/quotes/SPY/constituents
 https://spbexchange.ru/ru/about/news2.aspx?b=8
 https://www.investing.com/equities/fsk-ees_rts-chart
+https://stockcharts.com/h-sc/ui?s=$NYHL&p=D&yr=3&mn=0&dy=0&id=p19726689647&a=455869215

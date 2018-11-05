@@ -63,7 +63,8 @@ class ADVISOR(object):
             if asset.stoploss <= 0:
                 continue
 
-            # asset.plot()
+            if asset.anomalies > 0:
+                asset.plot()
 
             # Calculate chances
             asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, goal=self.min_goal)
@@ -92,5 +93,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='a')
+    adv = ADVISOR(datatype='m')
     fire.Fire(adv.check_watchlist)
