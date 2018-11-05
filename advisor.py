@@ -44,7 +44,7 @@ class ADVISOR(object):
         results = list()
         for item in self.watchdata:
 
-            symbol, entry_price = configs.alphaconf.get_symbol(item)
+            symbol, entry_price, limit = configs.alphaconf.get_symbol(item)
 
             print()
             print(symbol)
@@ -61,7 +61,7 @@ class ADVISOR(object):
             # Perform static analysis
             asset.static_analysis(printoutput=True)
             if asset.stoploss <= 0:
-                continue
+                asset.stoploss = asset.lastprice * 0.5
 
             # Calculate chances
             asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, goal=self.min_goal)
@@ -77,10 +77,23 @@ class ADVISOR(object):
                 print('Anomaly detected')
                 asset.plot()
 
+            # Can we sell something?
+            if asset.lastprice > entry_price > 0:
+                income = round((asset.lastprice / entry_price - 1) * 100, 2)
+                if income > self.min_goal*100:
+                    self.tosell[symbol] = str(income) + '%'
+                    print('Time to sell, income:', str(income) + '%')
+                    asset.plot()
+
             # Filter out too risky stuff
             if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
                 results.append(asset.get_results())
-                asset.plot()
+
+                # Ignore too expensive stuff
+                if asset.lastprice > limit > 0:
+                    continue
+                else:
+                    asset.plot()
 
         print('Results:')
         pprint(results)

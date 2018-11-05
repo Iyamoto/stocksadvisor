@@ -3,72 +3,76 @@
     "STX",
     "NTAP",
     {
-        "INTC": 50.52
+        "INTC": {"buy": 50.52}
     },
     {
-        "BK": 51.03
+        "BK": {"buy": 51.03}
     },
     "C",
     "JPM",
     "PCAR",
     "CAT",
     {
-        "F": 9.73
+        "F": {"buy": 9.73}
     },
     {
-        "KO": 46.15
+        "KO": {"buy": 46.15, "limit": 43.0}
     },
     {
-        "GE": 12.81
+        "GE": {"buy": 12.81}
     },
     {
-        "GM": 36.36
+        "GM": {"buy": 36.36}
     },
     {
-        "HRB": 26.14
+        "HRB": {"buy": 26.14, "limit": 26.0}
     },
     {
-        "HOG": 42.38
+        "HOG": {"buy": 42.38}
     },
     {
-        "IBM": 143.31
+        "IBM": {"buy": 143.31}
     },
     {
-        "SJM": 112.83
+        "SJM": {"buy": 112.83}
     },
     {
-        "KIM": 16.55
+        "KIM": {"buy": 16.55}
     },
     {
-        "KMI": 17.96
+        "KMI": {"buy": 17.96}
     },
     {
-        "LPL": 9.39
+        "LPL": {"buy": 9.39}
     },
     {
-        "MET": 46.27
+        "MET": {"buy": 46.27}
     },
     {
-        "NFLX": 417.4
+        "NFLX": {"buy": 417.4}
     },
     {
-        "OMC": 68.18
+        "OMC": {"buy": 68.18}
     },
     {
-        "PG": 81.52
+        "PG": {"limit": 80.0}
     },
     "SKM",
-    "SBUX",
     {
-        "TXN": 114.84
+        "SBUX": {"limit": 55.0}
     },
     {
-        "VEON": 2.98
+        "TXN": {"buy": 114.84}
     },
     {
-        "WDC": 59.4
+        "VEON": {"buy": 2.98}
     },
-    "AEE",
+    {
+        "WDC": {"buy": 59.4}
+    },
+    {
+        "AEE": {"limit": 55.0}
+    },
     "QCOM",
     "VIAB",
     "VNO",
@@ -78,7 +82,9 @@
     "CEA",
     "LYB",
     "M",
-    "HCP",
+    {
+    "HCP": {"buy": 28.24, "stop": 23.43, "limit": 30.0}
+    },
     "PEP",
     "FLS",
     "KEP",
@@ -90,37 +96,55 @@
     "CHL",
     "IBN",
     {
-        "ABBV": 97.76
+        "ABBV": {"buy": 97.76}
     },
     "AES",
     "CTL",
     "BAC",
     "ICE",
-    "O",
+    {
+        "O": {"limit": 56.0}
+    },
     "FCX",
-    "WELL",
+    {
+        "WELL": {"limit": 56.0}
+    },
     "SLG",
     "ETP",
     "BBT",
     "LFC",
     "WFC",
     "FTR",
-    "CMCSA",
+    {
+        "CMCSA": {"limit": 32.0}
+    },
     "R",
     "LMT",
     "APD",
     "UPS",
-    "PPL",
+    {
+        "PPL": {"buy": 30.95, "stop": 26.94, "limit": 28.0}
+    },
     "AVGO",
-    "PFE",
+    {
+        "PFE": {"limit": 37.0}
+    },
     "XOM",
     "CSCO",
-    "TGT",
-    "VZ",
+    {
+        "TGT": {"limit": 60.0}
+    },
+    {
+        "VZ": {"limit": 49.0}
+    },
     "BA",
-    "MRK",
+    {
+        "MRK": {"limit": 55.0}
+    },
     "CVX",
-    "ZTS",
+    {
+        "ZTS": {"limit": 65.0}
+    },
     "PSA",
     "GD",
     "RTN",
@@ -133,7 +157,9 @@
     "NWL",
     "GGP",
     "PBCT",
-    "SPG",
+    {
+        "SPG": {"limit": 150.0}
+    },
     "CNP",
     "HST",
     "VTR",
@@ -156,13 +182,17 @@
     "WU",
     "KHC",
     "IPG",
-    "WEC",
+    {
+        "WEC": {"limit": 58.0}
+    },
     "ETR",
     "IP",
     "LB",
     "WMB",
     "ETN",
-    "MO",
+    {
+        "MO": {"limit": 56.0}
+    },
     "OXY",
     "T",
     "ORCL",

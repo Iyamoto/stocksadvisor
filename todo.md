@@ -15,6 +15,7 @@ https://www.morningstar.com/stocks/xnas/intc/quote.html
 https://www.gurufocus.com/stock/WDC
 https://www.reuters.com/finance/stocks/company-news/WDC.O
 https://finviz.com/quote.ashx?t=WDC&ty=c&ta=0&p=w
+https://www.cnbc.com/quotes/?symbol=ETP%27D&tab=ownership
 
 # Research
 
