@@ -63,9 +63,6 @@ class ADVISOR(object):
             if asset.stoploss <= 0:
                 continue
 
-            if asset.anomalies > 0:
-                asset.plot()
-
             # Calculate chances
             asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, goal=self.min_goal)
             print('Bust chance:', round(asset.bust_chance, 2))
@@ -76,10 +73,14 @@ class ADVISOR(object):
                 asset.get_reward_risk_ratio()
                 print('Reward-Risk ratio:', asset.rewardriskratio)
 
+            if asset.anomalies > 0:
+                print('Anomaly detected')
+                asset.plot()
+
             # Filter out too risky stuff
             if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
                 results.append(asset.get_results())
-                asset.plot()
+                # asset.plot()
 
         print('Results:')
         pprint(results)
@@ -93,5 +94,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='m')
+    adv = ADVISOR(datatype='a')
     fire.Fire(adv.check_watchlist)

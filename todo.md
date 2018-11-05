@@ -24,9 +24,14 @@ https://top250.platts.com/Top250Rankings
 Элдер — «Трейдинг с доктором Элдером»
 New Concepts in Technical Trading Systems
 
+https://github.com/matplotlib/mpl_finance
+pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
+mpl_finance candlstick_ohlc
+
 # Info
 
 https://www.barchart.com/etfs-funds/quotes/SPY/constituents
 https://spbexchange.ru/ru/about/news2.aspx?b=8
 https://www.investing.com/equities/fsk-ees_rts-chart
 https://stockcharts.com/h-sc/ui?s=$NYHL&p=D&yr=3&mn=0&dy=0&id=p19726689647&a=455869215
+
