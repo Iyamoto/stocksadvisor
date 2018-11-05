@@ -67,12 +67,9 @@ class ADVISOR(object):
                 exit('Negative stop-loss')  # Debug
 
             print('Last price:', asset.lastprice)
+            print('Exit price:', asset.goalprice)
             print('Bust:', asset.stoplosspercent)
             print('Stop loss:', asset.stoploss)
-            print('Exit price:', asset.goalprice)
-            print()
-
-            asset.plot()
 
             # Calculate trend
             trend = asset.detect_trend()
@@ -82,6 +79,8 @@ class ADVISOR(object):
             anomalies = asset.count_anomalies()
             if anomalies > 0:
                 print('Anomaly detected:', anomalies)
+
+            asset.plot()
 
             bust_chance, goal_chance = asset.get_bust_chance(bust=bust, sims=10000, goal=self.min_goal)
             print('Bust chance:', round(bust_chance, 2))
