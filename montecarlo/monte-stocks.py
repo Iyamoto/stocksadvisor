@@ -20,7 +20,7 @@ min_RewardRiskRatio = 50
 atr_multiplier = 5
 
 results = dict()
-datatype = 'a'
+datatype = 'm'
 
 if datatype == 'm':
     watchdata = configs.alphaconf.symbols_m
@@ -53,17 +53,7 @@ for item in watchdata:
     # Calculate trend
     futures.get_ema(period=20)
 
-    futures.df['UpTrend'] = futures.df.EMA5.fillna(0) >= futures.df.EMA20.fillna(0)
-    futures.df['DownTrend'] = futures.df.EMA5.fillna(0) <= futures.df.EMA20.fillna(0)
-
-    # EMA5 > EMA20
-    if futures.df['UpTrend'].sum() >= 0.85 * len(futures.df['UpTrend']):
-        trend = 'Up'
-    elif futures.df['DownTrend'].sum() >= 0.85 * len(futures.df['DownTrend']):
-        trend = 'Down'
-    else:
-        trend = 'Sideways'
-
+    trend = futures.detect_trend()
     print('Trend:', trend)
 
     futures.get_kc()
@@ -71,17 +61,15 @@ for item in watchdata:
     anomalies = futures.count_anomalies()
     if anomalies > 0:
         print('Anomaly detected', anomalies)
-        futures.plot()
-        # exit()
 
-    futures.df.pop('Open')
-    futures.df.pop('High')
-    futures.df.pop('Low')
+    # futures.df.pop('Open')
+    # futures.df.pop('High')
+    # futures.df.pop('Low')
 
     # futures.plot()
 
-    futures.df.pop('KC_LOW')
-    futures.df.pop('KC_HIGH')
+    # futures.df.pop('KC_LOW')
+    # futures.df.pop('KC_HIGH')
 
     # Stop loss
     futures.df['StopLoss'] = futures.df['Close'] - atr_multiplier * futures.df['ATR']

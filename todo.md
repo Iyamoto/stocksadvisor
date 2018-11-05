@@ -2,30 +2,19 @@
 
 # To buy
 
-Мосбиржа?
-
-
+# Checklist
 
 Username:	vejameg@banit.me
 Password:	Teramemi0st$
 
 https://getnada.com/msg
-https://www.zacks.com/pfp/report/4400C3B3724A37F8D39F90DBCD5DC519/?adid=ZP_RESEARCH_REP_ZER&alert=ZRMODULE
 
-INTC
-https://www.zacks.com/zer/report/INTC
+https://www.zacks.com/zer/report/WDC
 https://www.morningstar.com/stocks/xnas/intc/quote.html
 
-AVGO - https://www.zacks.com/zer/report/AVGO
-
-# Checklist
-
 https://www.gurufocus.com/stock/WDC
-https://www.morningstar.com/stocks/xnas/wdc/quote.html
 https://www.reuters.com/finance/stocks/company-news/WDC.O
 https://finviz.com/quote.ashx?t=WDC&ty=c&ta=0&p=w
-https://www.zacks.com/stock/quote/WDC?q=WDC
-https://www.zacks.com/zer/report/WDC
 
 # Research
 
