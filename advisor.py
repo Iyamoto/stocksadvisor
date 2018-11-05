@@ -18,13 +18,14 @@ import fire
 class ADVISOR(object):
     """Stocks Advisor"""
 
-    def __init__(self, datatype='m', asset_type='stock'):
+    def __init__(self, datatype='m', asset_type='stock', plot_anomaly=False):
         self.asset_type = asset_type
+        self.plot_anomaly = plot_anomaly
 
         if datatype == 'm':
             self.watchdata = configs.alphaconf.symbols_m
             self.source = 'moex'
-        else:
+        if datatype == 'a':
             self.watchdata = configs.alphaconf.symbols
             self.source = 'alpha'
 
@@ -73,14 +74,14 @@ class ADVISOR(object):
                 asset.get_reward_risk_ratio()
                 print('Reward-Risk ratio:', asset.rewardriskratio)
 
-            if asset.anomalies > 0:
+            if asset.anomalies > 0 and self.plot_anomaly:
                 print('Anomaly detected')
                 asset.plot()
 
             # Filter out too risky stuff
             if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
                 results.append(asset.get_results())
-                # asset.plot()
+                asset.plot()
 
         print('Results:')
         pprint(results)
@@ -94,5 +95,5 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='a')
+    adv = ADVISOR(datatype='a', plot_anomaly=False)
     fire.Fire(adv.check_watchlist)
