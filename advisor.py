@@ -48,6 +48,9 @@ class ADVISOR(object):
             print()
             print(symbol)
 
+            if symbol == 'TCS':
+                continue
+
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
                                       min_goal=self.min_goal, atr_multiplier=self.atr_multiplier)
 
@@ -71,9 +74,7 @@ class ADVISOR(object):
             print('Reward-Risk ratio:', asset.rewardriskratio)
 
             # Filter out too risky stuff
-            if asset.rewardriskratio < self.min_RewardRiskRatio:
-                print('RewardRiskRatio is to low')
-            else:
+            if asset.rewardriskratio >= self.min_RewardRiskRatio:
                 results.append(asset.get_results())
 
         print('Results:')

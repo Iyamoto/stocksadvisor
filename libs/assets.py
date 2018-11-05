@@ -74,6 +74,8 @@ class ASSET(object):
         # Stop loss
         stop_loss, bust = self.get_stoploss()
         if stop_loss <= 0:
+            self.get_results()
+            print(self)
             raise ValueError('Negative stop-loss')  # Debug
 
         # Calculate trend
@@ -153,7 +155,11 @@ class ASSET(object):
         retry = 0
         while True:
             try:
-                data, meta_data = ts.get_daily_adjusted(symbol=self.symbol, outputsize=size)
+                if self.symbol == 'TCS':
+                    symbol = 'LON:TCS'
+                else:
+                    symbol = self.symbol
+                data, meta_data = ts.get_daily_adjusted(symbol=symbol, outputsize=size)
                 break
             except:
                 retry += 1
