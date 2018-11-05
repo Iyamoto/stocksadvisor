@@ -12,12 +12,14 @@ import matplotlib.pyplot as plt
 import talib
 import pandas_montecarlo
 from alpha_vantage.timeseries import TimeSeries
+import collections
+import json
 
 class ASSET(object):
     """Single asset"""
 
-    def __init__(self, symbol='', source='moex', asset_type='stock', key='demo',
-                 volumefield='VOLUME', cacheage=3600*24*5, cachebase=''):
+    def __init__(self, symbol='', source='moex', asset_type='stock', key='demo', min_goal=0.1,
+                 volumefield='VOLUME', atr_multiplier=5, cacheage=3600*24*5, cachebase=''):
         """
         source: moex, alpha
         type: stock, futures
@@ -29,6 +31,8 @@ class ASSET(object):
         self.cacheage = cacheage
         self.key = key
         self.cachebase = cachebase
+        self.min_goal = min_goal
+        self.atr_multiplier = atr_multiplier
 
         if self.asset_type == 'stock':
             self.boardid = 'TQBR'
@@ -41,15 +45,72 @@ class ASSET(object):
         self.lastprice = 0
         self.stoploss = 0
         self.stoplosspercent = 0  # AKA Bust
+        self.bust_chance = 0
         self.goalprice = 0
+        self.goal_chance = 0
+        self.rewardriskratio = 0
 
-    def get_goalprice(self, profit=0.1):
-        self.goalprice = round(self.lastprice * (1 + profit), 2)
+    def __str__(self):
+        result = self.get_results()
+        out = json.dumps(result, indent=4)
+        return out
+
+    def get_reward_risk_ratio(self):
+        self.df['RewardRiskRatio'] = self.goal_chance * self.min_goal * self.df['Close'] / \
+                                      (self.bust_chance * (self.df['Close'] - self.df['StopLoss']))
+
+        self.rewardriskratio = round(self.df['RewardRiskRatio'].mean(), 2)
+        return self.rewardriskratio
+
+    def static_analysis(self, printoutput=True):
+        # Calculate some stats
+        self.get_lastprice()
+        self.get_goalprice()
+        self.get_atr(period=5)
+        self.get_ema(period=5)
+        self.get_ema(period=20)
+        self.get_kc()
+
+        # Stop loss
+        stop_loss, bust = self.get_stoploss()
+        if stop_loss <= 0:
+            raise ValueError('Negative stop-loss')  # Debug
+
+        # Calculate trend
+        trend = self.detect_trend()
+
+        # Count anomalies
+        anomalies = self.count_anomalies()
+
+        if printoutput:
+            print('Last price:', self.lastprice)
+            print('Exit price:', self.goalprice)
+            print('Bust:', self.stoplosspercent)
+            print('Stop loss:', self.stoploss)
+            print('Trend:', trend)
+            print('Anomalies:', anomalies)
+
+    def get_results(self):
+        result = dict()
+        result[self.symbol] = collections.OrderedDict()
+        result[self.symbol]['last_price'] = self.lastprice
+        result[self.symbol]['stop_loss'] = self.stoploss
+        result[self.symbol]['exit_price'] = self.goalprice
+        result[self.symbol]['success_chance'] = round(self.goal_chance, 2)
+        result[self.symbol]['bust'] = round(self.stoplosspercent, 2)
+        result[self.symbol]['bust_chance'] = round(self.bust_chance, 2)
+        result[self.symbol]['reward_risk_ratio'] = self.rewardriskratio
+        result[self.symbol]['trend'] = self.trend
+        result[self.symbol]['anomalies'] = float(self.anomalies)
+        return result
+
+    def get_goalprice(self):
+        self.goalprice = round(self.lastprice * (1 + self.min_goal), 2)
         return self.goalprice
 
-    def get_stoploss(self, atr_multiplier=5):
+    def get_stoploss(self):
         """Returns stop loss and stop loss percent"""
-        self.df['StopLoss'] = self.df['Close'] - atr_multiplier * self.df['ATR']
+        self.df['StopLoss'] = self.df['Close'] - self.atr_multiplier * self.df['ATR']
         self.df['StopLossPercent'] = 1 - self.df['StopLoss'] / self.df['Close']
         self.stoplosspercent = self.df['StopLossPercent'].max()
         self.stoploss = round(self.df.Close[-1:].values[0] * (1 - self.stoplosspercent), 2)
@@ -256,8 +317,8 @@ class ASSET(object):
         mc = self.df['Return'].montecarlo(sims=sims, bust=-1 * bust, goal=goal)
 
         # pprint(mc.stats)
-        bust_chance = mc.stats['bust']
-        goal_chance = mc.stats['goal']
+        self.bust_chance = mc.stats['bust']
+        self.goal_chance = mc.stats['goal']
 
         # print(mc.data[1].describe())
         # print(mc.data)
@@ -265,7 +326,7 @@ class ASSET(object):
         if plot:
             mc.plot(title=self.symbol, figsize=(15, 5))
 
-        return bust_chance, goal_chance
+        return self.bust_chance, self.goal_chance
 
     def count_anomalies(self, period=5, ratio=2):
         low = self.df['Low'].values
