@@ -82,7 +82,7 @@ class ADVISOR(object):
 
         # Save results
         today = datetime.today()
-        filename = self.datatype + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
+        filename = self.source + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
         filepath = os.path.join('', 'recomendations', filename)
         with open(filepath, 'w') as outfile:
             json.dump(results, outfile, indent=4)

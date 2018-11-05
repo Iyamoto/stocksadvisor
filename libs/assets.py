@@ -114,7 +114,7 @@ class ASSET(object):
         """Returns stop loss and stop loss percent"""
         self.df['StopLoss'] = self.df['Close'] - self.atr_multiplier * self.df['ATR']
         self.df['StopLossPercent'] = 1 - self.df['StopLoss'] / self.df['Close']
-        self.stoplosspercent = self.df['StopLossPercent'].max()
+        self.stoplosspercent = self.df['StopLossPercent'].mean()
         self.stoploss = round(self.df.Close[-1:].values[0] * (1 - self.stoplosspercent), 2)
 
         return self.stoploss, self.stoplosspercent
