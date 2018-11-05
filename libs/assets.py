@@ -14,6 +14,7 @@ import pandas_montecarlo
 from alpha_vantage.timeseries import TimeSeries
 import collections
 import json
+import numpy as np
 
 
 class ASSET(object):
@@ -54,6 +55,7 @@ class ASSET(object):
         self.rewardriskratio = 0
         self.anomaly_filter_up = None
         self.anomaly_filter_down = None
+        self.trendline = None
 
     def __str__(self):
         result = self.get_results()
@@ -242,7 +244,7 @@ class ASSET(object):
         plt.subplot2grid((4, 1), (0, 0), rowspan=2)
         plt.title(self.symbol + ' RRR: ' + str(self.rewardriskratio))
 
-        plt.plot(df.index, df.Close, 'k', label='Price')
+        plt.plot(df.index, df.Close, 'k', label='Price', linewidth=2.0)
 
         if 'ATR' in columns:
             df['ATR'] = self.df.ATR.values
@@ -277,6 +279,12 @@ class ASSET(object):
         if self.anomaly_filter_down.any():
             plt.scatter(df[df['BreakoutDown']].index, df[df['BreakoutDown']].Close, marker='v', color='r',
                         label='BreakoutDown')
+
+        if self.trendline is not None:
+            polynomial = np.poly1d(self.trendline)
+            x = np.linspace(0, len(df.index)-1, num=100)
+            y = polynomial(x)
+            plt.plot(df.index, y, color='g', label='Trend', linestyle='-.', linewidth=1.0)
 
         plt.legend()
         plt.grid()
@@ -382,4 +390,12 @@ class ASSET(object):
             trend = 'Sideways'
 
         self.trend = trend
+
+        # Fit poly
+        def trendline(data, order=1):
+            coeffs = np.polyfit(data.index.values, list(data), order)
+            return coeffs
+
+        self.trendline = trendline(self.df['Close'])
+
         return trend
