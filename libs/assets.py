@@ -234,7 +234,7 @@ class ASSET(object):
         df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
         fig = plt.figure(figsize=(15, 8))
         plt.subplot2grid((4, 1), (0, 0), rowspan=2)
-        plt.title(self.symbol)
+        plt.title(self.symbol + ' RRR: ' + str(self.rewardriskratio))
 
         plt.plot(df.index, df.Close, 'k', label='Price')
 
@@ -336,8 +336,12 @@ class ASSET(object):
         if plot:
             mc.plot(title=self.symbol, figsize=(15, 5))
 
+        # Paranoid on
         if self.bust_chance < 0.01:
             self.bust_chance = 0.01
+        if self.goal_chance > 0.9:
+            self.goal_chance = 0.9
+
         return self.bust_chance, self.goal_chance
 
     def count_anomalies(self, period=5, ratio=2):
