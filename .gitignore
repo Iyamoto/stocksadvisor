@@ -6,4 +6,6 @@ configs/*.cfg
 history
 history-m
 cache-m
+advice.cmd
+recomendations/*
 
