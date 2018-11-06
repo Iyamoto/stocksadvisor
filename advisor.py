@@ -28,22 +28,15 @@ class ADVISOR(object):
             self.watchdata = configs.alphaconf.symbols
             self.source = 'alpha'
         if datatype == 'mc':
-            self.watchdata = [{"USD000UTSTOM": {"limit": 70.0}}]
+            self.watchdata = configs.alphaconf.symbols_mc
             self.source = 'moex'
             self.asset_type = 'currency'
         if datatype == 'mf':
-            self.watchdata = [
-                {"SiZ8": {"limit": 70000.0}},
-                {"BRZ8": {"limit": 75.0}}
-            ]
+            self.watchdata = configs.alphaconf.symbols_mf
             self.source = 'moex'
             self.asset_type = 'futures'
         if datatype == 'me':
-            self.watchdata = [
-                {"FXIT": {"limit": 70.0}},
-                {"FXRU": {"limit": 100.0}},
-                {"FXGD": {"limit": 9.0}}
-            ]
+            self.watchdata = configs.alphaconf.symbols_me
             self.source = 'moex'
             self.asset_type = 'etf'
 
@@ -56,6 +49,9 @@ class ADVISOR(object):
         self.min_RewardRiskRatio = 10
         self.atr_multiplier = 5
         self.accepted_goal_chance = 0.33
+
+    def correlation(self):
+        pass
 
     def check_watchlist(self):
         """Do magic"""
