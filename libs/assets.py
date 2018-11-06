@@ -282,7 +282,7 @@ class ASSET(object):
 
         if self.trendline is not None:
             polynomial = np.poly1d(self.trendline)
-            x = np.linspace(0, len(df.index)-1, num=100)
+            x = np.linspace(0, len(df.index)-1, num=len(df.index))
             y = polynomial(x)
             plt.plot(df.index, y, color='g', label='Trend', linestyle='-.', linewidth=1.0)
 

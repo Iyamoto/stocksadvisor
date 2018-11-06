@@ -13,15 +13,17 @@
         "PIKK": {"buy": 353.115}
     },
     {
-        "POLY": {"buy": 550.258}
+        "POLY": {"limit": 600.0}
     },
     {
-        "MTSS": {"buy": 251.889}
+        "MTSS": {"limit": 270.0}
     },
     {
-        "SIBN": {"buy": 339.4}
+        "SIBN": {"limit": 350.0}
     },
-    "RUAL",
+    {
+        "RUAL": {"limit": 25.0}
+    },
     {
         "MOEX": {"buy": 98.722}
     },
@@ -29,19 +31,19 @@
         "MSTT": {"buy": 105.082}
     },
     {
-        "DSKY": {"buy": 87.651}
+        "DSKY": {"limit": 90.0}
     },
     {
         "LSRG": {"buy": 758.82}
     },
     {
-        "RSTI": {"buy": 0.72607}
+        "RSTI": {"buy": 0.8}
     },
     {
-        "BSPB": {"buy": 47.333}
+        "BSPB": {"buy": 47.333, "limit": 55.0}
     },
     {
-        "VTBR": {"buy": 0.042866}
+        "VTBR": {"buy": 0.042866, "limit": 0.055}
     },
     "AFKS",
     "MRKV",
@@ -51,22 +53,42 @@
     "RTKMP",
     "NMTP",
     "BANE",
-    "BANEP",
-    "TATN",
+    {
+        "BANEP": {
+            "limit": 1500.0
+        }
+    },
+    {
+        "TATN": {"limit": 650.0}
+    },
     "OGKB",
     "FIVE",
     "TTLK",
     "IRKT",
     "TGKA",
-    "PHOR",
-    "CHMF",
-    "FEES",
+    {
+        "PHOR": {"limit": 2300.0}
+    },
+    {
+        "CHMF": {"limit": 1000.0}
+    },
+    {
+        "FEES": {"limit": 0.2}
+    },
     "ENRU",
     "HYDR",
-    "SNGSP",
+    {
+        "SNGSP": {"limit": 33.0}
+    },
     "MTLRP",
     "MRKP",
     "SBERP",
     "LNTA",
-    "MAGN"
+    "MAGN",
+    {
+        "ALRS": {"limit": 90.0}
+    },
+    {
+        "NLMK": {"limit": 140.0}
+    }
 ]
