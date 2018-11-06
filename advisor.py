@@ -8,6 +8,7 @@ import os
 import json
 sys.path.insert(0, os.path.abspath('..'))
 import libs.assets
+import pandas as pd
 import configs.alphaconf
 from pprint import pprint
 from datetime import datetime
@@ -54,8 +55,22 @@ class ADVISOR(object):
             asset_type = 'etf'
         return watchdata, source, asset_type
 
-    def correlation(self, base='mc:USD000UTSTOM', symbol='mf:SiZ8'):
-        pass
+    def correlation(self, datatype1='mc', symbol1='USD000UTSTOM',
+                    datatype2='me', symbol2='FXRU'):
+        watchdata1, source1, asset_type1 = self.get_assettype(datatype=datatype1)
+        watchdata2, source2, asset_type2 = self.get_assettype(datatype=datatype2)
+
+        asset1 = libs.assets.ASSET(symbol=symbol1, source=source1, asset_type=asset_type1, key=self.key)
+        asset2 = libs.assets.ASSET(symbol=symbol2, source=source2, asset_type=asset_type2, key=self.key)
+
+        asset1.get_data()
+        asset2.get_data()
+
+        df = pd.DataFrame()
+        df['A'] = asset1.df['Close']
+        df['B'] = asset2.df['Close']
+
+        print(df.corr())
 
     def check_watchlist(self):
         """Do magic"""
@@ -131,6 +146,7 @@ class ADVISOR(object):
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         adv = ADVISOR(datatype='me', plot_anomaly=False)
-        fire.Fire(adv.check_watchlist)
+        # fire.Fire(adv.check_watchlist)
+        fire.Fire(adv.correlation)
     else:
         fire.Fire(ADVISOR)
