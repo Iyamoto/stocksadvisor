@@ -53,7 +53,7 @@ class ADVISOR(object):
                 continue
 
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
-                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier)
+                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*24*3)
 
             # Fetch data from the source
             asset.get_data()
@@ -107,5 +107,8 @@ class ADVISOR(object):
 
 
 if __name__ == "__main__":
-    adv = ADVISOR(datatype='a', plot_anomaly=False)
-    fire.Fire(adv.check_watchlist)
+    if "PYCHARM_HOSTED" in os.environ:
+        adv = ADVISOR(datatype='m', plot_anomaly=False)
+        fire.Fire(adv.check_watchlist)
+    else:
+        fire.Fire(ADVISOR)

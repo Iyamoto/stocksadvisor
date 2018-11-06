@@ -83,7 +83,7 @@
     "LYB",
     "M",
     {
-    "HCP": {"buy": 28.24, "stop": 23.43, "limit": 30.0}
+    "HCP": {"buy": 28.24, "stop": 23.43, "limit": 26.0}
     },
     "PEP",
     "FLS",
@@ -155,7 +155,6 @@
     "ED",
     "XRX",
     "NWL",
-    "GGP",
     "PBCT",
     {
         "SPG": {"limit": 150.0}

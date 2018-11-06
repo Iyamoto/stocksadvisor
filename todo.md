@@ -17,6 +17,10 @@ https://www.reuters.com/finance/stocks/company-news/WDC.O
 https://finviz.com/quote.ashx?t=WDC&ty=c&ta=0&p=w
 https://www.cnbc.com/quotes/?symbol=ETP%27D&tab=ownership
 
+# Market state
+http://www.cboe.com/vix
+https://stockcharts.com/h-sc/ui?s=$NYHL&p=D&yr=3&mn=0&dy=0&id=p19726689647&a=455869215
+
 # Research
 
 Открытие видеокурс
@@ -34,5 +38,3 @@ mpl_finance candlstick_ohlc
 https://www.barchart.com/etfs-funds/quotes/SPY/constituents
 https://spbexchange.ru/ru/about/news2.aspx?b=8
 https://www.investing.com/equities/fsk-ees_rts-chart
-https://stockcharts.com/h-sc/ui?s=$NYHL&p=D&yr=3&mn=0&dy=0&id=p19726689647&a=455869215
-
