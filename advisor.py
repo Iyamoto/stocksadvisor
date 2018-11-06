@@ -21,7 +21,7 @@ class ADVISOR(object):
         self.asset_type = asset_type
         self.plot_anomaly = plot_anomaly
 
-        if datatype == 'm':
+        if datatype == 'ms':
             self.watchdata = configs.alphaconf.symbols_m
             self.source = 'moex'
         if datatype == 'a':
@@ -38,6 +38,14 @@ class ADVISOR(object):
             ]
             self.source = 'moex'
             self.asset_type = 'futures'
+        if datatype == 'me':
+            self.watchdata = [
+                {"FXIT": {"limit": 70.0}},
+                {"FXRU": {"limit": 100.0}},
+                {"FXGD": {"limit": 9.0}}
+            ]
+            self.source = 'moex'
+            self.asset_type = 'etf'
 
         self.key = configs.alphaconf.key
 
@@ -73,6 +81,9 @@ class ADVISOR(object):
             asset.static_analysis(printoutput=True)
             if asset.stoploss <= 0:
                 asset.stoploss = asset.lastprice * 0.5
+
+            # print(asset.df)
+            # exit()
 
             # Calculate chances
             asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, goal=self.min_goal)
@@ -121,7 +132,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='mf', plot_anomaly=False)
+        adv = ADVISOR(datatype='me', plot_anomaly=False)
         fire.Fire(adv.check_watchlist)
     else:
         fire.Fire(ADVISOR)

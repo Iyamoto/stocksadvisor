@@ -45,6 +45,8 @@ class ASSET(object):
         if self.asset_type == 'currency':
             self.boardid = 'CETS'
             self.volumefield = 'VOLRUR'
+        if self.asset_type == 'etf':
+            self.boardid = 'EQTD'
 
         self.df = None
         self.trend = ''
@@ -140,6 +142,8 @@ class ASSET(object):
         if self.source == 'alpha':
             self.get_prices_from_alpha(key=self.key, cachedir=os.path.join(self.cachebase, 'cache'))
             self.fix_alpha_columns()
+        self.df = self.df.fillna(method='ffill')
+        self.df = self.df.fillna(method='bfill')
 
     def get_prices_from_alpha(self, key='', cachedir='cache'):
         if not os.path.isdir(cachedir):
