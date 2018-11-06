@@ -27,6 +27,10 @@ class ADVISOR(object):
         if datatype == 'a':
             self.watchdata = configs.alphaconf.symbols
             self.source = 'alpha'
+        if datatype == 'mc':
+            self.watchdata = [{"USD000UTSTOM": {"limit": 70.0}}]
+            self.source = 'moex'
+            self.asset_type = 'currency'
 
         self.key = configs.alphaconf.key
 
@@ -75,7 +79,7 @@ class ADVISOR(object):
 
             if asset.anomalies > 0 and self.plot_anomaly:
                 print('Anomaly detected')
-                asset.plot()
+                asset.plot('Anomaly:')
 
             # Can we sell something?
             if asset.lastprice > entry_price > 0:
@@ -83,7 +87,7 @@ class ADVISOR(object):
                 if income > self.min_goal*100:
                     self.tosell[symbol] = str(income) + '%'
                     print('Time to sell, income:', str(income) + '%')
-                    asset.plot()
+                    asset.plot('Sell:')
 
             # Filter out too risky stuff
             if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
@@ -93,7 +97,9 @@ class ADVISOR(object):
                 if asset.lastprice > limit > 0:
                     continue
                 else:
-                    asset.plot()
+                    asset.plot('Buy:')
+
+        asset.plot('Debug:')
 
         print('Results:')
         pprint(results)
@@ -108,7 +114,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='a', plot_anomaly=False)
+        adv = ADVISOR(datatype='mc', plot_anomaly=False)
         fire.Fire(adv.check_watchlist)
     else:
         fire.Fire(ADVISOR)

@@ -42,6 +42,9 @@ class ASSET(object):
             self.boardid = 'TQBR'
         if self.asset_type == 'futures':
             self.boardid = 'RFUD'
+        if self.asset_type == 'currency':
+            self.boardid = 'CETS'
+            self.volumefield = 'VOLRUR'
 
         self.df = None
         self.trend = ''
@@ -232,7 +235,7 @@ class ASSET(object):
 
         return data
 
-    def plot(self):
+    def plot(self, msg=''):
         columns = self.df.columns
         df = pd.concat([self.df['date'], self.df['Close'], self.df['Volume'], self.df['BreakoutUp'],
                         self.df['BreakoutDown']], axis=1)
@@ -242,7 +245,7 @@ class ASSET(object):
         df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
         fig = plt.figure(figsize=(15, 8))
         plt.subplot2grid((4, 1), (0, 0), rowspan=2)
-        plt.title(self.symbol + ' RRR: ' + str(self.rewardriskratio))
+        plt.title(msg + ' ' + self.symbol + ' RRR: ' + str(self.rewardriskratio))
 
         plt.plot(df.index, df.Close, 'k', label='Price', linewidth=2.0)
 
