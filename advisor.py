@@ -56,7 +56,7 @@ class ADVISOR(object):
         return watchdata, source, asset_type
 
     def correlation(self, datatype1='mc', symbol1='USD000UTSTOM',
-                    datatype2='me', symbol2='FXRU'):
+                    datatype2='me', symbol2='FXGD'):
         watchdata1, source1, asset_type1 = self.get_assettype(datatype=datatype1)
         watchdata2, source2, asset_type2 = self.get_assettype(datatype=datatype2)
 
