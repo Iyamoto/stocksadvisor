@@ -31,6 +31,13 @@ class ADVISOR(object):
             self.watchdata = [{"USD000UTSTOM": {"limit": 70.0}}]
             self.source = 'moex'
             self.asset_type = 'currency'
+        if datatype == 'mf':
+            self.watchdata = [
+                {"SiZ8": {"limit": 70000.0}},
+                {"BRZ8": {"limit": 75.0}}
+            ]
+            self.source = 'moex'
+            self.asset_type = 'futures'
 
         self.key = configs.alphaconf.key
 
@@ -99,7 +106,7 @@ class ADVISOR(object):
                 else:
                     asset.plot('Buy:')
 
-        asset.plot('Debug:')
+            asset.plot('Debug:')
 
         print('Results:')
         pprint(results)
@@ -114,7 +121,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='mc', plot_anomaly=False)
+        adv = ADVISOR(datatype='mf', plot_anomaly=False)
         fire.Fire(adv.check_watchlist)
     else:
         fire.Fire(ADVISOR)
