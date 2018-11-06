@@ -17,29 +17,10 @@ import fire
 class ADVISOR(object):
     """Stocks Advisor"""
 
-    def __init__(self, datatype='m', asset_type='stock', plot_anomaly=False):
-        self.asset_type = asset_type
+    def __init__(self, datatype='m', plot_anomaly=False):
         self.plot_anomaly = plot_anomaly
 
-        if datatype == 'ms':
-            self.watchdata = configs.alphaconf.symbols_m
-            self.source = 'moex'
-        if datatype == 'a':
-            self.watchdata = configs.alphaconf.symbols
-            self.source = 'alpha'
-        if datatype == 'mc':
-            self.watchdata = configs.alphaconf.symbols_mc
-            self.source = 'moex'
-            self.asset_type = 'currency'
-        if datatype == 'mf':
-            self.watchdata = configs.alphaconf.symbols_mf
-            self.source = 'moex'
-            self.asset_type = 'futures'
-        if datatype == 'me':
-            self.watchdata = configs.alphaconf.symbols_me
-            self.source = 'moex'
-            self.asset_type = 'etf'
-
+        self.watchdata, self.source, self.asset_type = self.get_assettype(datatype=datatype)
         self.key = configs.alphaconf.key
 
         self.tobuy = dict()
@@ -50,7 +31,30 @@ class ADVISOR(object):
         self.atr_multiplier = 5
         self.accepted_goal_chance = 0.33
 
-    def correlation(self):
+    def get_assettype(self, datatype='ms'):
+        if datatype == 'ms':
+            watchdata = configs.alphaconf.symbols_m
+            source = 'moex'
+            asset_type = 'stock'
+        if datatype == 'a':
+            watchdata = configs.alphaconf.symbols
+            source = 'alpha'
+            asset_type = 'stock'
+        if datatype == 'mc':
+            watchdata = configs.alphaconf.symbols_mc
+            source = 'moex'
+            asset_type = 'currency'
+        if datatype == 'mf':
+            watchdata = configs.alphaconf.symbols_mf
+            source = 'moex'
+            asset_type = 'futures'
+        if datatype == 'me':
+            watchdata = configs.alphaconf.symbols_me
+            source = 'moex'
+            asset_type = 'etf'
+        return watchdata, source, asset_type
+
+    def correlation(self, base='mc:USD000UTSTOM', symbol='mf:SiZ8'):
         pass
 
     def check_watchlist(self):
@@ -112,8 +116,6 @@ class ADVISOR(object):
                     continue
                 else:
                     asset.plot('Buy:')
-
-            asset.plot('Debug:')
 
         print('Results:')
         pprint(results)
