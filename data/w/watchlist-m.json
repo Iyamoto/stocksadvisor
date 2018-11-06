@@ -50,7 +50,9 @@
     {
         "AFKS": {"limit": 15.0}
     },
-    "MRKV",
+    {
+        "MRKV": {"limit": 0.12}
+    },
     {
         "LSNGP": {"limit": 90.0}
     },
@@ -83,7 +85,9 @@
     {
         "TTLK": {"limit": 0.2}
     },
-    "IRKT",
+    {
+        "IRKT": {"limit": 40.0}
+    },
     {
         "TGKA": {"limit": 0.02}
     },
@@ -114,7 +118,6 @@
     {
         "SBERP": {"limit": 150.0}
     },
-    "LNTA",
     {
         "MAGN": {"limit": 42.0}
     },
