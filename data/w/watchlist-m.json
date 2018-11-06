@@ -1,13 +1,15 @@
 [
-    "AFLT",
     {
-        "GMKN": {"buy": 10980.11}
+        "AFLT": {"limit": 130.0}
     },
     {
-        "PRTK": {"buy": 81.1411}
+        "GMKN": {"buy": 10980.11, "limit": 10500.0}
     },
     {
-        "SBER": {"buy": 192.3245}
+        "PRTK": {"buy": 81.1411, "limit": 100.0}
+    },
+    {
+        "SBER": {"buy": 192.3245, "limit": 190.0}
     },
     {
         "PIKK": {"buy": 353.115}
@@ -28,13 +30,13 @@
         "MOEX": {"buy": 98.722}
     },
     {
-        "MSTT": {"buy": 105.082}
+        "MSTT": {"buy": 105.082, "limit": 140.0}
     },
     {
         "DSKY": {"limit": 90.0}
     },
     {
-        "LSRG": {"buy": 758.82}
+        "LSRG": {"buy": 677.3, "limit": 700.0}
     },
     {
         "RSTI": {"buy": 0.8}
@@ -45,14 +47,25 @@
     {
         "VTBR": {"buy": 0.042866, "limit": 0.055}
     },
-    "AFKS",
+    {
+        "AFKS": {"limit": 15.0}
+    },
     "MRKV",
-    "LSNG",
-    "LSNGP",
-    "RTKM",
-    "RTKMP",
-    "NMTP",
-    "BANE",
+    {
+        "LSNGP": {"limit": 90.0}
+    },
+    {
+        "RTKM": {"limit": 90.0}
+    },
+    {
+        "RTKMP": {"limit": 90.0}
+    },
+    {
+        "NMTP": {"limit": 7.0}
+    },
+    {
+        "BANE": {"limit": 2200.0}
+    },
     {
         "BANEP": {
             "limit": 1500.0
@@ -61,11 +74,19 @@
     {
         "TATN": {"limit": 650.0}
     },
-    "OGKB",
-    "FIVE",
-    "TTLK",
+    {
+        "OGKB": {"limit": 0.6}
+    },
+    {
+        "FIVE": {"limit": 1800.0}
+    },
+    {
+        "TTLK": {"limit": 0.2}
+    },
     "IRKT",
-    "TGKA",
+    {
+        "TGKA": {"limit": 0.02}
+    },
     {
         "PHOR": {"limit": 2300.0}
     },
@@ -75,20 +96,35 @@
     {
         "FEES": {"limit": 0.2}
     },
-    "ENRU",
-    "HYDR",
+    {
+        "ENRU": {"limit": 2.3}
+    },
+    {
+        "HYDR": {"limit": 1.0}
+    },
     {
         "SNGSP": {"limit": 33.0}
     },
-    "MTLRP",
-    "MRKP",
-    "SBERP",
+    {
+        "MTLRP": {"limit": 130.0}
+    },
+    {
+        "MRKP": {"limit": 0.25}
+    },
+    {
+        "SBERP": {"limit": 150.0}
+    },
     "LNTA",
-    "MAGN",
+    {
+        "MAGN": {"limit": 42.0}
+    },
     {
         "ALRS": {"limit": 90.0}
     },
     {
         "NLMK": {"limit": 140.0}
+    },
+    {
+        "MSNG": {"limit": 3.0}
     }
 ]

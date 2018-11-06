@@ -110,7 +110,9 @@
         "WELL": {"limit": 56.0}
     },
     "SLG",
-    "ETP",
+    {
+        "ETP": {"limit": 25.0}
+    },
     "BBT",
     "LFC",
     "WFC",
