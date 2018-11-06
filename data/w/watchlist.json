@@ -73,14 +73,24 @@
     {
         "AEE": {"limit": 55.0}
     },
-    "QCOM",
-    "VIAB",
-    "VNO",
-    "TTM",
-    "CCL",
-    "BBBY",
-    "CEA",
-    "LYB",
+    {
+        "QCOM": {"limit": 67.0}
+    },
+    {
+        "VIAB": {"limit": 33.0}
+    },
+    {
+        "VNO": {"limit": 75.0}
+    },
+    {
+        "CCL": {"limit": 60.0}
+    },
+    {
+        "BBBY": {"limit": 30.0}
+    },
+    {
+        "LYB": {"limit": 95.0}
+    },
     "M",
     {
     "HCP": {"buy": 28.24, "stop": 23.43, "limit": 26.0}

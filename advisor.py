@@ -108,7 +108,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='m', plot_anomaly=False)
+        adv = ADVISOR(datatype='a', plot_anomaly=False)
         fire.Fire(adv.check_watchlist)
     else:
         fire.Fire(ADVISOR)
