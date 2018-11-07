@@ -1,5 +1,7 @@
 [
-    "MSFT",
+    {
+        "MSFT": {"limit": 100.0}
+    },
     "STX",
     "NTAP",
     {
@@ -65,7 +67,7 @@
         "TXN": {"buy": 114.84}
     },
     {
-        "VEON": {"buy": 2.98}
+        "VEON": {"buy": 2.96, "limit": 2.8}
     },
     {
         "WDC": {"buy": 59.4}
@@ -182,7 +184,9 @@
     "HP",
     "OKE",
     "IRM",
-    "CCI",
+    {
+        "CCI": {"limit": 102.0}
+    },
     "GIS",
     "EXR",
     "UDR",
