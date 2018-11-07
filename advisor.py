@@ -20,8 +20,8 @@ class ADVISOR(object):
 
     def __init__(self, datatype='m', plot_anomaly=False):
         self.plot_anomaly = plot_anomaly
-
-        self.watchdata, self.source, self.asset_type = self.get_assettype(datatype=datatype)
+        self.datatype = datatype
+        self.watchdata, self.source, self.asset_type = self.get_assettype(datatype=self.datatype)
         self.key = configs.alphaconf.key
 
         self.tobuy = dict()
@@ -55,8 +55,38 @@ class ADVISOR(object):
             asset_type = 'etf'
         return watchdata, source, asset_type
 
+    def test_strategy(self, prediction_date='2018-11-07'):
+        today = datetime.today().strftime("%Y-%m-%d")
+        watchdata, source, asset_type = self.get_assettype(datatype=self.datatype)
+        filename = self.datatype + '-' + source + '-' + prediction_date + '.json'
+        filepath = os.path.join('', 'recomendations', filename)
+        with open(filepath, 'r') as infile:
+            data = json.load(infile)
+
+        for item in data:
+            symbol = list(item.keys())[0]
+            stop_loss = item[symbol]['stop_loss']
+            exit_price = item[symbol]['exit_price']
+
+            asset = libs.assets.ASSET(symbol=symbol, source=source, asset_type=asset_type, key=self.key)
+            asset.get_data()
+
+            df = pd.concat([asset.df['date'], asset.df['Close']], axis=1)
+            df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
+            df = df.set_index('date')
+
+            filtered = df[prediction_date:].copy()
+
+            filtered['Success'] = filtered.Close > exit_price
+            if filtered['Success'].sum() > 0:
+                print(today + ' Succeeded:', symbol, exit_price, filtered['Success'].sum())
+
+            filtered['Bust'] = filtered.Close < stop_loss
+            if filtered['Bust'].sum() > 0:
+                print(today + ' Busted:', symbol, stop_loss, filtered['Bust'].sum())
+
     def correlation(self, datatype1='mc', symbol1='USD000UTSTOM',
-                    datatype2='me', symbol2='FXGD'):
+                    datatype2='me', symbol2='FXRU'):
         watchdata1, source1, asset_type1 = self.get_assettype(datatype=datatype1)
         watchdata2, source2, asset_type2 = self.get_assettype(datatype=datatype2)
 
@@ -70,7 +100,8 @@ class ADVISOR(object):
         df['A'] = asset1.df['Close']
         df['B'] = asset2.df['Close']
 
-        print(df.corr())
+        correlation = df['A'].corr(df['B'])
+        return correlation
 
     def check_watchlist(self):
         """Do magic"""
@@ -137,7 +168,7 @@ class ADVISOR(object):
 
         # Save results
         today = datetime.today()
-        filename = self.source + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
+        filename = self.datatype + '-' + self.source + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
         filepath = os.path.join('', 'recomendations', filename)
         with open(filepath, 'w') as outfile:
             json.dump(results, outfile, indent=4)
@@ -146,7 +177,8 @@ class ADVISOR(object):
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         adv = ADVISOR(datatype='ms', plot_anomaly=False)
-        fire.Fire(adv.check_watchlist)
+        # fire.Fire(adv.check_watchlist)
         # fire.Fire(adv.correlation)
+        fire.Fire(adv.test_strategy)
     else:
         fire.Fire(ADVISOR)
