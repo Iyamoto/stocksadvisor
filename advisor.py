@@ -60,8 +60,11 @@ class ADVISOR(object):
         watchdata, source, asset_type = self.get_assettype(datatype=self.datatype)
         filename = self.datatype + '-' + source + '-' + prediction_date + '.json'
         filepath = os.path.join('', 'recomendations', filename)
-        with open(filepath, 'r') as infile:
-            data = json.load(infile)
+        if os.path.exists(filepath):
+            with open(filepath, 'r') as infile:
+                data = json.load(infile)
+        else:
+            return
 
         for item in data:
             symbol = list(item.keys())[0]
@@ -160,6 +163,8 @@ class ADVISOR(object):
                 # Ignore too expensive stuff
                 asset.get_fair_price(dividend=dividend)
                 print('Fair price:', asset.fairprice)
+                if asset.fairprice > asset.lastprice:
+                    asset.plot('Cheap:')
                 if limit == 0:
                     limit = asset.fairprice
                 if asset.lastprice > limit > 0:
