@@ -174,8 +174,9 @@ class ADVISOR(object):
         today = datetime.today()
         filename = self.datatype + '-' + self.source + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
         filepath = os.path.join('', 'recomendations', filename)
-        with open(filepath, 'w') as outfile:
-            json.dump(results, outfile, indent=4)
+        if len(results) > 0:
+            with open(filepath, 'w') as outfile:
+                json.dump(results, outfile, indent=4)
 
 
 if __name__ == "__main__":
