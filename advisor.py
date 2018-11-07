@@ -109,7 +109,7 @@ class ADVISOR(object):
         results = list()
         for item in self.watchdata:
 
-            symbol, entry_price, limit = configs.alphaconf.get_symbol(item)
+            symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
 
             print()
             print(symbol)
@@ -158,6 +158,10 @@ class ADVISOR(object):
                 results.append(asset.get_results())
 
                 # Ignore too expensive stuff
+                asset.get_fair_price(dividend=dividend)
+                print('Fair price:', asset.fairprice)
+                if limit == 0:
+                    limit = asset.fairprice
                 if asset.lastprice > limit > 0:
                     continue
                 else:
@@ -176,7 +180,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='ms', plot_anomaly=False)
+        adv = ADVISOR(datatype='a', plot_anomaly=False)
         fire.Fire(adv.check_watchlist)
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)

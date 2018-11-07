@@ -1,6 +1,6 @@
 [
     {
-        "MSFT": {"limit": 100.0}
+        "MSFT": {"limit": 100.0, "div": 1.68}
     },
     "STX",
     "NTAP",
@@ -54,7 +54,7 @@
         "NFLX": {"buy": 417.4}
     },
     {
-        "OMC": {"buy": 68.18}
+        "OMC": {"limit": 68.0, "div": 2.4}
     },
     {
         "PG": {"limit": 80.0}
@@ -98,7 +98,9 @@
     "HCP": {"buy": 28.24, "stop": 23.43, "limit": 26.0}
     },
     "PEP",
-    "FLS",
+    {
+        "FLS": {"limit": 45.0, "div": 0.76}
+    },
     "KEP",
     "CHA",
     "ZNH",

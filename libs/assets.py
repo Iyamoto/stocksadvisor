@@ -62,11 +62,19 @@ class ASSET(object):
         self.anomaly_filter_down = None
         self.trendline = None
         self.blackswan_chance = 0.005
+        self.dividend_level = dict()
+        self.dividend_level['alpha'] = 2  # Acceptable dividend lvl for USD
+        self.dividend_level['moex'] = 5  # Acceptable dividend lvl for RUB
+        self.fairprice = 0
 
     def __str__(self):
         result = self.get_results()
         out = json.dumps(result, indent=4)
         return out
+
+    def get_fair_price(self, dividend=0):
+        self.fairprice = round(100 * dividend/self.dividend_level[self.source], 2)
+        return self.fairprice
 
     def get_reward_risk_ratio(self):
         self.df['RewardRiskRatio'] = self.goal_chance * self.min_goal * (self.goalprice - self.df['Close']) / \
