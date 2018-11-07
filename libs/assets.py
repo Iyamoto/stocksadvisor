@@ -61,6 +61,7 @@ class ASSET(object):
         self.anomaly_filter_up = None
         self.anomaly_filter_down = None
         self.trendline = None
+        self.blackswan_chance = 0.005
 
     def __str__(self):
         result = self.get_results()
@@ -366,8 +367,8 @@ class ASSET(object):
             mc.plot(title=self.symbol, figsize=(15, 5))
 
         # Paranoid on
-        if self.bust_chance < 0.01:
-            self.bust_chance = 0.01
+        self.bust_chance += self.blackswan_chance
+
         if self.goal_chance > 0.9:
             self.goal_chance = 0.9
 
