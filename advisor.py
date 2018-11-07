@@ -163,14 +163,17 @@ class ADVISOR(object):
                 # Ignore too expensive stuff
                 asset.get_fair_price(dividend=dividend)
                 print('Fair price:', asset.fairprice)
-                if asset.fairprice > asset.lastprice:
-                    asset.plot('Cheap:')
+                # if asset.fairprice > asset.lastprice:
+                #     asset.plot('Cheap:')
                 if limit == 0:
                     limit = asset.fairprice
                 if asset.lastprice > limit > 0:
                     continue
-                else:
-                    asset.plot('Buy:')
+                if entry_price > 0 and asset.lastprice > 0.9 * entry_price:
+                    # We have the asset already
+                    continue
+
+                asset.plot('Buy:')
 
         print('Results:')
         pprint(results)
