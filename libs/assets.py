@@ -21,7 +21,7 @@ class ASSET(object):
     """Single asset"""
 
     def __init__(self, symbol='', source='moex', asset_type='stock', key='demo', min_goal=0.1,
-                 volumefield='VOLUME', atr_multiplier=5, cacheage=3600*24*1, cachebase='',
+                 volumefield='VOLUME', atr_multiplier=5, cacheage=3600*12, cachebase='',
                  kc_channel=2):
         """
         source: moex, alpha

@@ -156,13 +156,14 @@ class ADVISOR(object):
                     print('Time to sell, income:', str(income) + '%')
                     asset.plot('Sell:')
 
+            asset.get_fair_price(dividend=dividend)
+            print('Fair price:', asset.fairprice)
+
             # Filter out too risky stuff
             if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
                 results.append(asset.get_results())
 
                 # Ignore too expensive stuff
-                asset.get_fair_price(dividend=dividend)
-                print('Fair price:', asset.fairprice)
                 # if asset.fairprice > asset.lastprice:
                 #     asset.plot('Cheap:')
                 if limit == 0:
