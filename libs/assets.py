@@ -120,6 +120,7 @@ class ASSET(object):
         result[self.symbol]['last_price'] = self.lastprice
         result[self.symbol]['stop_loss'] = self.stoploss
         result[self.symbol]['exit_price'] = self.goalprice
+        result[self.symbol]['fair_price'] = float(self.fairprice)
         result[self.symbol]['success_chance'] = round(self.goal_chance, 2)
         result[self.symbol]['bust'] = round(self.stoplosspercent, 2)
         result[self.symbol]['bust_chance'] = round(self.bust_chance, 2)
