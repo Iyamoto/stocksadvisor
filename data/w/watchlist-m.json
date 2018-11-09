@@ -1,21 +1,21 @@
 [
     {
-        "AFLT": {"limit": 130.0}
+        "AFLT": {"div": 12.8}
     },
     {
-        "GMKN": {"buy": 10980.11, "limit": 10500.0}
+        "GMKN": {"buy": 10980.11, "div": 1384.0}
     },
     {
-        "PRTK": {"buy": 81.1411, "limit": 100.0}
+        "PRTK": {"buy": 81.1411, "div": 5.0}
     },
     {
-        "SBER": {"div": 12.0, "limit": 190.0}
+        "SBER": {"div": 12.0, "limit": 185.0}
     },
     {
-        "PIKK": {"buy": 353.115}
+        "PIKK": {"buy": 353.115, "div": 22.7}
     },
     {
-        "POLY": {"limit": 600.0}
+        "POLY": {"div": 13.0}
     },
     {
         "MTSS": {"div": 26.0}
@@ -24,22 +24,22 @@
         "SIBN": {"div": 10.0}
     },
     {
-        "RUAL": {"limit": 25.0}
+        "RUAL": {"div": 0.02}
     },
     {
         "MOEX": {"buy": 98.722, "div": 10.0}
     },
     {
-        "MSTT": {"buy": 105.082, "limit": 140.0}
+        "MSTT": {"buy": 105.082, "div": 10.0}
     },
     {
-        "DSKY": {"limit": 90.0}
+        "DSKY": {"div": 4.39}
     },
     {
         "LSRG": {"buy": 677.3, "div": 78.0}
     },
     {
-        "RSTI": {"buy": 0.8}
+        "RSTI": {"buy": 0.8, "div": 0.01}
     },
     {
         "BSPB": {"div": 1.5}
@@ -54,66 +54,66 @@
         "MRKV": {"div": 0.01}
     },
     {
-        "LSNGP": {"limit": 90.0}
+        "LSNGP": {"div": 13.4}
     },
     {
         "RTKM": {"div": 5.0}
     },
     {
-        "RTKMP": {"limit": 90.0}
+        "RTKMP": {"div": 5.0}
     },
     {
-        "NMTP": {"limit": 7.0}
+        "NMTP": {"div": 0.5}
     },
     {
-        "BANE": {"limit": 2200.0}
+        "BANE": {"div": 159.0}
     },
     {
         "BANEP": {
-            "limit": 1500.0
+            "div": 159.0, "limit": 1600.0
         }
     },
     {
         "TATN": {"div": 42.0, "limit": 670.0}
     },
     {
-        "OGKB": {"limit": 0.6}
+        "OGKB": {"div": 0.016}
     },
     {
-        "FIVE": {"limit": 1800.0}
+        "FIVE": {"div": 79.5}
     },
     {
-        "TTLK": {"limit": 0.2}
+        "TTLK": {"div": 0.019}
     },
     {
         "IRKT": {"limit": 40.0}
     },
     {
-        "TGKA": {"limit": 0.02}
+        "TGKA": {"div": 0.00049}
     },
     {
-        "PHOR": {"limit": 2300.0}
+        "PHOR": {"div": 100.0}
     },
     {
         "CHMF": {"div": 110.0}
     },
     {
-        "FEES": {"limit": 0.2}
+        "FEES": {"div": 0.015}
     },
     {
         "ENRU": {"div": 0.15}
     },
     {
-        "HYDR": {"limit": 1.0}
+        "HYDR": {"div": 0.026}
     },
     {
         "SNGSP": {"div": 2.0}
     },
     {
-        "MTLRP": {"limit": 130.0}
+        "MTLRP": {"div": 16.66}
     },
     {
-        "MRKP": {"limit": 0.25}
+        "MRKP": {"div": 0.04}
     },
     {
         "SBERP": {"limit": 150.0}
@@ -122,13 +122,13 @@
         "MAGN": {"div": 5.0}
     },
     {
-        "ALRS": {"div": 10.0}
+        "ALRS": {"div": 10.0, "limit": 90.0}
     },
     {
         "NLMK": {"div": 14.0}
     },
     {
-        "MSNG": {"limit": 3.0}
+        "MSNG": {"div": 0.16}
     },
     {
         "ROSN": {"div": 21.23, "limit": 380.0}
@@ -141,5 +141,23 @@
     },
     {
         "TATNP": {"div": 42.0, "limit": 400.0}
+    },
+    {
+        "UPRO": {"div": 0.22}
+    },
+    {
+        "RSTIP": {"div": 0.04}
+    },
+    {
+        "GAZP": {"div": 8.04}
+    },
+    {
+        "NVTK": {"div": 18.0}
+    },
+    {
+        "PLZL": {"div": 278.0}
+    },
+    {
+        "TRMK": {"div": 2.28}
     }
 ]
