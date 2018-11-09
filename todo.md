@@ -2,10 +2,12 @@
 
 # To buy
 
-# Checklist
+# Dates
 
-Username:	vejameg@banit.me
-Password:	Teramemi0st$
+11.11 : P+T
+31.11 + 2 weeks : G20  
+
+# Checklist
 
 https://getnada.com/msg
 
@@ -23,15 +25,11 @@ https://stockcharts.com/h-sc/ui?s=$NYHL&p=D&yr=3&mn=0&dy=0&id=p19726689647&a=455
 
 # Research
 
-Открытие видеокурс
+https://www.sentimentrader.com/models/
 The Psychology of Trading: Tools and Techniques for Minding the Markets
 https://top250.platts.com/Top250Rankings
 Элдер — «Трейдинг с доктором Элдером»
 New Concepts in Technical Trading Systems
-
-https://github.com/matplotlib/mpl_finance
-pip install https://github.com/matplotlib/mpl_finance/archive/master.zip
-mpl_finance candlstick_ohlc
 
 # Info
 

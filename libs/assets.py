@@ -63,8 +63,8 @@ class ASSET(object):
         self.trendline = None
         self.blackswan_chance = 0.005
         self.dividend_level = dict()
-        self.dividend_level['alpha'] = 2  # Acceptable dividend lvl for USD
-        self.dividend_level['moex'] = 5  # Acceptable dividend lvl for RUB
+        self.dividend_level['alpha'] = 1.8  # Acceptable dividend lvl for USD
+        self.dividend_level['moex'] = 4  # Acceptable dividend lvl for RUB
         self.fairprice = 0
 
     def __str__(self):
