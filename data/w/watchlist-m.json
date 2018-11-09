@@ -21,13 +21,13 @@
         "MTSS": {"limit": 270.0}
     },
     {
-        "SIBN": {"limit": 350.0}
+        "SIBN": {"div": 10.0}
     },
     {
         "RUAL": {"limit": 25.0}
     },
     {
-        "MOEX": {"buy": 98.722}
+        "MOEX": {"buy": 98.722, "div": 10.0}
     },
     {
         "MSTT": {"buy": 105.082, "limit": 140.0}
@@ -36,19 +36,19 @@
         "DSKY": {"limit": 90.0}
     },
     {
-        "LSRG": {"buy": 677.3, "limit": 700.0}
+        "LSRG": {"buy": 677.3, "div": 78.0}
     },
     {
         "RSTI": {"buy": 0.8}
     },
     {
-        "BSPB": {"limit": 55.0}
+        "BSPB": {"div": 1.5}
     },
     {
-        "VTBR": {"buy": 0.042866, "limit": 0.055}
+        "VTBR": {"buy": 0.042866, "div": 0.003}
     },
     {
-        "AFKS": {"limit": 15.0}
+        "AFKS": {"div": 1.4}
     },
     {
         "MRKV": {"limit": 0.12}
@@ -57,7 +57,7 @@
         "LSNGP": {"limit": 90.0}
     },
     {
-        "RTKM": {"limit": 90.0}
+        "RTKM": {"div": 5.0}
     },
     {
         "RTKMP": {"limit": 90.0}
@@ -74,7 +74,7 @@
         }
     },
     {
-        "TATN": {"limit": 650.0}
+        "TATN": {"div": 42.0}
     },
     {
         "OGKB": {"limit": 0.6}
@@ -95,19 +95,19 @@
         "PHOR": {"limit": 2300.0}
     },
     {
-        "CHMF": {"limit": 1000.0}
+        "CHMF": {"div": 110.0}
     },
     {
         "FEES": {"limit": 0.2}
     },
     {
-        "ENRU": {"limit": 2.3}
+        "ENRU": {"div": 0.15}
     },
     {
         "HYDR": {"limit": 1.0}
     },
     {
-        "SNGSP": {"limit": 33.0}
+        "SNGSP": {"div": 2.0}
     },
     {
         "MTLRP": {"limit": 130.0}
@@ -119,18 +119,27 @@
         "SBERP": {"limit": 150.0}
     },
     {
-        "MAGN": {"limit": 42.0}
+        "MAGN": {"div": 5.0}
     },
     {
-        "ALRS": {"limit": 90.0}
+        "ALRS": {"div": 10.0}
     },
     {
-        "NLMK": {"limit": 140.0}
+        "NLMK": {"div": 14.0}
     },
     {
         "MSNG": {"limit": 3.0}
     },
     {
         "ROSN": {"div": 21.23}
+    },
+    {
+        "LKOH": {"div": 225.0}
+    },
+    {
+        "IRAO": {"div": 0.13}
+    },
+    {
+        "TATNP": {"div": 42.0}
     }
 ]
