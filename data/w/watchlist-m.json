@@ -18,7 +18,7 @@
         "POLY": {"limit": 600.0}
     },
     {
-        "MTSS": {"limit": 270.0}
+        "MTSS": {"div": 26.0}
     },
     {
         "SIBN": {"div": 10.0}
@@ -74,7 +74,7 @@
         }
     },
     {
-        "TATN": {"div": 42.0}
+        "TATN": {"div": 42.0, "limit": 670.0}
     },
     {
         "OGKB": {"limit": 0.6}
@@ -131,15 +131,15 @@
         "MSNG": {"limit": 3.0}
     },
     {
-        "ROSN": {"div": 21.23}
+        "ROSN": {"div": 21.23, "limit": 380.0}
     },
     {
-        "LKOH": {"div": 225.0}
+        "LKOH": {"div": 225.0, "limit": 4000.0}
     },
     {
         "IRAO": {"div": 0.13}
     },
     {
-        "TATNP": {"div": 42.0}
+        "TATNP": {"div": 42.0, "limit": 400.0}
     }
 ]

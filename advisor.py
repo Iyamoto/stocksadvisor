@@ -100,8 +100,8 @@ class ADVISOR(object):
         asset2.get_data()
 
         df = pd.DataFrame()
-        df['A'] = asset1.df['Close']
-        df['B'] = asset2.df['Close']
+        df['A'] = asset1.df['Close'].copy()
+        df['B'] = asset2.df['Close'].copy()
 
         correlation = df['A'].corr(df['B'])
         return correlation
@@ -131,8 +131,8 @@ class ADVISOR(object):
             if asset.stoploss <= 0:
                 asset.stoploss = asset.lastprice * 0.5
 
-            usd_rub_correlation = round(self.correlation(datatype2=self.datatype, symbol2=symbol), 2)
-            print('USD-RUB-Correlation:', usd_rub_correlation)
+            # usd_rub_correlation = round(self.correlation(datatype2=self.datatype, symbol2=symbol), 2)
+            # print('USD-RUB-Correlation:', usd_rub_correlation)
 
             # print(asset.df)
             # exit()
@@ -193,7 +193,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='a', plot_anomaly=False)
+        adv = ADVISOR(datatype='ms', plot_anomaly=False)
         fire.Fire(adv.check_watchlist)
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
