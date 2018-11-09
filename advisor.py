@@ -131,6 +131,9 @@ class ADVISOR(object):
             if asset.stoploss <= 0:
                 asset.stoploss = asset.lastprice * 0.5
 
+            usd_rub_correlation = round(self.correlation(datatype2=self.datatype, symbol2=symbol), 2)
+            print('USD-RUB-Correlation:', usd_rub_correlation)
+
             # print(asset.df)
             # exit()
 

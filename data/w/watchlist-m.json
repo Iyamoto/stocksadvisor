@@ -51,7 +51,7 @@
         "AFKS": {"div": 1.4}
     },
     {
-        "MRKV": {"limit": 0.12}
+        "MRKV": {"div": 0.01}
     },
     {
         "LSNGP": {"limit": 90.0}
