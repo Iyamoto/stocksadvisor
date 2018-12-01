@@ -129,6 +129,6 @@ pprint(results)
 # Save results
 today = datetime.today()
 filename = datatype + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
-filepath = os.path.join('..', 'recomendations', filename)
+filepath = os.path.join('..', 'recommendations', filename)
 with open(filepath, 'w') as outfile:
     json.dump(results, outfile, indent=4)

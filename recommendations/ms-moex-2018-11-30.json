@@ -1,0 +1,184 @@
+[
+    {
+        "GMKN": {
+            "last_price": 12738.0,
+            "stop_loss": 10995.63,
+            "exit_price": 14011.8,
+            "fair_price": 34600.0,
+            "success_chance": 0.9,
+            "bust": 0.14,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 44.3,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "POLY": {
+            "last_price": 667.3,
+            "stop_loss": 531.73,
+            "exit_price": 734.03,
+            "fair_price": 325.0,
+            "success_chance": 0.9,
+            "bust": 0.2,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 36.58,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "SIBN": {
+            "last_price": 363.2,
+            "stop_loss": 284.51,
+            "exit_price": 399.52,
+            "fair_price": 250.0,
+            "success_chance": 0.9,
+            "bust": 0.22,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 13.23,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "RUAL": {
+            "last_price": 28.99,
+            "stop_loss": 16.98,
+            "exit_price": 31.89,
+            "fair_price": 0.5,
+            "success_chance": 0.9,
+            "bust": 0.41,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 18.56,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "RSTI": {
+            "last_price": 0.73,
+            "stop_loss": 0.52,
+            "exit_price": 0.8,
+            "fair_price": 0.25,
+            "success_chance": 0.86,
+            "bust": 0.29,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 13.71,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "BSPB": {
+            "last_price": 49.3,
+            "stop_loss": 41.36,
+            "exit_price": 54.23,
+            "fair_price": 37.5,
+            "success_chance": 0.59,
+            "bust": 0.16,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 11.74,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "NMTP": {
+            "last_price": 6.83,
+            "stop_loss": 5.01,
+            "exit_price": 7.51,
+            "fair_price": 12.5,
+            "success_chance": 0.9,
+            "bust": 0.27,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 17.95,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "BANEP": {
+            "last_price": 1843.5,
+            "stop_loss": 1571.77,
+            "exit_price": 2027.85,
+            "fair_price": 3975.0,
+            "success_chance": 0.8,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 17.3,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "FIVE": {
+            "last_price": 1725.0,
+            "stop_loss": 1265.71,
+            "exit_price": 1897.5,
+            "fair_price": 1987.5,
+            "success_chance": 0.9,
+            "bust": 0.27,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 14.0,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "TTLK": {
+            "last_price": 0.18,
+            "stop_loss": 0.11,
+            "exit_price": 0.2,
+            "fair_price": 0.47,
+            "success_chance": 0.46,
+            "bust": 0.37,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 10.68,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "PHOR": {
+            "last_price": 2593.0,
+            "stop_loss": 2118.87,
+            "exit_price": 2852.3,
+            "fair_price": 2500.0,
+            "success_chance": 0.64,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 11.71,
+            "trend": "Sideways Down",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "RSTIP": {
+            "last_price": 1.37,
+            "stop_loss": 1.05,
+            "exit_price": 1.51,
+            "fair_price": 1.0,
+            "success_chance": 0.83,
+            "bust": 0.23,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 16.25,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "PLZL": {
+            "last_price": 4827.5,
+            "stop_loss": 3812.76,
+            "exit_price": 5310.25,
+            "fair_price": 6950.0,
+            "success_chance": 0.9,
+            "bust": 0.21,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 35.47,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    }
+]

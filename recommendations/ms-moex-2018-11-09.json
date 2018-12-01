@@ -1,0 +1,156 @@
+[
+    {
+        "GMKN": {
+            "last_price": 11698.0,
+            "stop_loss": 10093.76,
+            "exit_price": 12867.8,
+            "fair_price": 34600.0,
+            "success_chance": 0.64,
+            "bust": 0.14,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 17.71,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "POLY": {
+            "last_price": 630.5,
+            "stop_loss": 518.56,
+            "exit_price": 693.55,
+            "fair_price": 325.0,
+            "success_chance": 0.9,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 30.28,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "SIBN": {
+            "last_price": 389.5,
+            "stop_loss": 310.83,
+            "exit_price": 428.45,
+            "fair_price": 250.0,
+            "success_chance": 0.9,
+            "bust": 0.2,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 28.64,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "RUAL": {
+            "last_price": 29.82,
+            "stop_loss": 17.51,
+            "exit_price": 32.8,
+            "fair_price": 0.5,
+            "success_chance": 0.9,
+            "bust": 0.41,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 29.26,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "BANEP": {
+            "last_price": 1913.0,
+            "stop_loss": 1631.02,
+            "exit_price": 2104.3,
+            "fair_price": 3975.0,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 42.96,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "TATN": {
+            "last_price": 819.2,
+            "stop_loss": 687.19,
+            "exit_price": 901.12,
+            "fair_price": 1050.0,
+            "success_chance": 0.9,
+            "bust": 0.16,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 23.06,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "PHOR": {
+            "last_price": 2520.0,
+            "stop_loss": 2059.28,
+            "exit_price": 2772.0,
+            "fair_price": 2500.0,
+            "success_chance": 0.9,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 15.89,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "ALRS": {
+            "last_price": 103.24,
+            "stop_loss": 83.5,
+            "exit_price": 113.56,
+            "fair_price": 250.0,
+            "success_chance": 0.73,
+            "bust": 0.19,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 11.86,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "ROSN": {
+            "last_price": 475.0,
+            "stop_loss": 387.29,
+            "exit_price": 522.5,
+            "fair_price": 530.75,
+            "success_chance": 0.9,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 26.01,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "LKOH": {
+            "last_price": 5160.0,
+            "stop_loss": 4440.35,
+            "exit_price": 5676.0,
+            "fair_price": 5625.0,
+            "success_chance": 0.9,
+            "bust": 0.14,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 34.94,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "TATNP": {
+            "last_price": 556.0,
+            "stop_loss": 452.51,
+            "exit_price": 611.6,
+            "fair_price": 1050.0,
+            "success_chance": 0.9,
+            "bust": 0.19,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 23.55,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    }
+]

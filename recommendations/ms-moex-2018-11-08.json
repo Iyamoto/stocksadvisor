@@ -1,0 +1,106 @@
+[
+    {
+        "POLY": {
+            "last_price": 615.0,
+            "stop_loss": 505.81,
+            "exit_price": 676.5,
+            "success_chance": 0.9,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 24.7,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "SIBN": {
+            "last_price": 386.0,
+            "stop_loss": 308.86,
+            "exit_price": 424.6,
+            "success_chance": 0.9,
+            "bust": 0.2,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 26.49,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "RUAL": {
+            "last_price": 29.75,
+            "stop_loss": 17.47,
+            "exit_price": 32.73,
+            "success_chance": 0.9,
+            "bust": 0.41,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 29.09,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "BANEP": {
+            "last_price": 1885.0,
+            "stop_loss": 1607.15,
+            "exit_price": 2073.5,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 40.8,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "TATN": {
+            "last_price": 802.2,
+            "stop_loss": 678.93,
+            "exit_price": 882.42,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 22.18,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "IRKT": {
+            "last_price": 60.58,
+            "stop_loss": 30.29,
+            "exit_price": 66.64,
+            "success_chance": 0.9,
+            "bust": 1.24,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 10.65,
+            "trend": "Sideways Up",
+            "anomalies": 1.0
+        }
+    },
+    {
+        "PHOR": {
+            "last_price": 2527.0,
+            "stop_loss": 2065.0,
+            "exit_price": 2779.7,
+            "success_chance": 0.9,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 17.62,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "SNGSP": {
+            "last_price": 38.5,
+            "stop_loss": 33.32,
+            "exit_price": 42.35,
+            "success_chance": 0.9,
+            "bust": 0.13,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 10.56,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    }
+]

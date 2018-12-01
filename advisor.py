@@ -56,10 +56,15 @@ class ADVISOR(object):
         return watchdata, source, asset_type
 
     def test_strategy(self, prediction_date='2018-11-07'):
+        """ Test predictions"""
+
+        # Get prediction dates
+
+        # Check predictions
         today = datetime.today().strftime("%Y-%m-%d")
         watchdata, source, asset_type = self.get_assettype(datatype=self.datatype)
         filename = self.datatype + '-' + source + '-' + prediction_date + '.json'
-        filepath = os.path.join('', 'recomendations', filename)
+        filepath = os.path.join('', 'recommendations', filename)
         if os.path.exists(filepath):
             with open(filepath, 'r') as infile:
                 data = json.load(infile)
@@ -82,7 +87,7 @@ class ADVISOR(object):
 
             filtered['Success'] = filtered.Close > exit_price
             if filtered['Success'].sum() > 0:
-                print(today + ' Succeeded:', symbol, exit_price, filtered['Success'].sum())
+                print(today + ' Succeeded:', symbol, exit_price, filtered['Success'].sum(), filtered['Success'].max())
 
             filtered['Bust'] = filtered.Close < stop_loss
             if filtered['Bust'].sum() > 0:
@@ -185,7 +190,7 @@ class ADVISOR(object):
         # Save results
         today = datetime.today()
         filename = self.datatype + '-' + self.source + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
-        filepath = os.path.join('', 'recomendations', filename)
+        filepath = os.path.join('', 'recommendations', filename)
         if len(results) > 0:
             with open(filepath, 'w') as outfile:
                 json.dump(results, outfile, indent=4)

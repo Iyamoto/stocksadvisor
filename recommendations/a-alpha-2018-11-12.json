@@ -1,0 +1,450 @@
+[
+    {
+        "MSFT": {
+            "last_price": 108.48,
+            "stop_loss": 82.43,
+            "exit_price": 119.33,
+            "fair_price": 93.33,
+            "success_chance": 0.84,
+            "bust": 0.24,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 16.72,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "KO": {
+            "last_price": 49.92,
+            "stop_loss": 44.73,
+            "exit_price": 54.91,
+            "fair_price": 86.67,
+            "success_chance": 0.9,
+            "bust": 0.1,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 59.37,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "HRB": {
+            "last_price": 28.8,
+            "stop_loss": 24.18,
+            "exit_price": 31.68,
+            "fair_price": 55.56,
+            "success_chance": 0.9,
+            "bust": 0.16,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 41.42,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "PG": {
+            "last_price": 92.36,
+            "stop_loss": 77.89,
+            "exit_price": 101.6,
+            "fair_price": 155.56,
+            "success_chance": 0.9,
+            "bust": 0.16,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 61.82,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "SBUX": {
+            "last_price": 68.65,
+            "stop_loss": 55.76,
+            "exit_price": 75.52,
+            "fair_price": 66.67,
+            "success_chance": 0.9,
+            "bust": 0.19,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 86.76,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "AEE": {
+            "last_price": 68.48,
+            "stop_loss": 60.44,
+            "exit_price": 75.33,
+            "fair_price": 102.22,
+            "success_chance": 0.9,
+            "bust": 0.12,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 39.59,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "HCP": {
+            "last_price": 29.06,
+            "stop_loss": 24.67,
+            "exit_price": 31.97,
+            "fair_price": 82.22,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 29.82,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "FLS": {
+            "last_price": 50.06,
+            "stop_loss": 35.91,
+            "exit_price": 55.07,
+            "fair_price": 42.22,
+            "success_chance": 0.9,
+            "bust": 0.28,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 20.14,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "AES": {
+            "last_price": 15.59,
+            "stop_loss": 12.79,
+            "exit_price": 17.15,
+            "fair_price": 28.89,
+            "success_chance": 0.9,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 39.58,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "O": {
+            "last_price": 63.03,
+            "stop_loss": 54.97,
+            "exit_price": 69.33,
+            "fair_price": 138.89,
+            "success_chance": 0.9,
+            "bust": 0.13,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 48.99,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "WELL": {
+            "last_price": 70.1,
+            "stop_loss": 57.43,
+            "exit_price": 77.11,
+            "fair_price": 193.33,
+            "success_chance": 0.9,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 34.75,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "ETP": {
+            "last_price": 21.47,
+            "stop_loss": 17.02,
+            "exit_price": 23.62,
+            "fair_price": 125.56,
+            "success_chance": 0.9,
+            "bust": 0.21,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 10.93,
+            "trend": "Sideways Up",
+            "anomalies": 1.0
+        }
+    },
+    {
+        "CMCSA": {
+            "last_price": 38.41,
+            "stop_loss": 31.01,
+            "exit_price": 42.25,
+            "fair_price": 44.44,
+            "success_chance": 0.9,
+            "bust": 0.19,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 15.09,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "PPL": {
+            "last_price": 31.88,
+            "stop_loss": 27.86,
+            "exit_price": 35.07,
+            "fair_price": 88.89,
+            "success_chance": 0.9,
+            "bust": 0.13,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 15.93,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "PFE": {
+            "last_price": 44.38,
+            "stop_loss": 37.71,
+            "exit_price": 48.82,
+            "fair_price": 75.56,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 48.2,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "CSCO": {
+            "last_price": 46.55,
+            "stop_loss": 38.17,
+            "exit_price": 51.2,
+            "fair_price": 72.22,
+            "success_chance": 0.75,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 11.32,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "TGT": {
+            "last_price": 86.33,
+            "stop_loss": 73.24,
+            "exit_price": 94.96,
+            "fair_price": 138.89,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 24.31,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "VZ": {
+            "last_price": 58.9,
+            "stop_loss": 50.31,
+            "exit_price": 64.79,
+            "fair_price": 133.33,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 48.11,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "BA": {
+            "last_price": 363.61,
+            "stop_loss": 280.17,
+            "exit_price": 399.97,
+            "fair_price": 380.0,
+            "success_chance": 0.78,
+            "bust": 0.23,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 14.1,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "MRK": {
+            "last_price": 74.91,
+            "stop_loss": 63.36,
+            "exit_price": 82.4,
+            "fair_price": 106.67,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 53.68,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "ZTS": {
+            "last_price": 94.82,
+            "stop_loss": 78.33,
+            "exit_price": 104.3,
+            "fair_price": 27.78,
+            "success_chance": 0.9,
+            "bust": 0.17,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 25.63,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "SPG": {
+            "last_price": 188.69,
+            "stop_loss": 164.78,
+            "exit_price": 207.56,
+            "fair_price": 444.44,
+            "success_chance": 0.81,
+            "bust": 0.13,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 15.54,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "VTR": {
+            "last_price": 60.43,
+            "stop_loss": 51.37,
+            "exit_price": 66.47,
+            "fair_price": 175.56,
+            "success_chance": 0.78,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 10.91,
+            "trend": "Sideways Down",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "UDR": {
+            "last_price": 41.11,
+            "stop_loss": 35.4,
+            "exit_price": 45.22,
+            "fair_price": 71.11,
+            "success_chance": 0.9,
+            "bust": 0.14,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 30.96,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "FE": {
+            "last_price": 38.9,
+            "stop_loss": 33.53,
+            "exit_price": 42.79,
+            "fair_price": 80.0,
+            "success_chance": 0.9,
+            "bust": 0.14,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 19.18,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "AIV": {
+            "last_price": 45.95,
+            "stop_loss": 40.71,
+            "exit_price": 50.55,
+            "fair_price": 84.44,
+            "success_chance": 0.65,
+            "bust": 0.11,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 13.98,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "WEC": {
+            "last_price": 71.25,
+            "stop_loss": 61.69,
+            "exit_price": 78.38,
+            "fair_price": 122.22,
+            "success_chance": 0.9,
+            "bust": 0.13,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 35.52,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "ETR": {
+            "last_price": 86.95,
+            "stop_loss": 74.25,
+            "exit_price": 95.65,
+            "fair_price": 202.22,
+            "success_chance": 0.67,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 20.59,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "ORCL": {
+            "last_price": 49.94,
+            "stop_loss": 42.68,
+            "exit_price": 54.93,
+            "fair_price": 42.22,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 27.86,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "MCD": {
+            "last_price": 186.35,
+            "stop_loss": 162.75,
+            "exit_price": 204.99,
+            "fair_price": 224.44,
+            "success_chance": 0.9,
+            "bust": 0.13,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 38.13,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "WMT": {
+            "last_price": 105.37,
+            "stop_loss": 89.42,
+            "exit_price": 115.91,
+            "fair_price": 115.56,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 58.98,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "V": {
+            "last_price": 141.62,
+            "stop_loss": 110.99,
+            "exit_price": 155.78,
+            "fair_price": 50.0,
+            "success_chance": 0.6,
+            "bust": 0.22,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 10.02,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    }
+]

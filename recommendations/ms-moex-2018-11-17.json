@@ -1,0 +1,128 @@
+[
+    {
+        "GMKN": {
+            "last_price": 11714.0,
+            "stop_loss": 10110.87,
+            "exit_price": 12885.4,
+            "fair_price": 34600.0,
+            "success_chance": 0.59,
+            "bust": 0.14,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 16.63,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "POLY": {
+            "last_price": 646.3,
+            "stop_loss": 531.56,
+            "exit_price": 710.93,
+            "fair_price": 325.0,
+            "success_chance": 0.9,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 32.42,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "SIBN": {
+            "last_price": 377.0,
+            "stop_loss": 300.86,
+            "exit_price": 414.7,
+            "fair_price": 250.0,
+            "success_chance": 0.9,
+            "bust": 0.2,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 22.84,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "RUAL": {
+            "last_price": 29.5,
+            "stop_loss": 17.33,
+            "exit_price": 32.45,
+            "fair_price": 0.5,
+            "success_chance": 0.9,
+            "bust": 0.41,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 26.59,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "NMTP": {
+            "last_price": 7.0,
+            "stop_loss": 5.14,
+            "exit_price": 7.7,
+            "fair_price": 12.5,
+            "success_chance": 0.9,
+            "bust": 0.27,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 22.2,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "BANEP": {
+            "last_price": 1884.0,
+            "stop_loss": 1606.3,
+            "exit_price": 2072.4,
+            "fair_price": 3975.0,
+            "success_chance": 0.9,
+            "bust": 0.15,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 33.37,
+            "trend": "Up Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "PHOR": {
+            "last_price": 2500.0,
+            "stop_loss": 2042.93,
+            "exit_price": 2750.0,
+            "fair_price": 2500.0,
+            "success_chance": 0.77,
+            "bust": 0.18,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 10.5,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "TATNP": {
+            "last_price": 541.1,
+            "stop_loss": 440.38,
+            "exit_price": 595.21,
+            "fair_price": 1050.0,
+            "success_chance": 0.68,
+            "bust": 0.19,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 11.63,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    },
+    {
+        "NVTK": {
+            "last_price": 1124.6,
+            "stop_loss": 878.58,
+            "exit_price": 1237.06,
+            "fair_price": 450.0,
+            "success_chance": 0.9,
+            "bust": 0.22,
+            "bust_chance": 0.01,
+            "reward_risk_ratio": 12.19,
+            "trend": "Sideways Up",
+            "anomalies": 0.0
+        }
+    }
+]

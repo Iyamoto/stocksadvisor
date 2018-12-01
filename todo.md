@@ -5,7 +5,9 @@
 # Dates
 
 11.11 : P+T
-31.11 + 2 weeks : G20  
+31.11 + 2 weeks : G20 
+14.12 CB RF - buy sber?
+19.12 FRS
 
 # Checklist
 
