@@ -101,12 +101,12 @@ class ADVISOR(object):
 
                 filtered['Success'] = filtered.Close > exit_price
                 if filtered['Success'].sum() > 0:
-                    print(today + ' Succeeded:', prediction_date, delta.days, symbol, exit_price, filtered['Success'].sum(),
+                    print(today + ' Succeeded', prediction_date, delta.days, symbol, exit_price, filtered['Success'].sum(),
                           filtered.Close.max())
 
                 filtered['Bust'] = filtered.Close < stop_loss
                 if filtered['Bust'].sum() > 0:
-                    print(today + ' Busted:', prediction_date, delta.days, symbol, stop_loss, filtered['Bust'].sum(),
+                    print(today + ' Busted', prediction_date, delta.days, symbol, stop_loss, filtered['Bust'].sum(),
                           filtered.Close.min())
 
     def correlation(self, datatype1='mc', symbol1='USD000UTSTOM',
