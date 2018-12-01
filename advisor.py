@@ -55,43 +55,59 @@ class ADVISOR(object):
             asset_type = 'etf'
         return watchdata, source, asset_type
 
-    def test_strategy(self, prediction_date='2018-11-07'):
+    def test_strategy(self):
         """ Test predictions"""
+        watchdata, source, asset_type = self.get_assettype(datatype=self.datatype)
 
         # Get prediction dates
+        prediction_dates = list()
+        sep = '-'
+        dirpath = os.path.join('', 'recommendations')
+        for filename in os.listdir(dirpath):
+            if filename.endswith('.json') and filename.startswith(self.datatype + '-' + source):
+                items = filename.split(sep)
+                prediction_date = items[2] + sep + items[3] + sep + items[4]
+                prediction_date = prediction_date.strip('.json')
+                prediction_dates.append(prediction_date)
+
+        # print('Date', 'Status', 'Prediction_date', 'Delta', 'Symbol', 'Exit_price', 'Success_count', 'Max/Min')
 
         # Check predictions
-        today = datetime.today().strftime("%Y-%m-%d")
-        watchdata, source, asset_type = self.get_assettype(datatype=self.datatype)
-        filename = self.datatype + '-' + source + '-' + prediction_date + '.json'
-        filepath = os.path.join('', 'recommendations', filename)
-        if os.path.exists(filepath):
-            with open(filepath, 'r') as infile:
-                data = json.load(infile)
-        else:
-            return
+        for prediction_date in prediction_dates:
+            today = datetime.today().strftime("%Y-%m-%d")
+            delta = datetime.today() - datetime.strptime(prediction_date, "%Y-%m-%d")
+            filename = self.datatype + '-' + source + '-' + prediction_date + '.json'
+            filepath = os.path.join(dirpath, filename)
+            if os.path.exists(filepath):
+                with open(filepath, 'r') as infile:
+                    data = json.load(infile)
+            else:
+                return
 
-        for item in data:
-            symbol = list(item.keys())[0]
-            stop_loss = item[symbol]['stop_loss']
-            exit_price = item[symbol]['exit_price']
+            for item in data:
+                symbol = list(item.keys())[0]
+                stop_loss = item[symbol]['stop_loss']
+                exit_price = item[symbol]['exit_price']
 
-            asset = libs.assets.ASSET(symbol=symbol, source=source, asset_type=asset_type, key=self.key)
-            asset.get_data()
+                asset = libs.assets.ASSET(symbol=symbol, source=source, asset_type=asset_type, key=self.key,
+                                          cacheage=3600*48)
+                asset.get_data()
 
-            df = pd.concat([asset.df['date'], asset.df['Close']], axis=1)
-            df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
-            df = df.set_index('date')
+                df = pd.concat([asset.df['date'], asset.df['Close']], axis=1)
+                df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
+                df = df.set_index('date')
 
-            filtered = df[prediction_date:].copy()
+                filtered = df[prediction_date:].copy()
 
-            filtered['Success'] = filtered.Close > exit_price
-            if filtered['Success'].sum() > 0:
-                print(today + ' Succeeded:', symbol, exit_price, filtered['Success'].sum(), filtered['Success'].max())
+                filtered['Success'] = filtered.Close > exit_price
+                if filtered['Success'].sum() > 0:
+                    print(today + ' Succeeded:', prediction_date, delta.days, symbol, exit_price, filtered['Success'].sum(),
+                          filtered.Close.max())
 
-            filtered['Bust'] = filtered.Close < stop_loss
-            if filtered['Bust'].sum() > 0:
-                print(today + ' Busted:', symbol, stop_loss, filtered['Bust'].sum())
+                filtered['Bust'] = filtered.Close < stop_loss
+                if filtered['Bust'].sum() > 0:
+                    print(today + ' Busted:', prediction_date, delta.days, symbol, stop_loss, filtered['Bust'].sum(),
+                          filtered.Close.min())
 
     def correlation(self, datatype1='mc', symbol1='USD000UTSTOM',
                     datatype2='me', symbol2='FXRU'):
@@ -199,8 +215,8 @@ class ADVISOR(object):
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         adv = ADVISOR(datatype='a', plot_anomaly=False)
-        fire.Fire(adv.check_watchlist)
+        # fire.Fire(adv.check_watchlist)
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
-        # fire.Fire(adv.test_strategy)
+        fire.Fire(adv.test_strategy)
     else:
         fire.Fire(ADVISOR)
