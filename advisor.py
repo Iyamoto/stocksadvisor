@@ -142,7 +142,7 @@ class ADVISOR(object):
                 continue
 
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
-                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*24*3)
+                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*24*30)
 
             # Fetch data from the source
             asset.get_data()
@@ -151,6 +151,18 @@ class ADVISOR(object):
             asset.static_analysis(printoutput=True)
             if asset.stoploss <= 0:
                 asset.stoploss = asset.lastprice * 0.5
+
+            # # Check 10% theory
+            # asset.df['PCT'] = asset.df['Close'].pct_change().fillna(0)
+            # asset.df['PCT10'] = asset.df['PCT'] > 0.1
+            #
+            # pd.options.display.max_rows = 200
+            #
+            # if asset.df['PCT10'].sum() > 1:
+            #     print(asset.df['PCT10'].sum())
+            #     print(asset.df[['PCT', 'PCT10']])
+            # else:
+            #     continue
 
             # usd_rub_correlation = round(self.correlation(datatype2=self.datatype, symbol2=symbol), 2)
             # print('USD-RUB-Correlation:', usd_rub_correlation)
@@ -215,8 +227,8 @@ class ADVISOR(object):
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         adv = ADVISOR(datatype='a', plot_anomaly=False)
-        # fire.Fire(adv.check_watchlist)
+        fire.Fire(adv.check_watchlist)
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
-        fire.Fire(adv.test_strategy)
+        # fire.Fire(adv.test_strategy)
     else:
         fire.Fire(ADVISOR)

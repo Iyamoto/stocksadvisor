@@ -6,6 +6,7 @@
 
 11.11 : P+T
 31.11 + 2 weeks : G20 
+06.12 OPEK
 14.12 CB RF - buy sber?
 19.12 FRS
 
@@ -32,6 +33,8 @@ The Psychology of Trading: Tools and Techniques for Minding the Markets
 https://top250.platts.com/Top250Rankings
 Элдер — «Трейдинг с доктором Элдером»
 New Concepts in Technical Trading Systems
+https://investfuture.ru/calendars
+https://stockcharts.com/articles/
 
 # Info
 
