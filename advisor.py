@@ -142,7 +142,7 @@ class ADVISOR(object):
                 continue
 
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
-                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*24*30)
+                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*24)
 
             # Fetch data from the source
             asset.get_data()

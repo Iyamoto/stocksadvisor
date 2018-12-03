@@ -7,6 +7,7 @@
 11.11 : P+T
 31.11 + 2 weeks : G20 
 06.12 OPEK
+07.12 SBER report
 14.12 CB RF - buy sber?
 19.12 FRS
 
