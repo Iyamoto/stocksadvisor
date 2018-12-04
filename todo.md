@@ -9,7 +9,7 @@
 06.12 OPEK
 07.12 SBER report
 14.12 CB RF - buy sber?
-19.12 FRS
+19.12 FRS - sell sber?
 
 # Checklist
 
