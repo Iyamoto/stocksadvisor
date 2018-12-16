@@ -18,11 +18,12 @@ import fire
 class ADVISOR(object):
     """Stocks Advisor"""
 
-    def __init__(self, datatype='m', plot_anomaly=False):
+    def __init__(self, datatype='m', plot_anomaly=False, caching=True):
         self.plot_anomaly = plot_anomaly
         self.datatype = datatype
         self.watchdata, self.source, self.asset_type = self.get_assettype(datatype=self.datatype)
         self.key = configs.alphaconf.key
+        self.caching = caching
 
         self.tobuy = dict()
         self.tosell = dict()
@@ -90,7 +91,7 @@ class ADVISOR(object):
                 exit_price = item[symbol]['exit_price']
 
                 asset = libs.assets.ASSET(symbol=symbol, source=source, asset_type=asset_type, key=self.key,
-                                          cacheage=3600*48, caching=False)
+                                          cacheage=3600*48, caching=self.caching)
                 asset.get_data()
 
                 df = pd.concat([asset.df['date'], asset.df['Close']], axis=1)
