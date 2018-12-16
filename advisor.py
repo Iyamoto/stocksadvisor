@@ -90,7 +90,7 @@ class ADVISOR(object):
                 exit_price = item[symbol]['exit_price']
 
                 asset = libs.assets.ASSET(symbol=symbol, source=source, asset_type=asset_type, key=self.key,
-                                          cacheage=3600*48)
+                                          cacheage=3600*48, caching=False)
                 asset.get_data()
 
                 df = pd.concat([asset.df['date'], asset.df['Close']], axis=1)

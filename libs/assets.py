@@ -22,7 +22,7 @@ class ASSET(object):
 
     def __init__(self, symbol='', source='moex', asset_type='stock', key='demo', min_goal=0.1,
                  volumefield='VOLUME', atr_multiplier=5, cacheage=3600*12, cachebase='',
-                 kc_channel=2):
+                 kc_channel=2, caching=True):
         """
         source: moex, alpha
         type: stock, futures
@@ -32,6 +32,7 @@ class ASSET(object):
         self.source = source
         self.volumefield = volumefield
         self.cacheage = cacheage
+        self.caching = caching
         self.key = key
         self.cachebase = cachebase
         self.min_goal = min_goal
@@ -156,21 +157,23 @@ class ASSET(object):
         self.df = self.df.fillna(method='bfill')
 
     def get_prices_from_alpha(self, key='', cachedir='cache'):
-        if not os.path.isdir(cachedir):
-            os.mkdir(cachedir)
-        filename = self.symbol + '.csv'
-        filepath = os.path.join(cachedir, filename)
-        if os.path.isfile(filepath):
-            age = time.time() - os.path.getmtime(filepath)
-            if age > self.cacheage:
-                os.remove(filepath)
-            else:
-                data = pd.read_csv(filepath, index_col='date')
-                self.df = data
-                return data
+        if self.caching:
+            if not os.path.isdir(cachedir):
+                os.mkdir(cachedir)
+            filename = self.symbol + '.csv'
+            filepath = os.path.join(cachedir, filename)
+            if os.path.isfile(filepath):
+                age = time.time() - os.path.getmtime(filepath)
+                if age > self.cacheage:
+                    os.remove(filepath)
+                else:
+                    data = pd.read_csv(filepath, index_col='date')
+                    self.df = data
+                    return data
 
         data = self.fetch_alpha(key=key, size='compact')
-        data.to_csv(filepath)
+        if self.caching:
+            data.to_csv(filepath)
 
         self.df = data
         return data
@@ -227,23 +230,25 @@ class ASSET(object):
         return filtered
 
     def get_data_from_moex(self, cachedir='cache-m', timeout=3, days=100):
-        if not os.path.isdir(cachedir):
-            os.mkdir(cachedir)
-        filename = self.symbol + '.csv'
-        filepath = os.path.join(cachedir, filename)
-        if os.path.isfile(filepath):
-            age = time.time() - os.path.getmtime(filepath)
-            if age > self.cacheage:
-                os.remove(filepath)
-            else:
-                data = pd.read_csv(filepath)
-                self.df = data
-                return data
+        if self.caching:
+            if not os.path.isdir(cachedir):
+                os.mkdir(cachedir)
+            filename = self.symbol + '.csv'
+            filepath = os.path.join(cachedir, filename)
+            if os.path.isfile(filepath):
+                age = time.time() - os.path.getmtime(filepath)
+                if age > self.cacheage:
+                    os.remove(filepath)
+                else:
+                    data = pd.read_csv(filepath)
+                    self.df = data
+                    return data
 
         data = self.fetch_moex(days=days, timeout=timeout)
         self.df = data
-        filepath = os.path.join(cachedir, filename)
-        data.to_csv(filepath, index=False)
+        if self.caching:
+            filepath = os.path.join(cachedir, filename)
+            data.to_csv(filepath, index=False)
 
         time.sleep(timeout)
 

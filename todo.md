@@ -10,6 +10,7 @@
 07.12 SBER report
 14.12 CB RF - buy sber?
 19.12 FRS - sell sber?
+15.01 CB start to buy USD
 
 # Checklist
 
