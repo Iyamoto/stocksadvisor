@@ -230,10 +230,10 @@ class ADVISOR(object):
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         adv = ADVISOR(datatype='me', plot_anomaly=False)
-        # fire.Fire(adv.check_watchlist)
+        fire.Fire(adv.check_watchlist)
 
-        rez = adv.correlation(datatype1='me', symbol1='FXGD', datatype2='me', symbol2='FXRU')
-        print(rez)
+        # rez = adv.correlation(datatype1='me', symbol1='FXGD', datatype2='me', symbol2='FXRU')
+        # print(rez)
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
