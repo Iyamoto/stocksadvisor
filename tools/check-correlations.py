@@ -24,10 +24,14 @@ if __name__ == "__main__":
 
     # Portfolio Sber
     etfs = [
-        'SBMX',
-        'SBSP',
-        'SBGB',
-        'SBCB',
+        'FXIT',  # +20%, 70
+        'SBSP',  # 10%, 35
+        'SBMX',  # 20%, vs SBRB
+        'SBGB',  # 10%, vs SBRB
+        'SBRB',  # 10%
+        'SBCB',  # +10%, Anti RUB devaluation
+        'FXTB',  # +10%, Anti RUB devaluation
+        'FXRU'   # +10%, Anti RUB devaluation
     ]
 
     data = dict()
