@@ -15,11 +15,18 @@ if __name__ == "__main__":
 
     # Portfolio FX-Kub
     etfs = [
-        'FXRL',
-        'FXUS',
-        'FXRU',
-        'FXGD',  # or PLZL?
-        'FXTB'
+        'FXIT',  # +
+        'FXUS',  # +
+        'AKNX',  # + , Anti RUB devaluation
+        'FXRL',  # +
+        'FXCN',  # +
+        'RUSE',  # +
+        'FXRB',  # +
+        'FXMM',  # +
+        'FXRU',  # + , Anti RUB devaluation
+        'FXGD',  # + , Anti RUB devaluation, or PLZL?
+        'RUSB',  # + , Anti RUB devaluation
+        'FXTB',  # + , Anti RUB devaluation
     ]
 
     # Portfolio Power-RUB
@@ -41,17 +48,17 @@ if __name__ == "__main__":
     #     'HD'
     # ]
 
-    # Portfolio Sber
-    etfs = [
-        'FXIT',  # +20%, 70
-        'SBSP',  # 10%, 35
-        'SBMX',  # 20%, vs SBRB
-        'SBGB',  # 10%, vs SBRB
-        'SBRB',  # 10%
-        'SBCB',  # +10%, Anti RUB devaluation
-        'FXTB',  # +10%, Anti RUB devaluation
-        'FXRU'   # +10%, Anti RUB devaluation
-    ]
+    # # Portfolio Sber
+    # etfs = [
+    #     'FXIT',  # + 20%, 70
+    #     'SBSP',  # 10%, 35
+    #     'SBMX',  # 20%, vs SBRB
+    #     'SBGB',  # 10%, vs SBRB
+    #     'SBRB',  # 10%
+    #     'SBCB',  # + 10%, Anti RUB devaluation
+    #     'FXTB',  # + 10%, Anti RUB devaluation
+    #     'FXRU'   # + 10%, Anti RUB devaluation
+    # ]
 
     data = dict()
     data['USD/RUB'] = list()
