@@ -115,8 +115,10 @@ class ADVISOR(object):
         watchdata1, source1, asset_type1 = self.get_assettype(datatype=datatype1)
         watchdata2, source2, asset_type2 = self.get_assettype(datatype=datatype2)
 
-        asset1 = libs.assets.ASSET(symbol=symbol1, source=source1, asset_type=asset_type1, key=self.key)
-        asset2 = libs.assets.ASSET(symbol=symbol2, source=source2, asset_type=asset_type2, key=self.key)
+        asset1 = libs.assets.ASSET(symbol=symbol1, source=source1, asset_type=asset_type1,
+                                   key=self.key, caching=self.caching)
+        asset2 = libs.assets.ASSET(symbol=symbol2, source=source2, asset_type=asset_type2,
+                                   key=self.key, caching=self.caching)
 
         asset1.get_data()
         asset2.get_data()
@@ -227,8 +229,12 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='a', plot_anomaly=False)
-        fire.Fire(adv.check_watchlist)
+        adv = ADVISOR(datatype='me', plot_anomaly=False)
+        # fire.Fire(adv.check_watchlist)
+
+        rez = adv.correlation(datatype1='me', symbol1='FXGD', datatype2='me', symbol2='FXRU')
+        print(rez)
+
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
     else:

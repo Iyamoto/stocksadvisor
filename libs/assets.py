@@ -47,7 +47,7 @@ class ASSET(object):
             self.boardid = 'CETS'
             self.volumefield = 'VOLRUR'
         if self.asset_type == 'etf':
-            self.boardid = 'EQTD'
+            self.boardid = 'TQTF'
 
         self.df = None
         self.trend = ''
@@ -251,7 +251,6 @@ class ASSET(object):
             data.to_csv(filepath, index=False)
 
         time.sleep(timeout)
-
         return data
 
     def plot(self, msg=''):
