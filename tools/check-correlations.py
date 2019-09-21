@@ -13,13 +13,32 @@ if __name__ == "__main__":
 
     adv = advisor.ADVISOR(datatype='me', plot_anomaly=False)
 
-    # # Portfolio FX-Kub
-    # etfs = [
-    #     'FXRL',
-    #     'FXUS',
-    #     'FXRU',
-    #     'FXGD',
-    #     'FXTB'
+    # Portfolio FX-Kub
+    etfs = [
+        'FXRL',
+        'FXUS',
+        'FXRU',
+        'FXGD',  # or PLZL?
+        'FXTB'
+    ]
+
+    # Portfolio Power-RUB
+    stocks = [
+        'SBER',
+        'MSTT',
+        'MRKV',
+        'CHMF',
+        'MAGN',
+        'IRAO',
+        'TRMK',
+        'SJM'
+    ]
+
+    # # Portfolio Power-USD
+    # stocks = [
+    #     'PLZL',  # ?
+    #     'VEON',
+    #     'HD'
     # ]
 
     # Portfolio Sber
@@ -51,3 +70,7 @@ if __name__ == "__main__":
 
     df = pd.DataFrame(data)
     print(df)
+
+    # print('MOEX', adv.correlation(datatype2='ms', symbol2='MOEX'))
+    # print('SBER', adv.correlation(datatype2='ms', symbol2='SBER'))
+    # print('MTSS', adv.correlation(datatype2='ms', symbol2='MTSS'))

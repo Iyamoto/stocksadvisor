@@ -197,6 +197,7 @@ class ADVISOR(object):
 
             asset.get_fair_price(dividend=dividend)
             print('Fair price:', asset.fairprice)
+            print('USD/RUB Correlation:', round(self.correlation(datatype2=self.datatype, symbol2=symbol), 1))
 
             # Filter out too risky stuff
             if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
@@ -229,11 +230,8 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='me', plot_anomaly=False)
-        fire.Fire(adv.check_watchlist)
-
-        # rez = adv.correlation(datatype1='me', symbol1='FXGD', datatype2='me', symbol2='FXRU')
-        # print(rez)
+        adv = ADVISOR(datatype='a', plot_anomaly=False)
+        adv.check_watchlist()
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
