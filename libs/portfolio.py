@@ -5,6 +5,7 @@ Portfolio class
 import sys
 import os
 sys.path.insert(0, os.path.abspath('..'))
+import json
 import libs.assets
 import configs.alphaconf
 
@@ -36,10 +37,12 @@ class PORTFOLIO(object):
         self.data[symbol]['share'] = share
 
     def __str__(self):
+        data = dict()
+        data[self.name] = dict()
         symbols = self.data.keys()
-        sep = ','
-        items = list()
+
         for symbol in symbols:
-            items.append(symbol + ':' + str(self.data[symbol]['share']))
-        rez = sep.join(items)
+            data[self.name][symbol] = self.data[symbol]['share']
+
+        rez = json.dumps(data, indent=4)
         return rez
