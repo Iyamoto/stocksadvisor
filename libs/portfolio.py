@@ -63,8 +63,9 @@ class PORTFOLIO(object):
         self.money -= self.data[symbol]['value']
 
     def run(self):
-
-        final_money = self.money
+        """
+        Calculate performance of the portfolio
+        """
 
         value_names = list()
         for symbol in self.data.keys():
@@ -73,7 +74,7 @@ class PORTFOLIO(object):
 
         self.df['Total'] = self.df[value_names].sum(axis=1)
 
-        final_money += self.df['Total'][-1:].values[0]
+        final_money = self.money + self.df['Total'][-1:].values[0]
         self.profit = round(final_money - self.initial_money, 2)
 
     def __str__(self):
