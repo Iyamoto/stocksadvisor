@@ -84,10 +84,12 @@ class PORTFOLIO(object):
         """
 
         symbols = self.data.keys()
+        money = 0
+
         for index, row in self.df.iterrows():
 
+            total = 0
             # Get total value of the portfolio
-            total = self.money
             for symbol in symbols:
                 self.data[symbol]['value'] = round(row[symbol] * self.data[symbol]['count'], 2)
                 total += self.data[symbol]['value']
@@ -105,31 +107,30 @@ class PORTFOLIO(object):
                     for symbol2 in symbols:
                         if symbol == symbol2:
                             continue
-                        if self.data[symbol2]['diff'] < 2:
+                        if self.data[symbol2]['diff'] < -1:
                             print(symbol2, self.data[symbol2]['diff'])
 
                             # Sell
                             amount = int(self.data[symbol]['value'] * self.data[symbol]['diff'] * 0.01 / row[symbol])
                             if amount > 0:
-                                print(self.data[symbol]['count'])
                                 print(symbol, 'to sell:', amount)
                                 self.data[symbol]['count'] -= amount
                                 gain = amount * row[symbol]
-                                print(gain)
 
                                 # Buy
                                 amount = int(gain / row[symbol2])
-                                print(self.data[symbol2]['count'])
                                 print(symbol2, 'to buy:', amount)
                                 self.data[symbol2]['count'] += amount
                                 pay = amount * row[symbol2]
-                                print(pay)
 
-                                self.money += gain - pay
+                                money += gain - pay
                                 break
                     else:
                         continue
                     break
+
+        profit = round(self.money + money + total - self.initial_money, 2)
+        print(profit)
 
     def print_stats(self):
         if 'Total' in self.df:
