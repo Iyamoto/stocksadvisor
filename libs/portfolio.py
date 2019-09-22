@@ -78,6 +78,59 @@ class PORTFOLIO(object):
         self.value = round(self.money + self.df['Total'][-1:].values[0], 2)
         self.profit = round(self.value - self.initial_money, 2)
 
+    def walk(self):
+        """
+        Simulate something
+        """
+
+        symbols = self.data.keys()
+        for index, row in self.df.iterrows():
+
+            # Get total value of the portfolio
+            total = self.money
+            for symbol in symbols:
+                self.data[symbol]['value'] = round(row[symbol] * self.data[symbol]['count'], 2)
+                total += self.data[symbol]['value']
+
+            # Get current asset weight
+            for symbol in symbols:
+                self.data[symbol]['weight'] = round(100 * self.data[symbol]['value'] / total, 2)
+                self.data[symbol]['diff'] = self.data[symbol]['weight'] - self.data[symbol]['share']
+
+            # Rebalance?
+            for symbol in symbols:
+                if self.data[symbol]['diff'] > 2:
+                    print(symbol, row[symbol], self.data[symbol]['value'], self.data[symbol]['weight'],
+                          self.data[symbol]['share'], total)
+                    for symbol2 in symbols:
+                        if symbol == symbol2:
+                            continue
+                        if self.data[symbol2]['diff'] < 2:
+                            print(symbol2, self.data[symbol2]['diff'])
+
+                            # Sell
+                            amount = int(self.data[symbol]['value'] * self.data[symbol]['diff'] * 0.01 / row[symbol])
+                            if amount > 0:
+                                print(self.data[symbol]['count'])
+                                print(symbol, 'to sell:', amount)
+                                self.data[symbol]['count'] -= amount
+                                gain = amount * row[symbol]
+                                print(gain)
+
+                                # Buy
+                                amount = int(gain / row[symbol2])
+                                print(self.data[symbol2]['count'])
+                                print(symbol2, 'to buy:', amount)
+                                self.data[symbol2]['count'] += amount
+                                pay = amount * row[symbol2]
+                                print(pay)
+
+                                self.money += gain - pay
+                                break
+                    else:
+                        continue
+                    break
+
     def print_stats(self):
         if 'Total' in self.df:
             print(self.df['Total'].describe())
