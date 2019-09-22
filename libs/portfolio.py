@@ -56,6 +56,7 @@ class PORTFOLIO(object):
             tmp_df = asset.df
             tmp_df.date = pd.to_datetime(tmp_df['date'], format='%Y-%m-%d')
             tmp_df = tmp_df.set_index('date')
+            tmp_df = tmp_df[~tmp_df.index.duplicated()]
             self.df[symbol] = tmp_df['Close']
 
         price = float(round(self.df[symbol][0:1].values[0], 2))
