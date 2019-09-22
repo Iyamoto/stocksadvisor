@@ -16,6 +16,7 @@ class PORTFOLIO(object):
 
     def __init__(self, name='No name', money=100000, caching=True, cacheage=3600 * 48):
         self.name = name
+        self.initial_money = money
         self.money = money
         self.data = dict()
         self.key = configs.alphaconf.key
@@ -54,6 +55,14 @@ class PORTFOLIO(object):
             tmp_df = tmp_df.set_index('date')
             self.df[symbol] = tmp_df['Close']
 
+        price = float(round(self.df[symbol][0:1].values[0], 2))
+        self.data[symbol]['count'] = int(self.initial_money * (share / 100) / price)
+        self.data[symbol]['value'] = self.data[symbol]['count'] * price
+        self.money -= self.data[symbol]['value']
+
+    def run(self):
+        pass
+
     def __str__(self):
         data = dict()
         data[self.name] = dict()
@@ -61,7 +70,10 @@ class PORTFOLIO(object):
         symbols = self.data.keys()
 
         for symbol in symbols:
-            data[self.name][symbol] = self.data[symbol]['share']
+            data[self.name][symbol] = dict()
+            data[self.name][symbol]['share'] = self.data[symbol]['share']
+            data[self.name][symbol]['count'] = self.data[symbol]['count']
+            data[self.name][symbol]['value'] = self.data[symbol]['value']
 
         rez = json.dumps(data, indent=4)
         return rez
