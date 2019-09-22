@@ -1,5 +1,10 @@
 # TODOs
 
+https://www.bloomberg.com/quote/GDX:US
+https://www.etf.com/SPLV#fit
+https://www.ishares.com/us/products/239695/ishares-msci-usa-minimum-volatility-etf
+https://seekingalpha.com
+
 # To buy
 
 # Dates
