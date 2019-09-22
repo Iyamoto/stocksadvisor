@@ -78,6 +78,10 @@ class PORTFOLIO(object):
         self.value = round(self.money + self.df['Total'][-1:].values[0], 2)
         self.profit = round(self.value - self.initial_money, 2)
 
+    def print_stats(self):
+        if 'Total' in self.df:
+            print(self.df['Total'].describe())
+
     def __str__(self):
         data = dict()
         data[self.name] = dict()
@@ -85,6 +89,7 @@ class PORTFOLIO(object):
         data[self.name]['money'] = self.money
         data[self.name]['profit'] = self.profit
         data[self.name]['profit_pct'] = round(100 * self.profit / self.initial_money, 1)
+
         symbols = self.data.keys()
 
         for symbol in symbols:
