@@ -18,6 +18,7 @@ class PORTFOLIO(object):
         self.name = name
         self.initial_money = money
         self.money = money
+        self.value = money
         self.profit = 0
         self.data = dict()
         self.key = configs.alphaconf.key
@@ -60,7 +61,7 @@ class PORTFOLIO(object):
         price = float(round(self.df[symbol][0:1].values[0], 2))
         self.data[symbol]['count'] = int(self.initial_money * (share / 100) / price)
         self.data[symbol]['value'] = round(self.data[symbol]['count'] * price, 2)
-        self.money -= self.data[symbol]['value']
+        self.money = round(self.money - self.data[symbol]['value'], 2)
 
     def run(self):
         """
@@ -74,15 +75,16 @@ class PORTFOLIO(object):
 
         self.df['Total'] = self.df[value_names].sum(axis=1)
 
-        final_money = self.money + self.df['Total'][-1:].values[0]
-        self.profit = round(final_money - self.initial_money, 2)
+        self.value = round(self.money + self.df['Total'][-1:].values[0], 2)
+        self.profit = round(self.value - self.initial_money, 2)
 
     def __str__(self):
         data = dict()
         data[self.name] = dict()
+        data[self.name]['value'] = self.value
         data[self.name]['money'] = self.money
         data[self.name]['profit'] = self.profit
-        data[self.name]['profit_pct'] = round(100 * self.profit / self.money, 1)
+        data[self.name]['profit_pct'] = round(100 * self.profit / self.initial_money, 1)
         symbols = self.data.keys()
 
         for symbol in symbols:
