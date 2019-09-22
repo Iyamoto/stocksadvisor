@@ -23,6 +23,9 @@ if __name__ == "__main__":
     portfolio.add(symbol='FXTB', share=10)
     portfolio.add(symbol='FXRU', share=10)
 
-    print(portfolio.df.head(5))
+    portfolio.run()
 
     print(portfolio)
+
+    print(portfolio.df.head(5))
+    print(portfolio.df.tail(5))

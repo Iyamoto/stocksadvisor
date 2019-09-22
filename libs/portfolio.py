@@ -18,6 +18,7 @@ class PORTFOLIO(object):
         self.name = name
         self.initial_money = money
         self.money = money
+        self.profit = 0
         self.data = dict()
         self.key = configs.alphaconf.key
         self.caching = caching
@@ -25,6 +26,7 @@ class PORTFOLIO(object):
 
         pd.options.display.max_rows = 200
         self.df = pd.DataFrame()
+        self.values = pd.DataFrame()
 
     def add(self, symbol='', asset_type='etf', source='moex', share=0):
         """
@@ -57,16 +59,27 @@ class PORTFOLIO(object):
 
         price = float(round(self.df[symbol][0:1].values[0], 2))
         self.data[symbol]['count'] = int(self.initial_money * (share / 100) / price)
-        self.data[symbol]['value'] = self.data[symbol]['count'] * price
+        self.data[symbol]['value'] = round(self.data[symbol]['count'] * price, 2)
         self.money -= self.data[symbol]['value']
 
     def run(self):
-        pass
+
+        final_money = self.money
+
+        for symbol in self.data.keys():
+            self.df[symbol + '_value'] = self.df[symbol] * self.data[symbol]['count']
+            price = float(round(self.df[symbol][-1:].values[0], 2))
+            self.data[symbol]['value'] = round(self.data[symbol]['count'] * price, 2)
+            final_money += self.data[symbol]['value']
+
+        self.profit = round(final_money - self.initial_money, 2)
 
     def __str__(self):
         data = dict()
         data[self.name] = dict()
         data[self.name]['money'] = self.money
+        data[self.name]['profit'] = self.profit
+        data[self.name]['profit_pct'] = round(100 * self.profit / self.money, 1)
         symbols = self.data.keys()
 
         for symbol in symbols:
