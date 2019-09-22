@@ -27,5 +27,5 @@ if __name__ == "__main__":
 
     print(portfolio)
 
-    print(portfolio.df.head(5))
-    print(portfolio.df.tail(5))
+    # print(portfolio.df.head(5))
+    # print(portfolio.df.tail(5))

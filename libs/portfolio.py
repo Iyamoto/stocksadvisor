@@ -66,12 +66,14 @@ class PORTFOLIO(object):
 
         final_money = self.money
 
+        value_names = list()
         for symbol in self.data.keys():
+            value_names.append(symbol + '_value')
             self.df[symbol + '_value'] = self.df[symbol] * self.data[symbol]['count']
-            price = float(round(self.df[symbol][-1:].values[0], 2))
-            self.data[symbol]['value'] = round(self.data[symbol]['count'] * price, 2)
-            final_money += self.data[symbol]['value']
 
+        self.df['Total'] = self.df[value_names].sum(axis=1)
+
+        final_money += self.df['Total'][-1:].values[0]
         self.profit = round(final_money - self.initial_money, 2)
 
     def __str__(self):
