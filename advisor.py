@@ -191,7 +191,7 @@ class ADVISOR(object):
             if self.datatype == 'a':
                 ema200 = asset.get_ema200_alpha(key=self.key)
                 print('EMA200:', ema200)
-                if ema200 and ema200 > asset.lastprice:
+                if ema200 and asset.lastprice > ema200:
                     print('Price above EMA200', ema200)
 
             # Can we sell something?
