@@ -192,7 +192,8 @@ class ADVISOR(object):
                 ema200 = asset.get_ema200_alpha(key=self.key)
                 print('EMA200:', ema200)
                 if ema200 and asset.lastprice > ema200:
-                    print('Price above EMA200', ema200)
+                    ema200_diff = round(100 * (asset.lastprice - ema200) / asset.lastprice, 1)
+                    print('Price above EMA200', ema200_diff, '%')
 
             # Can we sell something?
             if asset.lastprice > entry_price > 0:
