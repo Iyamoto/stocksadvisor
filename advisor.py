@@ -187,6 +187,11 @@ class ADVISOR(object):
                 print('Anomaly detected')
                 asset.plot('Anomaly:')
 
+            # Check EMA200
+            if self.datatype == 'a':
+                ema200 = asset.get_ema200_alpha(key=self.key)
+                print('EMA200:', ema200)
+
             # Can we sell something?
             if asset.lastprice > entry_price > 0:
                 income = round((asset.lastprice / entry_price - 1) * 100, 2)
