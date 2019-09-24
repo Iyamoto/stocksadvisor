@@ -182,11 +182,13 @@ class ASSET(object):
     def get_ema200_alpha(self, key='demo'):
         url = 'https://www.alphavantage.co/query?function=' + \
             'EMA&symbol={}&interval=daily&time_period=200&series_type=close&apikey={}'.format(self.symbol, key)
-
-        r = requests.get(url=url)
-        data = r.json()
-        last = data['Meta Data']['3: Last Refreshed']
-        ema200 = data['Technical Analysis: EMA'][last]['EMA']
+        try:
+            r = requests.get(url=url)
+            data = r.json()
+            last = data['Meta Data']['3: Last Refreshed']
+            ema200 = float(data['Technical Analysis: EMA'][last]['EMA'])
+        except:
+            ema200 = None
         return ema200
 
     def fetch_alpha(self, key='demo', size='compact', timeout=5):
