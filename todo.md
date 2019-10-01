@@ -4,6 +4,8 @@ https://www.bloomberg.com/quote/GDX:US
 https://www.etf.com/SPLV#fit
 https://www.ishares.com/us/products/239695/ishares-msci-usa-minimum-volatility-etf
 https://seekingalpha.com
+https://money.usnews.com/investing/stock-market-news/slideshows/the-complete-berkshire-hathaway-portfolio?onepage
+https://www.gurufocus.com/guru/warren+buffett/current-portfolio/portfolio
 
 # To buy
 
