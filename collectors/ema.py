@@ -27,7 +27,8 @@ def get_ema200(symbol):
 
     query = 'SELECT last("ema200") FROM "ema200" WHERE ("symbol"=~ /' + symbol + '/)'
     result = influx_client.query(query)
-    print(result.raw)
+    ema200 = result['series'][0]['values'][1]
+    return ema200
 
 
 def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
