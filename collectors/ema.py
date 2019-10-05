@@ -69,6 +69,7 @@ def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
                     logging.error('Can not fetch ' + symbol)
                     logging.error(url)
                     break
+                logging.info('Retry ' + str(retry))
                 time.sleep(retry)
                 continue
 
