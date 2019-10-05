@@ -32,6 +32,8 @@ def get_ema200_alpha(symbol, key='demo'):
             retry += 1
             if retry > 10:
                 logging.error('Can not fetch ' + symbol)
+                logging.error(url)
+                break
             time.sleep(retry)
             continue
 
@@ -63,5 +65,8 @@ if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         fetch_ema200_fxit(write_to_influx=False)
     else:
+        logging.basicConfig(format='%(asctime)-15s %(levelname)s %(message)s',
+                            level='ERROR',
+                            stream=sys.stderr)
         fire.Fire()
 
