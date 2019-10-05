@@ -26,7 +26,7 @@ def get_ema200(symbol, age=23*3600):
         timeout=5
     )
 
-    query = 'SELECT last("ema200") FROM "ema200" WHERE ("symbol"=~ /' + symbol + '/)'
+    query = 'SELECT last("ema200") FROM "ema200" WHERE ("symbol" = ' + symbol + ')'
     result = influx_client.query(query)
     ema200_date = result.raw['series'][0]['values'][0][0]
     tmp = ema200_date.split('.')
