@@ -15,7 +15,7 @@ import configs.influx
 import configs.fxit
 
 
-def get_ema200_alpha(symbol, key='demo'):
+def get_ema200_alpha(symbol, key=configs.alphaconf.key):
     url = 'https://www.alphavantage.co/query?function=' + \
           'EMA&symbol={}&interval=daily&time_period=200&series_type=close&apikey={}'.format(symbol, key)
     retry = 0
@@ -53,7 +53,7 @@ def fetch_ema200_fxit(write_to_influx=True):
 
     symbols = configs.fxit.holdings
     for symbol in symbols:
-        ema200 = get_ema200_alpha(symbol=symbol, key=configs.alphaconf.key)
+        ema200 = get_ema200_alpha(symbol=symbol)
         print(ema200)
 
         if write_to_influx:
