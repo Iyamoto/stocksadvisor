@@ -1,3 +1,5 @@
 """FXIT holdings"""
 
-holdings = ['MSFT', 'AAPL', 'FB', 'GOOG', 'V', 'MA', 'INTC', 'CSCO', 'ADBE']
+holdings = ['MSFT', 'AAPL', 'FB', 'GOOG', 'V', 'MA', 'INTC', 'CSCO', 'ADBE', 'ORCL', 'NVDA', 'IBM', 'TXN',
+            'ACN', 'CRM', 'PYPL', 'QCOM', 'AVGO', 'ADP', 'HPQ', 'ADI', 'NTAP', 'WDC', 'XLNX', 'STX', 'SWKS',
+            ]
