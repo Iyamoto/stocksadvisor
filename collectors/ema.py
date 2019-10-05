@@ -57,7 +57,7 @@ def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
         # Try to fetch from the WEB
         while True:
             try:
-                r = requests.get(url=url)
+                r = requests.get(url=url, timeout=5)
                 data = r.json()
                 last = data['Meta Data']['3: Last Refreshed']
                 ema200 = float(data['Technical Analysis: EMA'][last]['EMA'])
