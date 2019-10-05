@@ -66,7 +66,12 @@ def get_price(symbol, age=23*3600):
         price = result.raw['series'][0]['values'][0][1]
     else:
         price = None
-    return price
+
+    query = 'SELECT last("change_percent") FROM "data" WHERE ("symbol"=~ /^' + symbol + '$/)'
+    result = influx_client.query(query)
+    change_percent = result.raw['series'][0]['values'][0][1]
+
+    return price, change_percent
 
 
 def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
@@ -124,6 +129,8 @@ def fetch_price_alpha(symbol, key=configs.alphaconf.key):
                 r = requests.get(url=url, timeout=5)
                 data = r.json()
                 price = float(data['Global Quote']['05. price'])
+                change_percent = data['Global Quote']['10. change percent']
+                change_percent = float(change_percent.strip('%'))
                 if price:
                     break
             except:
@@ -136,7 +143,7 @@ def fetch_price_alpha(symbol, key=configs.alphaconf.key):
                 time.sleep(retry*5)
                 continue
 
-    return price
+    return price, change_percent
 
 
 def fetch(write_to_influx=True, datatype='fxit'):
@@ -159,7 +166,7 @@ def fetch(write_to_influx=True, datatype='fxit'):
         if datatype == 'portfolio':
             symbol = list(symbol.keys())[0]
 
-        price = fetch_price_alpha(symbol)
+        price, change_percent = fetch_price_alpha(symbol)
         logging.info(symbol + ' price: ' + str(price))
         ema200 = fetch_ema200_alpha(symbol)
         logging.info(symbol + ' ema200: ' + str(ema200))
@@ -172,6 +179,8 @@ def fetch(write_to_influx=True, datatype='fxit'):
             logging.error(symbol + ' price ' + str(price) + ' not float')
             continue
 
+        ema_distance = round(100 * (price - ema200) / ema200, 2)
+
         if write_to_influx:
             json_body = [
                 {
@@ -182,6 +191,8 @@ def fetch(write_to_influx=True, datatype='fxit'):
                     "fields": {
                         "price": price,
                         "ema200": ema200,
+                        "ema_distance": ema_distance,
+                        "change_percent": change_percent,
                     }
                 }
             ]
