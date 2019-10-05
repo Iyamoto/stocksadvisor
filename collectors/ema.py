@@ -70,7 +70,7 @@ def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
                     logging.error(url)
                     break
                 logging.info(symbol + ' retry ' + str(retry))
-                time.sleep(retry*3)
+                time.sleep(retry*5)
                 continue
 
     return ema200
