@@ -1,0 +1,8 @@
+[Unit]
+Description=Collects EMA200 from alphavantage.co
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /home/alex/stocksadvisor/collectors/ema_collect.sh
+User=alex
+Group=systemd-journal

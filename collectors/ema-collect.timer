@@ -1,0 +1,10 @@
+[Unit]
+Description=Run ema-collect.service every day
+
+[Timer]
+OnCalendar=Mon..Fri 17:30
+OnBootSec=10min
+OnUnitActiveSec=15min
+
+[Install]
+WantedBy=timers.target

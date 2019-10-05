@@ -95,7 +95,7 @@ if __name__ == "__main__":
         fetch_ema200_fxit(write_to_influx=False)
     else:
         logging.basicConfig(format='%(asctime)-15s %(levelname)s %(message)s',
-                            level='ERROR',
+                            level='INFO',
                             stream=sys.stderr)
         fire.Fire()
 
