@@ -25,7 +25,7 @@ def get_ema200(symbol, age=23*3600):
         configs.influx.DBNAME,
         timeout=5
     )
-    query = 'SELECT last("ema200") FROM "ema200" WHERE ("symbol"=~ /^' + symbol + '$/)'
+    query = 'SELECT last("ema200") FROM "data" WHERE ("symbol"=~ /^' + symbol + '$/)'
     result = influx_client.query(query)
     ema200_date = result.raw['series'][0]['values'][0][0]
     tmp = ema200_date.split('.')
@@ -38,6 +38,36 @@ def get_ema200(symbol, age=23*3600):
     else:
         ema200 = None
     return ema200
+
+
+def get_price(symbol, age=23*3600):
+
+    influx_client = InfluxDBClient(
+        configs.influx.HOST,
+        configs.influx.PORT,
+        configs.influx.DBUSER,
+        configs.influx.DBPWD,
+        configs.influx.DBNAME,
+        timeout=5
+    )
+
+    # influx_client.drop_measurement('ema200')
+    # influx_client.drop_measurement('price')
+    # exit()
+
+    query = 'SELECT last("price") FROM "data" WHERE ("symbol"=~ /^' + symbol + '$/)'
+    result = influx_client.query(query)
+    price_date = result.raw['series'][0]['values'][0][0]
+    tmp = price_date.split('.')
+    price_date = tmp[0]
+    price_date = datetime.datetime.strptime(price_date, '%Y-%m-%dT%H:%M:%S')
+    now = datetime.datetime.utcnow()
+    diff = now - price_date
+    if diff.total_seconds() < age:
+        price = result.raw['series'][0]['values'][0][1]
+    else:
+        price = None
+    return price
 
 
 def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
@@ -76,7 +106,41 @@ def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
     return ema200
 
 
-def fetch_ema200_fxit(write_to_influx=True):
+def fetch_price_alpha(symbol, key=configs.alphaconf.key):
+    url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={}&apikey={}'.format(symbol, key)
+    retry = 0
+
+    # Check cache
+    try:
+        price = get_price(symbol)
+    except:
+        price = None
+
+    if price:
+        logging.info(symbol + ' Got price from InfluxDB: ' + str(price))
+    else:
+        # Try to fetch from the WEB
+        while True:
+            try:
+                r = requests.get(url=url, timeout=5)
+                data = r.json()
+                price = float(data['Global Quote']['05. price'])
+                if price:
+                    break
+            except:
+                retry += 1
+                if retry > 10:
+                    logging.error('Can not fetch ' + symbol)
+                    logging.error(url)
+                    break
+                logging.info(symbol + ' retry ' + str(retry))
+                time.sleep(retry*5)
+                continue
+
+    return price
+
+
+def fetch(write_to_influx=True, datatype='fxit'):
     if write_to_influx:
         influx_client = InfluxDBClient(
             configs.influx.HOST,
@@ -87,58 +151,37 @@ def fetch_ema200_fxit(write_to_influx=True):
             timeout=5
         )
 
-    symbols = configs.fxit.holdings
+    if datatype == 'fxit':
+        symbols = configs.fxit.holdings
+    if datatype == 'portfolio':
+        symbols = configs.alphaconf.symbols
+
     for symbol in symbols:
-        ema200 = fetch_ema200_alpha(symbol=symbol)
-        logging.info(symbol + ' ' + str(ema200))
+        if datatype == 'portfolio':
+            symbol = list(symbol.keys())[0]
+
+        price = fetch_price_alpha(symbol)
+        logging.info(symbol + ' price: ' + str(price))
+        ema200 = fetch_ema200_alpha(symbol)
+        logging.info(symbol + ' ema200: ' + str(ema200))
+
         if type(ema200) != float:
-            logging.error(symbol + ' ' + str(ema200) + ' not float')
+            logging.error(symbol + ' ema200 ' + str(ema200) + ' not float')
+            continue
+
+        if type(price) != float:
+            logging.error(symbol + ' price ' + str(price) + ' not float')
             continue
 
         if write_to_influx:
             json_body = [
                 {
-                    "measurement": "ema200",
+                    "measurement": "data",
                     "tags": {
                         "symbol": symbol,
                     },
                     "fields": {
-                        "ema200": ema200,
-                    }
-                }
-            ]
-            influx_client.write_points(json_body)
-
-
-def fetch_ema200_portfolio(write_to_influx=True):
-    if write_to_influx:
-        influx_client = InfluxDBClient(
-            configs.influx.HOST,
-            configs.influx.PORT,
-            configs.influx.DBUSER,
-            configs.influx.DBPWD,
-            configs.influx.DBNAME,
-            timeout=5
-        )
-
-    symbols = configs.alphaconf.symbols
-
-    for item in symbols:
-        symbol = list(item.keys())[0]
-        ema200 = fetch_ema200_alpha(symbol=symbol)
-        logging.info(symbol + ' ' + str(ema200))
-        if type(ema200) != float:
-            logging.error(symbol + ' ' + str(ema200) + ' not float')
-            continue
-
-        if write_to_influx:
-            json_body = [
-                {
-                    "measurement": "ema200",
-                    "tags": {
-                        "symbol": symbol,
-                    },
-                    "fields": {
+                        "price": price,
                         "ema200": ema200,
                     }
                 }
@@ -151,8 +194,8 @@ if __name__ == "__main__":
                         level='INFO',
                         stream=sys.stderr)
     if "PYCHARM_HOSTED" in os.environ:
-        print(get_ema200('C'))
-        # fetch_ema200_portfolio(write_to_influx=False)
+        # print(fetch_price_alpha('MSFT'))
+        fetch(write_to_influx=False)
     else:
         fire.Fire()
 
