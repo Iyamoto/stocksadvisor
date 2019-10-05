@@ -111,7 +111,7 @@ class ADVISOR(object):
                           filtered.Close.min())
 
     def correlation(self, datatype1='mc', symbol1='USD000UTSTOM',
-                    datatype2='me', symbol2='FXRU'):
+                    datatype2='me', symbol2='FXRU', extended=False):
         watchdata1, source1, asset_type1 = self.get_assettype(datatype=datatype1)
         watchdata2, source2, asset_type2 = self.get_assettype(datatype=datatype2)
 
@@ -128,7 +128,10 @@ class ADVISOR(object):
         df['B'] = asset2.df['Close'].copy()
 
         correlation = df['A'].corr(df['B'])
-        return correlation
+        if extended:
+            return correlation, df
+        else:
+            return correlation
 
     def check_watchlist(self):
         """Do magic"""
