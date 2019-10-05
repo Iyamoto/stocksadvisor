@@ -110,12 +110,48 @@ def fetch_ema200_fxit(write_to_influx=True):
             influx_client.write_points(json_body)
 
 
+def fetch_ema200_portfolio(write_to_influx=True):
+    if write_to_influx:
+        influx_client = InfluxDBClient(
+            configs.influx.HOST,
+            configs.influx.PORT,
+            configs.influx.DBUSER,
+            configs.influx.DBPWD,
+            configs.influx.DBNAME,
+            timeout=5
+        )
+
+    symbols = configs.alphaconf.symbols
+
+    for item in symbols:
+        symbol = list(item.keys())[0]
+        ema200 = fetch_ema200_alpha(symbol=symbol)
+        logging.info(symbol + ' ' + str(ema200))
+        if type(ema200) != float:
+            logging.error(symbol + ' ' + str(ema200) + ' not float')
+            continue
+
+        if write_to_influx:
+            json_body = [
+                {
+                    "measurement": "ema200",
+                    "tags": {
+                        "symbol": symbol,
+                    },
+                    "fields": {
+                        "ema200": ema200,
+                    }
+                }
+            ]
+            influx_client.write_points(json_body)
+
+
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)-15s %(levelname)s %(message)s',
                         level='INFO',
                         stream=sys.stderr)
     if "PYCHARM_HOSTED" in os.environ:
-        fetch_ema200_fxit(write_to_influx=False)
+        fetch_ema200_portfolio(write_to_influx=False)
     else:
         fire.Fire()
 
