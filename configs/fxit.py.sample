@@ -1,0 +1,3 @@
+"""FXIT holdings"""
+
+holdings = ['MSFT', 'AAPL', 'FB', 'GOOG', 'V', 'MA', 'INTC', 'CSCO', 'ADBE']
