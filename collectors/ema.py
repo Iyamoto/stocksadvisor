@@ -51,8 +51,7 @@ def get_price(symbol, age=23*3600):
         timeout=5
     )
 
-    # influx_client.drop_measurement('ema200')
-    # influx_client.drop_measurement('price')
+    # influx_client.drop_measurement('data')
     # exit()
 
     query = 'SELECT last("price") FROM "data" WHERE ("symbol"=~ /^' + symbol + '$/)'
