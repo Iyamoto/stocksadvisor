@@ -54,11 +54,24 @@ def fetch_ema200_fxit(write_to_influx=True):
     symbols = configs.fxit.holdings
     for symbol in symbols:
         ema200 = get_ema200_alpha(symbol=symbol)
-        print(ema200)
+        logging.info(symbol + ' ' + str(ema200))
+        if type(ema200) != float:
+            logging.error(symbol + ' ' + str(ema200) + ' not float')
+            continue
 
         if write_to_influx:
-            pass
-
+            json_body = [
+                {
+                    "measurement": "ema200",
+                    "tags": {
+                        "symbol": symbol,
+                    },
+                    "fields": {
+                        "ema200": ema200,
+                    }
+                }
+            ]
+            influx_client.write_points(json_body)
 
 
 if __name__ == "__main__":
