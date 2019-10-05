@@ -14,9 +14,19 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath('..'))
 import pandas as pd
-from scipy import stats
 import advisor
 import configs.fxit
+import numpy as np
+
+
+def calc_beta(df):
+    np_array = df.values
+    m = np_array[:, 0]  # market returns are column zero from numpy array
+    s = np_array[:, 1]  # stock returns are column one from numpy array
+    covariance = np.cov(s, m)  # Calculate covariance between stock and market
+    beta = covariance[0, 1]/covariance[1, 1]
+    return beta
+
 
 if __name__ == "__main__":
 
@@ -26,6 +36,7 @@ if __name__ == "__main__":
     data['Symbol'] = list()
     data['Correlation'] = list()
     data['Beta'] = list()
+
     for symbol in configs.fxit.holdings:
 
         correlation, df = adv.correlation(datatype1='me', symbol1='FXIT', datatype2='a', symbol2=symbol,
@@ -36,10 +47,9 @@ if __name__ == "__main__":
         X = df_change['A']
         y = df_change['B']
 
-        slope, intercept, r_value, p_value, std_err = stats.linregress(X, y)
         data['Symbol'].append(symbol)
         data['Correlation'].append(round(correlation, 2))
-        data['Beta'].append(round(slope, 2))
+        data['Beta'].append(round(calc_beta(df_change), 2))
 
     df_rez = pd.DataFrame(data)
     print(df_rez.sort_values('Correlation'))
