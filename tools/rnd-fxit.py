@@ -39,7 +39,10 @@ if __name__ == "__main__":
 
     for symbol in configs.fxit.holdings:
 
-        correlation, df = adv.correlation(datatype1='me', symbol1='FXIT', datatype2='a', symbol2=symbol,
+        # correlation, df = adv.correlation(datatype1='me', symbol1='FXIT', datatype2='a', symbol2=symbol,
+        #                                   extended=True)
+
+        correlation, df = adv.correlation(datatype1='a', symbol1='STX', datatype2='a', symbol2=symbol,
                                           extended=True)
 
         df_change = df.pct_change(1).dropna(axis=0)
