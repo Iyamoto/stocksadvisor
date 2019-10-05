@@ -25,8 +25,7 @@ def get_ema200(symbol, age=23*3600):
         configs.influx.DBNAME,
         timeout=5
     )
-
-    query = 'SELECT last("ema200") FROM "ema200" WHERE ("symbol" = ' + symbol + ')'
+    query = 'SELECT last("ema200") FROM "ema200" WHERE ("symbol"=~ /^' + symbol + '$/)'
     result = influx_client.query(query)
     ema200_date = result.raw['series'][0]['values'][0][0]
     tmp = ema200_date.split('.')
@@ -151,7 +150,8 @@ if __name__ == "__main__":
                         level='INFO',
                         stream=sys.stderr)
     if "PYCHARM_HOSTED" in os.environ:
-        fetch_ema200_portfolio(write_to_influx=False)
+        print(get_ema200('C'))
+        # fetch_ema200_portfolio(write_to_influx=False)
     else:
         fire.Fire()
 
