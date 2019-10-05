@@ -47,7 +47,11 @@ def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
     retry = 0
 
     # Check cache
-    ema200 = get_ema200(symbol)
+    try:
+        ema200 = get_ema200(symbol)
+    except:
+        ema200 = None
+
     if ema200:
         logging.info(symbol + ' Got EMA200 from InfluxDB: ' + str(ema200))
     else:
