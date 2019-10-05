@@ -15,7 +15,22 @@ import configs.influx
 import configs.fxit
 
 
-def get_ema200_alpha(symbol, key=configs.alphaconf.key):
+def get_ema200(symbol):
+    influx_client = InfluxDBClient(
+        configs.influx.HOST,
+        configs.influx.PORT,
+        configs.influx.DBUSER,
+        configs.influx.DBPWD,
+        configs.influx.DBNAME,
+        timeout=5
+    )
+
+    query = 'SELECT last("ema200") FROM "ema200" WHERE ("symbol"=~ /' + symbol + '/)'
+    result = influx_client.query(query)
+    print(result.raw)
+
+
+def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
     url = 'https://www.alphavantage.co/query?function=' + \
           'EMA&symbol={}&interval=daily&time_period=200&series_type=close&apikey={}'.format(symbol, key)
     retry = 0
@@ -53,7 +68,7 @@ def fetch_ema200_fxit(write_to_influx=True):
 
     symbols = configs.fxit.holdings
     for symbol in symbols:
-        ema200 = get_ema200_alpha(symbol=symbol)
+        ema200 = fetch_ema200_alpha(symbol=symbol)
         logging.info(symbol + ' ' + str(ema200))
         if type(ema200) != float:
             logging.error(symbol + ' ' + str(ema200) + ' not float')
