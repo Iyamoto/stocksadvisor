@@ -181,12 +181,18 @@ def fetch(write_to_influx=True, datatype='fxit'):
 
         ema_distance = round(100 * (price - ema200) / ema200, 2)
 
+        if symbol in configs.fxit.holdings:
+            symbol_type = 'FXIT'
+        else:
+            symbol_type = 'Portfolio'
+
         if write_to_influx:
             json_body = [
                 {
                     "measurement": "data",
                     "tags": {
                         "symbol": symbol,
+                        "symbol_type": symbol_type,
                     },
                     "fields": {
                         "price": price,
