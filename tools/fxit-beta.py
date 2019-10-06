@@ -44,6 +44,10 @@ if __name__ == "__main__":
     fxit_usd_df[['date', 'RUB']] = fxit_df[['date', 'Close']]
     fxit_usd_df['USD'] = round(fxit_usd_df['RUB'] / usdrub_df['Close'], 2)
     fxit_usd_df['Close'] = fxit_usd_df['USD'].fillna(method='ffill')
+
+    # correlation = fxit_usd_df['RUB'].corr(fxit_usd_df['Close'])
+    # print(correlation)
+
     fxit_usd_df.drop(['RUB', 'USD'], axis=1, inplace=True)
 
     data = dict()
@@ -53,7 +57,7 @@ if __name__ == "__main__":
 
     for symbol in configs.etf.XLK:
 
-        # Get correlation
+        # Calculate correlation
         asset = libs.assets.ASSET(symbol=symbol, source='alpha', asset_type='stock', key=configs.alphaconf.key)
         asset.get_data()
 
@@ -62,6 +66,8 @@ if __name__ == "__main__":
         df['B'] = asset.df['Close'].copy()
 
         correlation = df['A'].corr(df['B'])
+
+        # Calculate Beta
 
         df_change = df.pct_change(1).dropna(axis=0)
 
