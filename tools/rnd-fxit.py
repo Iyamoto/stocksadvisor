@@ -1,58 +1,58 @@
 """
 Research FXIT
 
-Beta Interpretation
-0 indicates no correlation with the chosen benchmark (e.g. NASDAQ index )
-1 indicates a stock has the same volatility as the market
->1 indicates a stock that’s more volatile than its benchmark
-<1 is less volatile than the benchmark
-1.5 is 50% more volatile than the benchmark
-
 """
 
 import sys
 import os
 sys.path.insert(0, os.path.abspath('..'))
 import pandas as pd
-import advisor
+import configs.alphaconf
 import configs.fxit
+import libs.assets
 import numpy as np
-
-
-def calc_beta(df):
-    np_array = df.values
-    m = np_array[:, 0]  # market returns are column zero from numpy array
-    s = np_array[:, 1]  # stock returns are column one from numpy array
-    covariance = np.cov(s, m)  # Calculate covariance between stock and market
-    beta = covariance[0, 1]/covariance[1, 1]
-    return beta
+from fbprophet import Prophet
+from fbprophet.diagnostics import cross_validation
+import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
 
-    adv = advisor.ADVISOR(datatype='a', plot_anomaly=False)
+    asset = libs.assets.ASSET(symbol='MSFT', source='alpha', asset_type='stock', key=configs.alphaconf.key)
 
-    data = dict()
-    data['Symbol'] = list()
-    data['Correlation'] = list()
-    data['Beta'] = list()
+    asset.get_data()
 
-    for symbol in configs.fxit.holdings:
+    df_size = len(asset.df)
+    train_size = round(df_size * 95 / 100)
+    test_size = round(df_size * 5 / 100)
 
-        # correlation, df = adv.correlation(datatype1='me', symbol1='FXIT', datatype2='a', symbol2=symbol,
-        #                                   extended=True)
+    df_train = asset.df[:train_size]
+    df_test = asset.df[-test_size:]
 
-        correlation, df = adv.correlation(datatype1='a', symbol1='STX', datatype2='a', symbol2=symbol,
-                                          extended=True)
+    train = pd.DataFrame()
 
-        df_change = df.pct_change(1).dropna(axis=0)
+    # Convert to Prophet required form
+    train[['ds', 'y']] = df_train[['date', 'Close']]
 
-        X = df_change['A']
-        y = df_change['B']
+    # Init & fit model
+    model = Prophet(yearly_seasonality=False, daily_seasonality=False, weekly_seasonality=False,
+                    interval_width=0.95)
+    model.fit(train)
 
-        data['Symbol'].append(symbol)
-        data['Correlation'].append(round(correlation, 2))
-        data['Beta'].append(round(calc_beta(df_change), 2))
+    forecast_frame = model.make_future_dataframe(periods=test_size)
 
-    df_rez = pd.DataFrame(data)
-    print(df_rez.sort_values('Correlation'))
+    forecast = model.predict(forecast_frame)
+    print(forecast.tail(test_size))
+    print(df_test[['date', 'Close']])
+
+    # validation = cross_validation(model, horizon='5 days')
+    #
+    # # last 5 entries
+    # print(validation.tail())
+    #
+    # mean_error = np.mean(np.abs((validation['y'] - validation['yhat']) / validation['y'])) * 100
+    # print(mean_error)
+
+    model.plot(forecast)
+    # model.plot_components(forecast)
+    plt.show()
