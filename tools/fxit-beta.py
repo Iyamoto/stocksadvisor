@@ -14,8 +14,9 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath('..'))
 import pandas as pd
-import advisor
-import configs.fxit
+import configs.etf
+import libs.assets
+import configs.alphaconf
 import numpy as np
 
 
@@ -30,20 +31,37 @@ def calc_beta(df):
 
 if __name__ == "__main__":
 
-    adv = advisor.ADVISOR(datatype='a', plot_anomaly=False)
+    # Transform FXIT to USD
+    asset = libs.assets.ASSET(symbol='FXIT', source='moex', asset_type='etf', key=configs.alphaconf.key)
+    asset.get_data()
+    fxit_df = asset.df
+
+    asset = libs.assets.ASSET(symbol='USD000UTSTOM', source='moex', asset_type='currency', key=configs.alphaconf.key)
+    asset.get_data()
+    usdrub_df = asset.df
+
+    fxit_usd_df = pd.DataFrame()
+    fxit_usd_df[['date', 'RUB']] = fxit_df[['date', 'Close']]
+    fxit_usd_df['USD'] = round(fxit_usd_df['RUB'] / usdrub_df['Close'], 2)
+    fxit_usd_df['Close'] = fxit_usd_df['USD'].fillna(method='ffill')
+    fxit_usd_df.drop(['RUB', 'USD'], axis=1, inplace=True)
 
     data = dict()
     data['Symbol'] = list()
     data['Correlation'] = list()
     data['Beta'] = list()
 
-    for symbol in configs.fxit.holdings:
+    for symbol in configs.etf.XLK:
 
-        # correlation, df = adv.correlation(datatype1='me', symbol1='FXIT', datatype2='a', symbol2=symbol,
-        #                                   extended=True)
+        # Get correlation
+        asset = libs.assets.ASSET(symbol=symbol, source='alpha', asset_type='stock', key=configs.alphaconf.key)
+        asset.get_data()
 
-        correlation, df = adv.correlation(datatype1='a', symbol1='STX', datatype2='a', symbol2=symbol,
-                                          extended=True)
+        df = pd.DataFrame()
+        df['A'] = fxit_usd_df['Close'].copy()
+        df['B'] = asset.df['Close'].copy()
+
+        correlation = df['A'].corr(df['B'])
 
         df_change = df.pct_change(1).dropna(axis=0)
 
