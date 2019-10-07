@@ -15,7 +15,7 @@ import configs.influx
 import configs.fxit
 
 
-def get_ema200(symbol, age=23*3600):
+def get_ema200(symbol, age=5*23*3600):
 
     influx_client = InfluxDBClient(
         configs.influx.HOST,
