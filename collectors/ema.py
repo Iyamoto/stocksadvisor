@@ -113,13 +113,13 @@ def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
 def fetch_price_alpha(symbol, key=configs.alphaconf.key):
     url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={}&apikey={}'.format(symbol, key)
     retry = 0
-    change_percent = 0.0
 
     # Check cache
     try:
-        price = get_price(symbol)
+        price, change_percent = get_price(symbol)
     except:
         price = None
+        change_percent = None
 
     if price:
         logging.info(symbol + ' Got price from InfluxDB: ' + str(price))
