@@ -113,6 +113,7 @@ def fetch_ema200_alpha(symbol, key=configs.alphaconf.key):
 def fetch_price_alpha(symbol, key=configs.alphaconf.key):
     url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={}&apikey={}'.format(symbol, key)
     retry = 0
+    change_percent = 0.0
 
     # Check cache
     try:
