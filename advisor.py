@@ -133,13 +133,17 @@ class ADVISOR(object):
         else:
             return correlation
 
-    def check_watchlist(self):
+    def check_watchlist(self, symbol_overide=''):
         """Do magic"""
 
         results = list()
         for item in self.watchdata:
 
             symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
+
+            if symbol_overide:
+                if symbol != symbol_overide:
+                    continue
 
             print()
             print(symbol)
@@ -210,6 +214,9 @@ class ADVISOR(object):
             print('Fair price:', asset.fairprice)
             print('USD/RUB Correlation:', round(self.correlation(datatype2=self.datatype, symbol2=symbol), 1))
 
+            if symbol_overide:
+                asset.plot('Manual:')
+
             # Filter out too risky stuff
             if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
                 results.append(asset.get_results())
@@ -242,7 +249,7 @@ class ADVISOR(object):
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         adv = ADVISOR(datatype='a', plot_anomaly=False)
-        adv.check_watchlist()
+        adv.check_watchlist(symbol_overide='RTN')
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
