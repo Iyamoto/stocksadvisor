@@ -16,6 +16,8 @@ import collections
 import json
 import numpy as np
 import requests
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
 
 
 class ASSET(object):
