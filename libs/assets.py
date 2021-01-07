@@ -158,6 +158,7 @@ class ASSET(object):
             self.fix_alpha_columns()
         self.df = self.df.fillna(method='ffill')
         self.df = self.df.fillna(method='bfill')
+        self.df = self.df[::-1].reset_index(drop=True)
 
     def get_prices_from_alpha(self, key='', cachedir='cache'):
         if self.caching:
