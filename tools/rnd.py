@@ -17,6 +17,11 @@ from scipy.signal import argrelextrema
 import numpy as np
 
 
+def trendline(data, order=1):
+    coeffs = np.polyfit(data.index.values, list(data), order)
+    return coeffs
+
+
 def get_assettype(datatype='ms'):
     if datatype == 'ms':
         watchdata = configs.alphaconf.symbols_m
@@ -92,11 +97,16 @@ if __name__ == "__main__":
         # symbol = 'HAS'
         asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*12)
         asset.get_data()
+        asset.get_lastprice()
         asset.get_ema(period=13)
         asset.df = find_event(df=asset.df)
-        if asset.df.Max.sum() > 0:
+        if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
             print(symbol)
-            pprint(asset.df.Max[asset.df.Max > 0])
-            plot(in_df=asset.df, symbol=symbol)
+            event_index = asset.df.Max[asset.df.Max >= asset.lastprice][-1:].index.values[0]
+            if len(asset.df) - event_index >= 5:
+                trend = trendline(asset.df['Close'].tail(len(asset.df) - event_index))
+                angle = trend[0]
+                if angle > 0:
+                    plot(in_df=asset.df, symbol=symbol)
 
         # break
