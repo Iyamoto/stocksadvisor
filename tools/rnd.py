@@ -61,6 +61,18 @@ def plot(in_df=None, symbol=''):
         df['EMA13'] = in_df.EMA13.values
         plt.plot(df.index, df.EMA13, 'b', label='EMA13', linestyle='--')
 
+    if 'ATR' in columns:
+        df['ATR'] = in_df.ATR.values
+
+    if 'KC_LOW' in columns:
+        df['KC_LOW'] = in_df.KC_LOW.values
+
+    if 'KC_HIGH' in columns:
+        df['KC_HIGH'] = in_df.KC_HIGH.values
+
+    if 'KC_LOW' in columns and 'KC_HIGH' in columns:
+        plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.1)
+
     plt.scatter(df.index, df['Max'], c='g')
 
     plt.legend()
@@ -69,6 +81,14 @@ def plot(in_df=None, symbol=''):
     ax1 = plt.subplot2grid((4, 1), (2, 0), rowspan=1)
     ax1.plot(df.index, df.Volume, 'g', label='Volume')
     ax1.set_ylabel('Volume', color='g')
+
+    ax1.grid()
+
+    if 'ATR' in columns:
+        plt.subplot2grid((4, 1), (3, 0), rowspan=1)
+        plt.plot(df.index, df.ATR, 'r', label='ATR')
+        plt.legend()
+        plt.grid()
 
     fig.tight_layout()
     plt.show()
@@ -92,6 +112,7 @@ if __name__ == "__main__":
     pd.options.display.max_rows = 200
 
     watchdata, source, asset_type = get_assettype(datatype='ms')
+    # watchdata, source, asset_type = get_assettype(datatype='a')
     for item in watchdata:
         symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
         print(symbol)
@@ -99,7 +120,10 @@ if __name__ == "__main__":
         asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*24)
         asset.get_data()
         asset.get_lastprice()
+        asset.get_ema(period=5)
         asset.get_ema(period=13)
+        asset.get_atr()
+        asset.get_kc(period=5)
         asset.df = find_event(df=asset.df)
         if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
             event_index = asset.df.Max[asset.df.Max >= asset.lastprice][-1:].index.values[0]
