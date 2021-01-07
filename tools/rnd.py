@@ -46,8 +46,8 @@ def get_assettype(datatype='ms'):
 if __name__ == "__main__":
     pd.options.display.max_rows = 200
 
-    # watchdata, source, asset_type = get_assettype(datatype='ms')
-    watchdata, source, asset_type = get_assettype(datatype='a')
+    watchdata, source, asset_type = get_assettype(datatype='ms')
+    # watchdata, source, asset_type = get_assettype(datatype='a')
     for item in watchdata:
         symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
         print(symbol)
@@ -65,12 +65,10 @@ if __name__ == "__main__":
                 if angle > 0:
                     print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
 
-                    asset.get_bust_chance(bust=asset.stoplosspercent, sims=1000, plot=False, taillen=taillen)
+                    asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
                     print('Bust chance:', round(asset.bust_chance, 2))
                     print('Goal chance:', round(asset.goal_chance, 2))
-                    # Reward-risk ratio
-                    if asset.goal_chance > 0.25:
-                        asset.get_reward_risk_ratio()
-                        print('Reward-Risk ratio:', asset.rewardriskratio)
+                    asset.get_reward_risk_ratio()
+                    print('Reward-Risk ratio:', asset.rewardriskratio)
 
                     asset.plot_fous()
