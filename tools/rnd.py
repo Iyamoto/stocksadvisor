@@ -51,7 +51,10 @@ def find_event(df=None, points=5):
     event_filter = df.Volume > mean + 2*std
     df['Event'] = event_filter
 
-    df['Max'] = df.iloc[argrelextrema(df.Close.values, np.greater_equal, order=points)[0]]['Close']
+    df['tmp'] = df.iloc[argrelextrema(df.Close.values, np.greater_equal, order=points)[0]]['Close']
+    df['Max'] = df.tmp[df.Event == True]
+    df = df.drop(['Event'], axis=1)
+    df = df.drop(['tmp'], axis=1)
 
     return df
 
