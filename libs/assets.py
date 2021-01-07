@@ -156,9 +156,9 @@ class ASSET(object):
         if self.source == 'alpha':
             self.get_prices_from_alpha(key=self.key, cachedir=os.path.join(self.cachebase, 'cache'))
             self.fix_alpha_columns()
+            self.df = self.df[::-1].reset_index(drop=True)
         self.df = self.df.fillna(method='ffill')
         self.df = self.df.fillna(method='bfill')
-        self.df = self.df[::-1].reset_index(drop=True)
 
     def get_prices_from_alpha(self, key='', cachedir='cache'):
         if self.caching:

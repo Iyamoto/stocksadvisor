@@ -91,9 +91,10 @@ def find_event(df=None, points=5):
 if __name__ == "__main__":
     pd.options.display.max_rows = 200
 
-    watchdata, source, asset_type = get_assettype(datatype='a')
+    watchdata, source, asset_type = get_assettype(datatype='ms')
     for item in watchdata:
         symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
+        print(symbol)
         # symbol = 'HAS'
         asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*12)
         asset.get_data()
@@ -101,7 +102,6 @@ if __name__ == "__main__":
         asset.get_ema(period=13)
         asset.df = find_event(df=asset.df)
         if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
-            print(symbol)
             event_index = asset.df.Max[asset.df.Max >= asset.lastprice][-1:].index.values[0]
             if len(asset.df) - event_index >= 5:
                 trend = trendline(asset.df['Close'].tail(len(asset.df) - event_index))
