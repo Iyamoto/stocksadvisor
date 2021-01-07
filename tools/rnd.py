@@ -111,8 +111,8 @@ def find_event(df=None, points=5):
 if __name__ == "__main__":
     pd.options.display.max_rows = 200
 
-    watchdata, source, asset_type = get_assettype(datatype='ms')
-    # watchdata, source, asset_type = get_assettype(datatype='a')
+    # watchdata, source, asset_type = get_assettype(datatype='ms')
+    watchdata, source, asset_type = get_assettype(datatype='a')
     for item in watchdata:
         symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
         print(symbol)
