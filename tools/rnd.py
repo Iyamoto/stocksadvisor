@@ -10,10 +10,7 @@ import libs.assets
 import pandas as pd
 import configs.alphaconf
 from pprint import pprint
-from datetime import datetime
-import fire
 import matplotlib.pyplot as plt
-from scipy.signal import argrelextrema
 import numpy as np
 
 
@@ -46,68 +43,6 @@ def get_assettype(datatype='ms'):
     return watchdata, source, asset_type
 
 
-def plot(in_df=None, symbol=''):
-    columns = in_df.columns
-    df = pd.concat([in_df['date'], in_df['Close'], in_df['Volume'], in_df['Max']], axis=1)
-    df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
-    df['Close'] = df.Close.replace(to_replace=0, method='ffill')
-    df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
-    fig = plt.figure(figsize=(15, 8))
-    plt.subplot2grid((4, 1), (0, 0), rowspan=2)
-    plt.title(symbol)
-    plt.plot(df.index, df.Close, 'k', label='Price', linewidth=2.0)
-
-    if 'EMA13' in columns:
-        df['EMA13'] = in_df.EMA13.values
-        plt.plot(df.index, df.EMA13, 'b', label='EMA13', linestyle='--')
-
-    if 'ATR' in columns:
-        df['ATR'] = in_df.ATR.values
-
-    if 'KC_LOW' in columns:
-        df['KC_LOW'] = in_df.KC_LOW.values
-
-    if 'KC_HIGH' in columns:
-        df['KC_HIGH'] = in_df.KC_HIGH.values
-
-    if 'KC_LOW' in columns and 'KC_HIGH' in columns:
-        plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.1)
-
-    plt.scatter(df.index, df['Max'], c='g')
-
-    plt.legend()
-    plt.grid()
-
-    ax1 = plt.subplot2grid((4, 1), (2, 0), rowspan=1)
-    ax1.plot(df.index, df.Volume, 'g', label='Volume')
-    ax1.set_ylabel('Volume', color='g')
-
-    ax1.grid()
-
-    if 'ATR' in columns:
-        plt.subplot2grid((4, 1), (3, 0), rowspan=1)
-        plt.plot(df.index, df.ATR, 'r', label='ATR')
-        plt.legend()
-        plt.grid()
-
-    fig.tight_layout()
-    plt.show()
-
-
-def find_event(df=None, points=5):
-    std = round(asset.df['Volume'].std(), 1)
-    mean = round(asset.df['Volume'].mean(), 1)
-    event_filter = df.Volume > mean + 2*std
-    df['Event'] = event_filter
-
-    df['tmp'] = df.iloc[argrelextrema(df.Close.values, np.greater_equal, order=points)[0]]['Close']
-    df['Max'] = df.tmp[df.Event == True]
-    df = df.drop(['Event'], axis=1)
-    df = df.drop(['tmp'], axis=1)
-
-    return df
-
-
 if __name__ == "__main__":
     pd.options.display.max_rows = 200
 
@@ -119,18 +54,23 @@ if __name__ == "__main__":
         # symbol = 'HAS'
         asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*24)
         asset.get_data()
-        asset.get_lastprice()
-        asset.get_ema(period=5)
-        asset.get_ema(period=13)
-        asset.get_atr()
-        asset.get_kc(period=5)
-        asset.df = find_event(df=asset.df)
+        asset.static_analysis()
+        asset.find_event()
         if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
             event_index = asset.df.Max[asset.df.Max >= asset.lastprice][-1:].index.values[0]
-            if len(asset.df) - event_index >= 5:
-                trend = trendline(asset.df['Close'].tail(len(asset.df) - event_index))
+            taillen = len(asset.df) - event_index
+            if taillen >= 5:
+                trend = trendline(asset.df['Close'].tail(taillen))
                 angle = trend[0]
                 if angle > 0:
-                    plot(in_df=asset.df, symbol=symbol)
+                    print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
 
-        # break
+                    asset.get_bust_chance(bust=asset.stoplosspercent, sims=1000, plot=False, taillen=taillen)
+                    print('Bust chance:', round(asset.bust_chance, 2))
+                    print('Goal chance:', round(asset.goal_chance, 2))
+                    # Reward-risk ratio
+                    if asset.goal_chance > 0.25:
+                        asset.get_reward_risk_ratio()
+                        print('Reward-Risk ratio:', asset.rewardriskratio)
+
+                    asset.plot_fous()

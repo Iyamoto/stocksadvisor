@@ -14,6 +14,7 @@ import pandas_montecarlo
 from alpha_vantage.timeseries import TimeSeries
 import collections
 import json
+from scipy.signal import argrelextrema
 import numpy as np
 import requests
 from pandas.plotting import register_matplotlib_converters
@@ -67,7 +68,7 @@ class ASSET(object):
         self.trendline = None
         self.blackswan_chance = 0.005
         self.dividend_level = dict()
-        self.dividend_level['alpha'] = 1.8  # Acceptable dividend lvl for USD
+        self.dividend_level['alpha'] = 2.5  # Acceptable dividend lvl for USD
         self.dividend_level['moex'] = 4  # Acceptable dividend lvl for RUB
         self.fairprice = 0
 
@@ -93,6 +94,7 @@ class ASSET(object):
         self.get_goalprice()
         self.get_atr(period=5)
         self.get_ema(period=5)
+        self.get_ema(period=13)
         self.get_ema(period=20)
         self.get_kc()
 
@@ -113,7 +115,6 @@ class ASSET(object):
         if printoutput:
             print('Last price:', self.lastprice)
             print('Exit price:', self.goalprice)
-            print('Bust:', self.stoplosspercent)
             print('Stop loss:', self.stoploss)
             print('Trend:', self.trend)
             print('Anomalies:', self.anomalies)
@@ -348,6 +349,61 @@ class ASSET(object):
         fig.tight_layout()
         plt.show()
 
+    def plot_fous(self):
+        columns = self.df.columns
+        df = pd.concat([self.df['date'], self.df['Close'], self.df['Volume'], self.df['Max']], axis=1)
+        df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
+        df['Close'] = df.Close.replace(to_replace=0, method='ffill')
+        df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
+        fig = plt.figure(figsize=(15, 8))
+        plt.subplot2grid((4, 1), (0, 0), rowspan=2)
+        plt.title(self.symbol)
+        plt.plot(df.index, df.Close, 'k', label='Price', linewidth=2.0)
+
+        if 'EMA13' in columns:
+            df['EMA13'] = self.df.EMA13.values
+            plt.plot(df.index, df.EMA13, 'b', label='EMA13', linestyle='--')
+
+        if 'ATR' in columns:
+            df['ATR'] = self.df.ATR.values
+
+        if 'KC_LOW' in columns:
+            df['KC_LOW'] = self.df.KC_LOW.values
+
+        if 'KC_HIGH' in columns:
+            df['KC_HIGH'] = self.df.KC_HIGH.values
+
+        if 'KC_LOW' in columns and 'KC_HIGH' in columns:
+            plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.1)
+
+        if self.anomaly_filter_up.any():
+            plt.scatter(df[df['BreakoutUp']].index, df[df['BreakoutUp']].Close, marker='^', color='b',
+                        label='BreakoutUp')
+
+        if self.anomaly_filter_down.any():
+            plt.scatter(df[df['BreakoutDown']].index, df[df['BreakoutDown']].Close, marker='v', color='r',
+                        label='BreakoutDown')
+
+        plt.scatter(df.index, df['Max'], c='g')
+
+        plt.legend()
+        plt.grid()
+
+        ax1 = plt.subplot2grid((4, 1), (2, 0), rowspan=1)
+        ax1.plot(df.index, df.Volume, 'g', label='Volume')
+        ax1.set_ylabel('Volume', color='g')
+
+        ax1.grid()
+
+        if 'ATR' in columns:
+            plt.subplot2grid((4, 1), (3, 0), rowspan=1)
+            plt.plot(df.index, df.ATR, 'r', label='ATR')
+            plt.legend()
+            plt.grid()
+
+        fig.tight_layout()
+        plt.show()
+
     def get_atr(self, period=5):
         pricedata = self.df
         high = pricedata['High'].values
@@ -372,15 +428,16 @@ class ASSET(object):
         self.df['KC_LOW'] = self.df['EMA' + str(period)] - self.kc_channel * self.df['ATR']
         self.df['KC_HIGH'] = self.df['EMA' + str(period)] + self.kc_channel * self.df['ATR']
 
-    def get_bust_chance(self, sims=1000, bust=0.1, goal=0.1, plot=False):
+    def get_bust_chance(self, sims=1000, bust=0.1, goal=0.1, plot=False, taillen=0):
         # Monte-Carlo
-        self.df['Return'] = self.df['Close'].pct_change().fillna(0)
+        df = self.df.tail(taillen).copy()
+        df['Return'] = df['Close'].pct_change().fillna(0)
 
         # print('Real returns stats:')
         # pprint(self.df['Return'].describe())
         # print()
 
-        mc = self.df['Return'].montecarlo(sims=sims, bust=-1 * bust, goal=goal)
+        mc = df['Return'].montecarlo(sims=sims, bust=-1 * bust, goal=goal)
 
         # pprint(mc.stats)
         self.bust_chance = mc.stats['bust']
@@ -442,3 +499,16 @@ class ASSET(object):
 
         self.trend = ema_trend + ' ' + fit_trend
         return self.trend
+
+    def find_event(self, points=5):
+        std = round(self.df['Volume'].std(), 1)
+        mean = round(self.df['Volume'].mean(), 1)
+        event_filter = self.df.Volume > mean + 2 * std
+        self.df['Event'] = event_filter
+
+        self.df['tmp'] = self.df.iloc[argrelextrema(self.df.Close.values, np.greater_equal, order=points)[0]]['Close']
+        self.df['Max'] = self.df.tmp[self.df.Event == True]
+        self.df = self.df.drop(['Event'], axis=1)
+        self.df = self.df.drop(['tmp'], axis=1)
+
+        return self.df
