@@ -17,6 +17,30 @@ from scipy.signal import argrelextrema
 import numpy as np
 
 
+def get_assettype(datatype='ms'):
+    if datatype == 'ms':
+        watchdata = configs.alphaconf.symbols_m
+        source = 'moex'
+        asset_type = 'stock'
+    if datatype == 'a':
+        watchdata = configs.alphaconf.symbols
+        source = 'alpha'
+        asset_type = 'stock'
+    if datatype == 'mc':
+        watchdata = configs.alphaconf.symbols_mc
+        source = 'moex'
+        asset_type = 'currency'
+    if datatype == 'mf':
+        watchdata = configs.alphaconf.symbols_mf
+        source = 'moex'
+        asset_type = 'futures'
+    if datatype == 'me':
+        watchdata = configs.alphaconf.symbols_me
+        source = 'moex'
+        asset_type = 'etf'
+    return watchdata, source, asset_type
+
+
 def plot(in_df=None, symbol=''):
     columns = in_df.columns
     df = pd.concat([in_df['date'], in_df['Close'], in_df['Volume'], in_df['Max']], axis=1)
@@ -61,11 +85,18 @@ def find_event(df=None, points=5):
 
 if __name__ == "__main__":
     pd.options.display.max_rows = 200
-    symbol = 'T'
-    asset = libs.assets.ASSET(symbol=symbol, source='alpha', key=configs.alphaconf.key, cacheage=3600*12)
-    asset.get_data()
-    asset.get_ema(period=13)
-    asset.df = find_event(df=asset.df)
-    pprint(asset.df)
 
-    plot(in_df=asset.df, symbol=symbol)
+    watchdata, source, asset_type = get_assettype(datatype='a')
+    for item in watchdata:
+        symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
+        # symbol = 'HAS'
+        asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*12)
+        asset.get_data()
+        asset.get_ema(period=13)
+        asset.df = find_event(df=asset.df)
+        if asset.df.Max.sum() > 0:
+            print(symbol)
+            pprint(asset.df.Max[asset.df.Max > 0])
+            plot(in_df=asset.df, symbol=symbol)
+
+        # break
