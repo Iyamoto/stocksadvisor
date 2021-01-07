@@ -96,7 +96,7 @@ if __name__ == "__main__":
         symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
         print(symbol)
         # symbol = 'HAS'
-        asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*12)
+        asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*24)
         asset.get_data()
         asset.get_lastprice()
         asset.get_ema(period=13)
