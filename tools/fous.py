@@ -65,15 +65,15 @@ if __name__ == "__main__":
                     if angle > 0:
                         print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
                         print('Breakout level:', asset.breakout_level)
-                        if asset.lastprice >= asset.breakout_level:
-                            print('Price is above of the breakout level!')
+                        if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level < 0.02:
+                            print('Price is close the breakout level!')
 
-                        asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
-                        print('Bust chance:', round(asset.bust_chance, 2))
-                        print('Goal chance:', round(asset.goal_chance, 2))
-                        asset.get_reward_risk_ratio()
-                        print('Reward-Risk ratio:', asset.rewardriskratio)
+                            asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
+                            print('Bust chance:', round(asset.bust_chance, 2))
+                            print('Goal chance:', round(asset.goal_chance, 2))
+                            asset.get_reward_risk_ratio()
+                            print('Reward-Risk ratio:', asset.rewardriskratio)
 
-                        asset.plot_fous()
+                            asset.plot_fous()
 
             print()
