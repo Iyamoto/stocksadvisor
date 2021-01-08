@@ -97,6 +97,7 @@ class ASSET(object):
         self.get_ema(period=5)
         self.get_ema(period=13)
         self.get_ema(period=20)
+        self.get_rsi(period=13)
         self.get_kc()
 
         # Stop loss
@@ -366,8 +367,8 @@ class ASSET(object):
             df['EMA13'] = self.df.EMA13.values
             plt.plot(df.index, df.EMA13, 'b', label='EMA13', linestyle='--')
 
-        if 'ATR' in columns:
-            df['ATR'] = self.df.ATR.values
+        if 'RSI' in columns:
+            df['RSI'] = self.df.RSI.values
 
         if 'KC_LOW' in columns:
             df['KC_LOW'] = self.df.KC_LOW.values
@@ -399,9 +400,13 @@ class ASSET(object):
 
         ax1.grid()
 
-        if 'ATR' in columns:
+        if 'RSI' in columns:
             plt.subplot2grid((4, 1), (3, 0), rowspan=1)
-            plt.plot(df.index, df.ATR, 'r', label='ATR')
+            plt.plot(df.index, df.RSI, 'r', label='RSI')
+            horiz_line_data = np.array([70 for i in range(len(df.index))])
+            plt.plot(df.index, horiz_line_data, color='g', label='Oversold', linestyle='-.', linewidth=1.0)
+            horiz_line_data = np.array([30 for i in range(len(df.index))])
+            plt.plot(df.index, horiz_line_data, color='b', label='Overbought', linestyle='-.', linewidth=1.0)
             plt.legend()
             plt.grid()
 
@@ -426,6 +431,14 @@ class ASSET(object):
         close = close.astype(float)
         output = talib.EMA(close, timeperiod=period)
         self.df['EMA' + str(period)] = output
+        return output
+
+    def get_rsi(self, period=5):
+        pricedata = self.df
+        close = pricedata['Close'].values
+        close = close.astype(float)
+        output = talib.RSI(close, timeperiod=period)
+        self.df['RSI'] = output
         return output
 
     def get_kc(self, period=5):
