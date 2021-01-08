@@ -115,6 +115,7 @@ class ASSET(object):
         if printoutput:
             print('Last price:', self.lastprice)
             print('Exit price:', self.goalprice)
+            print('Bust:', self.stoplosspercent)
             print('Stop loss:', self.stoploss)
             print('Trend:', self.trend)
             print('Anomalies:', self.anomalies)
@@ -142,7 +143,7 @@ class ASSET(object):
         """Returns stop loss and stop loss percent"""
         self.df['StopLoss'] = self.df['Close'] - self.atr_multiplier * self.df['ATR']
         self.df['StopLossPercent'] = 1 - self.df['StopLoss'] / self.df['Close']
-        self.stoplosspercent = self.df['StopLossPercent'].max()
+        self.stoplosspercent = round(self.df['StopLossPercent'].max(), 2)
         self.stoploss = round(self.df.Close[-1:].values[0] * (1 - self.stoplosspercent), 2)
 
         return self.stoploss, self.stoplosspercent
