@@ -55,7 +55,7 @@ if __name__ == "__main__":
             asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*24)
             asset.get_data()
             asset.static_analysis()
-            asset.find_event()
+            asset.find_event(points=3, diff=1.5)
             if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
                 event_index = asset.df.Max[asset.df.Max >= asset.lastprice][-1:].index.values[0]
                 taillen = len(asset.df) - event_index
@@ -64,6 +64,9 @@ if __name__ == "__main__":
                     angle = trend[0]
                     if angle > 0:
                         print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
+                        print('Breakout level:', asset.breakout_level)
+                        if asset.lastprice >= asset.breakout_level:
+                            print('Price is above of the breakout level!')
 
                         asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
                         print('Bust chance:', round(asset.bust_chance, 2))

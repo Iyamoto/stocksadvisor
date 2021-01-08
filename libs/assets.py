@@ -71,6 +71,7 @@ class ASSET(object):
         self.dividend_level['alpha'] = 2.5  # Acceptable dividend lvl for USD
         self.dividend_level['moex'] = 4  # Acceptable dividend lvl for RUB
         self.fairprice = 0
+        self.breakout_level = 0
 
     def __str__(self):
         result = self.get_results()
@@ -386,6 +387,8 @@ class ASSET(object):
                         label='BreakoutDown')
 
         plt.scatter(df.index, df['Max'], c='g')
+        horiz_line_data = np.array([self.breakout_level for i in range(len(df.index))])
+        plt.plot(df.index, horiz_line_data, color='g', label='Breakout', linestyle='-.', linewidth=1.0)
 
         plt.legend()
         plt.grid()
@@ -501,15 +504,17 @@ class ASSET(object):
         self.trend = ema_trend + ' ' + fit_trend
         return self.trend
 
-    def find_event(self, points=5):
+    def find_event(self, points=5, diff=2):
         std = round(self.df['Volume'].std(), 1)
         mean = round(self.df['Volume'].mean(), 1)
-        event_filter = self.df.Volume > mean + 2 * std
+        event_filter = self.df.Volume > mean + diff * std
         self.df['Event'] = event_filter
 
         self.df['tmp'] = self.df.iloc[argrelextrema(self.df.Close.values, np.greater_equal, order=points)[0]]['Close']
         self.df['Max'] = self.df.tmp[self.df.Event == True]
         self.df = self.df.drop(['Event'], axis=1)
         self.df = self.df.drop(['tmp'], axis=1)
+        if self.df.Max.sum() > 0:
+            self.breakout_level = self.df.Max[self.df.Max > 0].tail(1).values[0]
 
         return self.df
