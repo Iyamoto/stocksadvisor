@@ -211,7 +211,7 @@ class ADVISOR(object):
                             print()
                             print('Monte-Carlo')
                             # asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
-                            asset.get_bust_chance(bust=price_distance, sims=10000, plot=False, taillen=taillen)
+                            asset.get_bust_chance(bust=price_distance, sims=1000, plot=False, taillen=taillen)
                             print('Stop loss chance:', round(asset.bust_chance, 2))
                             print('Stop loss price:', round(asset.breakout_level, 2))
                             print('Take profit chance:', round(asset.goal_chance, 2))
