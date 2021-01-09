@@ -63,6 +63,7 @@ class ASSET(object):
         self.stoplosspercent = 0  # AKA Bust
         self.bust_chance = 0
         self.goalprice = 0
+        self.lastrsi = 0
         self.goal_chance = 0
         self.rewardriskratio = 0
         self.anomaly_filter_up = None
@@ -104,6 +105,7 @@ class ASSET(object):
         self.get_ema(period=13)
         self.get_ema(period=20)
         self.get_rsi(period=13)
+        self.get_lastrsi()
         self.get_kc()
         self.find_event(points=3, diff=1.5)
 
@@ -160,6 +162,10 @@ class ASSET(object):
     def get_lastprice(self):
         self.lastprice = float(round(self.df.Close[-1:].values[0], 2))
         return self.lastprice
+
+    def get_lastrsi(self):
+        self.lastrsi = float(round(self.df.RSI[-1:].values[0], 2))
+        return self.lastrsi
 
     def get_data(self):
         if self.source == 'moex':
@@ -415,9 +421,9 @@ class ASSET(object):
             plt.subplot2grid((4, 1), (3, 0), rowspan=1)
             plt.plot(df.index, df.RSI, 'r', label='RSI')
             horiz_line_data = np.array([70 for i in range(len(df.index))])
-            plt.plot(df.index, horiz_line_data, color='g', label='Oversold', linestyle='-.', linewidth=1.0)
+            plt.plot(df.index, horiz_line_data, color='g', label='Overbought', linestyle='-.', linewidth=1.0)
             horiz_line_data = np.array([30 for i in range(len(df.index))])
-            plt.plot(df.index, horiz_line_data, color='b', label='Overbought', linestyle='-.', linewidth=1.0)
+            plt.plot(df.index, horiz_line_data, color='b', label='Oversold', linestyle='-.', linewidth=1.0)
             plt.legend()
             plt.grid()
 

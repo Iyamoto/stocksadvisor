@@ -198,13 +198,16 @@ class ADVISOR(object):
                         print('Last price:', asset.lastprice)
                         print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
                         print('Trend:', asset.trend)
-                        print('Anomalies:', asset.anomalies)
                         print('Breakout level:', asset.breakout_level)
-                        print('ATR based stop loss:', asset.stoploss, asset.stoplosspercent)
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level <= price_distance:
                             print('Price is close the breakout level!')
+                            print()
+                            print('Risks')
                             print('Please check dividend pay date')
                             print('Please check earnings report date (Jan, April, July, Oct)')
+                            print('Anomalies:', asset.anomalies)
+                            if asset.lastrsi > 70:
+                                print('Overbought signal: RSI > 70', asset.lastrsi)
                             print()
                             print('Monte-Carlo')
                             # asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
