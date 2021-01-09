@@ -191,7 +191,7 @@ class ADVISOR(object):
                     asset.df.Max[abs(asset.df.Max - asset.lastprice)/asset.df.Max <= price_distance].sum() > 0:
                 event_index = asset.df.Max[abs(asset.df.Max - asset.lastprice)/asset.df.Max <= price_distance][-1:].index.values[0]
                 taillen = len(asset.df) - event_index
-                if taillen >= 5:
+                if taillen >= 3 and taillen <= 50:
                     trend = asset.get_trendline(asset.df['Close'].tail(taillen))
                     angle = trend[0]
                     if angle > 0:
