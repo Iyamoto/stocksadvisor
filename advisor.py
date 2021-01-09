@@ -207,7 +207,7 @@ class ADVISOR(object):
                             print('Please check earnings report date (Jan, April, July, Oct)')
                             print('Anomalies:', asset.anomalies)
                             if asset.lastrsi > 70:
-                                print('Overbought signal: RSI > 70', asset.lastrsi)
+                                print('Overbought signal (RSI > 70):', asset.lastrsi)
                             print()
                             print('Monte-Carlo')
                             # asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
