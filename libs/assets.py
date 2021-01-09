@@ -78,6 +78,11 @@ class ASSET(object):
         out = json.dumps(result, indent=4)
         return out
 
+    @staticmethod
+    def get_trendline(data, order=1):
+        coeffs = np.polyfit(data.index.values, list(data), order)
+        return coeffs
+
     def get_fair_price(self, dividend=0):
         self.fairprice = round(100 * dividend/self.dividend_level[self.source], 2)
         return self.fairprice
@@ -99,6 +104,7 @@ class ASSET(object):
         self.get_ema(period=20)
         self.get_rsi(period=13)
         self.get_kc()
+        self.find_event(points=3, diff=1.5)
 
         # Stop loss
         self.get_stoploss()
@@ -287,8 +293,8 @@ class ASSET(object):
 
         plt.plot(df.index, df.Close, 'k', label='Price', linewidth=2.0)
 
-        if 'ATR' in columns:
-            df['ATR'] = self.df.ATR.values
+        if 'RSI' in columns:
+            df['RSI'] = self.df.RSI.values
 
         if 'EMA5' in columns:
             df['EMA5'] = self.df.EMA5.values
@@ -343,9 +349,13 @@ class ASSET(object):
 
         ax1.grid()
 
-        if 'ATR' in columns:
+        if 'RSI' in columns:
             plt.subplot2grid((4, 1), (3, 0), rowspan=1)
-            plt.plot(df.index, df.ATR, 'r', label='ATR')
+            plt.plot(df.index, df.RSI, 'r', label='RSI')
+            horiz_line_data = np.array([70 for i in range(len(df.index))])
+            plt.plot(df.index, horiz_line_data, color='g', label='Oversold', linestyle='-.', linewidth=1.0)
+            horiz_line_data = np.array([30 for i in range(len(df.index))])
+            plt.plot(df.index, horiz_line_data, color='b', label='Overbought', linestyle='-.', linewidth=1.0)
             plt.legend()
             plt.grid()
 
@@ -517,7 +527,7 @@ class ASSET(object):
         self.trend = ema_trend + ' ' + fit_trend
         return self.trend
 
-    def find_event(self, points=5, diff=2):
+    def find_event(self, points=5, diff=2.0):
         std = round(self.df['Volume'].std(), 1)
         mean = round(self.df['Volume'].mean(), 1)
         event_filter = self.df.Volume > mean + diff * std

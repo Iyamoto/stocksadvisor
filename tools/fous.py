@@ -10,12 +10,6 @@ import libs.assets
 import pandas as pd
 import configs.alphaconf
 from pprint import pprint
-import numpy as np
-
-
-def trendline(data, order=1):
-    coeffs = np.polyfit(data.index.values, list(data), order)
-    return coeffs
 
 
 def get_assettype(datatype='ms'):
@@ -55,12 +49,12 @@ if __name__ == "__main__":
             asset = libs.assets.ASSET(symbol=symbol, source=source, key=configs.alphaconf.key, cacheage=3600*24)
             asset.get_data()
             asset.static_analysis()
-            asset.find_event(points=3, diff=1.5)
+
             if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
                 event_index = asset.df.Max[asset.df.Max >= asset.lastprice][-1:].index.values[0]
                 taillen = len(asset.df) - event_index
                 if taillen >= 5:
-                    trend = trendline(asset.df['Close'].tail(taillen))
+                    trend = asset.trendline(asset.df['Close'].tail(taillen))
                     angle = trend[0]
                     if angle > 0:
                         print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))

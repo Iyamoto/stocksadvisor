@@ -29,8 +29,8 @@ class ADVISOR(object):
         self.tosell = dict()
 
         self.min_goal = 0.1
-        self.min_RewardRiskRatio = 10
-        self.atr_multiplier = 5
+        self.min_RewardRiskRatio = 5
+        self.atr_multiplier = 3
         self.accepted_goal_chance = 0.33
 
     def get_assettype(self, datatype='ms'):
@@ -180,76 +180,51 @@ class ADVISOR(object):
             # print(asset.df)
             # exit()
 
-            # Calculate chances
-            asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, goal=self.min_goal)
-            print('Bust chance:', round(asset.bust_chance, 2))
-            print('Goal chance:', round(asset.goal_chance, 2))
-
-            # Reward-risk ratio
-            if asset.goal_chance > self.accepted_goal_chance:
-                asset.get_reward_risk_ratio()
-                print('Reward-Risk ratio:', asset.rewardriskratio)
-
+            # Find anomalies
             if asset.anomalies > 0 and self.plot_anomaly:
                 print('Anomaly detected')
                 asset.plot('Anomaly:')
 
-            # Check EMA200
-            if self.datatype == 'a':
-                ema200 = asset.get_ema200_alpha(key=self.key)
-                print('EMA200:', ema200)
-                if ema200 and asset.lastprice > ema200:
-                    ema200_diff = round(100 * (asset.lastprice - ema200) / asset.lastprice, 1)
-                    print('Price above EMA200', ema200_diff, '%')
+            # Find fous pattern
+            if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
+                event_index = asset.df.Max[asset.df.Max >= asset.lastprice][-1:].index.values[0]
+                taillen = len(asset.df) - event_index
+                if taillen >= 5:
+                    trend = asset.get_trendline(asset.df['Close'].tail(taillen))
+                    angle = trend[0]
+                    if angle > 0:
+                        print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
+                        print('Breakout level:', asset.breakout_level)
+                        if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level < 0.02:
+                            print('Price is close the breakout level!')
 
-            # Can we sell something?
-            if asset.lastprice > entry_price > 0:
-                income = round((asset.lastprice / entry_price - 1) * 100, 2)
-                if income > self.min_goal*100:
-                    self.tosell[symbol] = str(income) + '%'
-                    print('Time to sell, income:', str(income) + '%')
-                    asset.plot('Sell:')
+                            asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
+                            print('Bust chance:', round(asset.bust_chance, 2))
+                            print('Goal chance:', round(asset.goal_chance, 2))
+                            asset.get_reward_risk_ratio()
+                            print('Reward-Risk ratio:', asset.rewardriskratio)
 
-            asset.get_fair_price(dividend=dividend)
-            print('Fair price:', asset.fairprice)
-            print('USD/RUB Correlation:', round(self.correlation(datatype2=self.datatype, symbol2=symbol), 1))
+                            asset.plot_fous()
 
             if symbol_overide:
                 asset.plot('Manual:')
 
-            # Filter out too risky stuff
-            if asset.rewardriskratio >= self.min_RewardRiskRatio and asset.goal_chance > self.accepted_goal_chance:
-                results.append(asset.get_results())
-
-                # Ignore too expensive stuff
-                # if asset.fairprice > asset.lastprice:
-                #     asset.plot('Cheap:')
-                if limit == 0:
-                    limit = asset.fairprice
-                if asset.lastprice > limit > 0:
-                    continue
-                if entry_price > 0 and asset.lastprice > 0.9 * entry_price:
-                    # We have the asset already
-                    continue
-
-                asset.plot('Buy:')
-
         print('Results:')
         pprint(results)
 
-        # Save results
-        today = datetime.today()
-        filename = self.datatype + '-' + self.source + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
-        filepath = os.path.join('', 'recommendations', filename)
-        if len(results) > 0:
-            with open(filepath, 'w') as outfile:
-                json.dump(results, outfile, indent=4)
+        # # Save results
+        # today = datetime.today()
+        # filename = self.datatype + '-' + self.source + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
+        # filepath = os.path.join('', 'recommendations', filename)
+        # if len(results) > 0:
+        #     with open(filepath, 'w') as outfile:
+        #         json.dump(results, outfile, indent=4)
 
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='a', plot_anomaly=False)
-        adv.check_watchlist(symbol_overide='RTN')
+        adv = ADVISOR(datatype='a', plot_anomaly=True)
+        adv.check_watchlist()
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
