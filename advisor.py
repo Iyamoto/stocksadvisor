@@ -186,8 +186,10 @@ class ADVISOR(object):
             #     asset.plot('Anomaly:')
 
             # Find fous pattern
-            if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
-                event_index = asset.df.Max[asset.df.Max >= asset.lastprice][-1:].index.values[0]
+            price_distance = 0.03
+            if asset.df.Max.sum() > 0 and \
+                    asset.df.Max[abs(asset.df.Max - asset.lastprice)/asset.df.Max <= price_distance].sum() > 0:
+                event_index = asset.df.Max[abs(asset.df.Max - asset.lastprice)/asset.df.Max <= price_distance][-1:].index.values[0]
                 taillen = len(asset.df) - event_index
                 if taillen >= 5:
                     trend = asset.get_trendline(asset.df['Close'].tail(taillen))
@@ -198,16 +200,20 @@ class ADVISOR(object):
                         print('Trend:', asset.trend)
                         print('Anomalies:', asset.anomalies)
                         print('Breakout level:', asset.breakout_level)
-                        if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level < 0.02:
+                        print('ATR based stop loss:', asset.stoploss, asset.stoplosspercent)
+                        if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level <= price_distance:
                             print('Price is close the breakout level!')
                             print('Please check dividend pay date')
+                            print('Please check earnings report date (Jan, April, July, Oct)')
                             print()
                             print('Monte-Carlo')
-                            asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
-                            print('Stop loss:', asset.stoploss)
-                            print('Bust level:', asset.stoplosspercent)
-                            print('Bust chance:', round(asset.bust_chance, 2))
-                            print('Goal chance:', round(asset.goal_chance, 2))
+                            # asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
+                            asset.get_bust_chance(bust=price_distance, sims=10000, plot=False, taillen=taillen)
+                            print('Stop loss chance:', round(asset.bust_chance, 2))
+                            print('Stop loss price:', round(asset.breakout_level, 2))
+                            print('Take profit chance:', round(asset.goal_chance, 2))
+                            asset.goalprice = asset.lastprice * 1.1
+                            print('Take profit price:', round(asset.goalprice, 2))
                             asset.get_reward_risk_ratio()
                             print('Reward-Risk ratio:', asset.rewardriskratio)
 

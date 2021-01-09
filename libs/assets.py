@@ -90,10 +90,9 @@ class ASSET(object):
         return self.fairprice
 
     def get_reward_risk_ratio(self):
-        self.df['RewardRiskRatio'] = self.goal_chance * self.min_goal * (self.goalprice - self.df['Close']) / \
-                                      (self.bust_chance * (self.df['Close'] - self.df['StopLoss']))
+        self.rewardriskratio = round(self.goal_chance * (self.goalprice - self.lastprice) /
+                                     (self.bust_chance * (self.lastprice - self.stoploss)), 2)
 
-        self.rewardriskratio = round(self.df['RewardRiskRatio'].mean(), 2)
         return self.rewardriskratio
 
     def static_analysis(self, printoutput=True):
