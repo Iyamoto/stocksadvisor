@@ -225,8 +225,10 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        adv = ADVISOR(datatype='a', plot_anomaly=True)
-        adv.check_watchlist()
+        datatypes = ['ms', 'a']
+        for datatype in datatypes:
+            adv = ADVISOR(datatype=datatype)
+            adv.check_watchlist()
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
