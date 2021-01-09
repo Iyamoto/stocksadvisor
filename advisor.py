@@ -147,9 +147,6 @@ class ADVISOR(object):
             print()
             print(symbol)
 
-            if symbol == 'TCS':
-                continue
-
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
                                       min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*12)
 
