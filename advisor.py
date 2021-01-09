@@ -203,8 +203,19 @@ class ADVISOR(object):
                             print('Price is close the breakout level!')
                             print()
                             print('Risks')
-                            print('Please check dividend pay date')
+                            print('Please read recent news https://seekingalpha.com/symbol/{}'.format(symbol))
+                            print('Check short interest')
+                            print(
+                                'Please check dividend pay date https://seekingalpha.com/symbol/{}/dividends/news'.format(
+                                    symbol))
                             print('Please check earnings report date (Jan, April, July, Oct)')
+                            print('Are insiders buying or selling? https://www.gurufocus.com/stock/{}/insider'.format(symbol))
+                            print('Check growth estimates https://seekingalpha.com/symbol/{}/growth'.format(symbol))
+                            print('Check FFV = Avg F EPS * F P/E (industry)')
+                            print('Sector PE https://seekingalpha.com/symbol/{}/valuation/metrics'.format(symbol))
+                            print(
+                                'Earnings https://seekingalpha.com/symbol/{}/earnings/estimates#figure_type=annual'.format(
+                                    symbol))
                             print('Anomalies:', asset.anomalies)
                             if asset.lastrsi > 70:
                                 print('Overbought signal (RSI > 70):', asset.lastrsi)
@@ -236,7 +247,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        datatypes = ['mc', 'me', 'meusd', 'ms', 'a']
+        datatypes = ['mc', 'me', 'meusd', 'a', 'ms']
         for datatype in datatypes:
             adv = ADVISOR(datatype=datatype)
             adv.check_watchlist()
