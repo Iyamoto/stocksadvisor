@@ -54,6 +54,10 @@ class ADVISOR(object):
             watchdata = configs.alphaconf.symbols_me
             source = 'moex'
             asset_type = 'etf'
+        if datatype == 'meusd':
+            watchdata = configs.alphaconf.symbols_meusd
+            source = 'moex'
+            asset_type = 'etfusd'
         return watchdata, source, asset_type
 
     def test_strategy(self):
@@ -162,7 +166,7 @@ class ADVISOR(object):
             # asset.df['PCT'] = asset.df['Close'].pct_change().fillna(0)
             # asset.df['PCT10'] = asset.df['PCT'] > 0.1
             #
-            # pd.options.display.max_rows = 200
+            pd.options.display.max_rows = 200
             #
             # if asset.df['PCT10'].sum() > 1:
             #     print(asset.df['PCT10'].sum())
@@ -196,6 +200,7 @@ class ADVISOR(object):
                         print('Breakout level:', asset.breakout_level)
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level < 0.02:
                             print('Price is close the breakout level!')
+                            print('Please check dividend pay date')
                             print()
                             print('Monte-Carlo')
                             asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
@@ -222,7 +227,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        datatypes = ['ms', 'a']
+        datatypes = ['mc', 'me', 'meusd', 'ms', 'a']
         for datatype in datatypes:
             adv = ADVISOR(datatype=datatype)
             adv.check_watchlist()

@@ -42,7 +42,7 @@ class ASSET(object):
         self.min_goal = min_goal
         self.atr_multiplier = atr_multiplier
         self.kc_channel = kc_channel
-
+        # http://ftp.moex.com/pub/ClientsAPI/ASTS/docs/ASTS_Markets_and_Boards.pdf
         if self.asset_type == 'stock':
             self.boardid = 'TQBR'
         if self.asset_type == 'futures':
@@ -52,6 +52,8 @@ class ASSET(object):
             self.volumefield = 'VOLRUR'
         if self.asset_type == 'etf':
             self.boardid = 'TQTF'
+        if self.asset_type == 'etfusd':
+            self.boardid = 'TQTD'
 
         self.df = None
         self.trend = ''
