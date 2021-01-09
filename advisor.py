@@ -30,7 +30,7 @@ class ADVISOR(object):
 
         self.min_goal = 0.1
         self.min_RewardRiskRatio = 5
-        self.atr_multiplier = 3
+        self.atr_multiplier = 1
         self.accepted_goal_chance = 0.33
 
     def get_assettype(self, datatype='ms'):
@@ -136,7 +136,6 @@ class ADVISOR(object):
     def check_watchlist(self, symbol_overide=''):
         """Do magic"""
 
-        results = list()
         for item in self.watchdata:
 
             symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
@@ -158,7 +157,7 @@ class ADVISOR(object):
             asset.get_data()
 
             # Perform static analysis
-            asset.static_analysis(printoutput=True)
+            asset.static_analysis(printoutput=False)
             if asset.stoploss <= 0:
                 asset.stoploss = asset.lastprice * 0.5
 
@@ -181,9 +180,9 @@ class ADVISOR(object):
             # exit()
 
             # Find anomalies
-            if asset.anomalies > 0 and self.plot_anomaly:
-                print('Anomaly detected')
-                asset.plot('Anomaly:')
+            # if asset.anomalies > 0 and self.plot_anomaly:
+            #     print('Anomaly detected')
+            #     asset.plot('Anomaly:')
 
             # Find fous pattern
             if asset.df.Max.sum() > 0 and asset.df.Max[asset.df.Max >= asset.lastprice].sum() > 0:
@@ -193,12 +192,18 @@ class ADVISOR(object):
                     trend = asset.get_trendline(asset.df['Close'].tail(taillen))
                     angle = trend[0]
                     if angle > 0:
+                        print('Last price:', asset.lastprice)
                         print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
+                        print('Trend:', asset.trend)
+                        print('Anomalies:', asset.anomalies)
                         print('Breakout level:', asset.breakout_level)
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level < 0.02:
                             print('Price is close the breakout level!')
-
+                            print()
+                            print('Monte-Carlo')
                             asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
+                            print('Stop loss:', asset.stoploss)
+                            print('Bust level:', asset.stoplosspercent)
                             print('Bust chance:', round(asset.bust_chance, 2))
                             print('Goal chance:', round(asset.goal_chance, 2))
                             asset.get_reward_risk_ratio()
@@ -208,9 +213,6 @@ class ADVISOR(object):
 
             if symbol_overide:
                 asset.plot('Manual:')
-
-        print('Results:')
-        pprint(results)
 
         # # Save results
         # today = datetime.today()
