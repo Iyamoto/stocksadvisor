@@ -70,11 +70,14 @@ class ASSET(object):
         self.anomaly_filter_down = None
         self.trendline = None
         self.blackswan_chance = 0.005
+        self.volume_limit = 0
         self.dividend_level = dict()
         self.dividend_level['alpha'] = 2.5  # Acceptable dividend lvl for USD
         self.dividend_level['moex'] = 4  # Acceptable dividend lvl for RUB
         self.fairprice = 0
         self.breakout_level = 0
+        self.phase1_start = 0
+        self.phase1_end = 0
 
     def __str__(self):
         result = self.get_results()
@@ -104,10 +107,9 @@ class ASSET(object):
         self.get_ema(period=5)
         self.get_ema(period=13)
         self.get_ema(period=20)
-        self.get_rsi(period=13)
+        self.get_rsi(period=14)
         self.get_lastrsi()
         self.get_kc()
-        self.find_event(points=3, diff=1.5)
 
         # Stop loss
         self.get_stoploss()
@@ -288,28 +290,31 @@ class ASSET(object):
 
     def plot(self, msg=''):
         columns = self.df.columns
-        df = pd.concat([self.df['date'], self.df['Close'], self.df['Volume'], self.df['BreakoutUp'],
-                        self.df['BreakoutDown']], axis=1)
+        df = pd.concat([self.df['date'], self.df['Close'], self.df['Volume']], axis=1)
         df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
         df = df.set_index('date')
         df['Close'] = df.Close.replace(to_replace=0, method='ffill')
         df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
         fig = plt.figure(figsize=(15, 8))
         plt.subplot2grid((4, 1), (0, 0), rowspan=2)
-        plt.title(msg + ' ' + self.symbol + ' RRR: ' + str(self.rewardriskratio))
+        plt.title(msg + ' ' + self.symbol)
 
         plt.plot(df.index, df.Close, 'k', label='Price', linewidth=2.0)
 
         if 'RSI' in columns:
             df['RSI'] = self.df.RSI.values
 
-        if 'EMA5' in columns:
-            df['EMA5'] = self.df.EMA5.values
-            plt.plot(df.index, df.EMA5, 'b', label='EMA5', linestyle='--')
+        if 'EMA13' in columns:
+            df['EMA13'] = self.df.EMA13.values
+            plt.plot(df.index, df.EMA13, 'g', label='EMA13', linestyle='--')
 
-        if 'EMA20' in columns:
-            df['EMA20'] = self.df.EMA20.values
-            plt.plot(df.index, df.EMA20, 'r', label='EMA20', linestyle='--')
+        # if 'EMA5' in columns:
+        #     df['EMA5'] = self.df.EMA5.values
+        #     plt.plot(df.index, df.EMA5, 'b', label='EMA5', linestyle='--')
+        #
+        # if 'EMA20' in columns:
+        #     df['EMA20'] = self.df.EMA20.values
+        #     plt.plot(df.index, df.EMA20, 'r', label='EMA20', linestyle='--')
 
         if 'KC_LOW' in columns:
             df['KC_LOW'] = self.df.KC_LOW.values
@@ -320,25 +325,23 @@ class ASSET(object):
         if 'KC_LOW' in columns and 'KC_HIGH' in columns:
             plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.1)
 
-        if self.stoploss > 0:
-            plt.axhline(y=self.stoploss, color='m', linestyle=':', label='StopLoss')
+        if 'Phase1' in columns:
+            df['Phase1'] = self.df.Phase1.values
+            plt.scatter(df.index, df['Phase1'], c='r')
 
-        if self.goalprice > 0:
-            plt.axhline(y=self.goalprice, color='c', linestyle=':', label='Goal')
+        if 'Phase1_Max' in columns:
+            df['Phase1_Max'] = self.df.Phase1_Max.values
+            plt.scatter(df.index, df['Phase1_Max'], c='g')
 
-        if self.anomaly_filter_up.any():
-            plt.scatter(df[df['BreakoutUp']].index, df[df['BreakoutUp']].Close, marker='^', color='b',
-                        label='BreakoutUp')
+            if self.breakout_level > 0:
+                horiz_line_data = np.array([self.breakout_level for i in range(len(df.index))])
+                plt.plot(df.index, horiz_line_data, color='b', label='Breakout', linestyle='-.', linewidth=1.0)
 
-        if self.anomaly_filter_down.any():
-            plt.scatter(df[df['BreakoutDown']].index, df[df['BreakoutDown']].Close, marker='v', color='r',
-                        label='BreakoutDown')
-
-        if self.trendline is not None:
-            polynomial = np.poly1d(self.trendline)
-            x = np.linspace(0, len(df.index)-1, num=len(df.index))
-            y = polynomial(x)
-            plt.plot(df.index, y, color='g', label='Trend', linestyle='-.', linewidth=1.0)
+        # if self.trendline is not None:
+        #     polynomial = np.poly1d(self.trendline)
+        #     x = np.linspace(0, len(df.index)-1, num=len(df.index))
+        #     y = polynomial(x)
+        #     plt.plot(df.index, y, color='g', label='Trend', linestyle='-.', linewidth=1.0)
 
         plt.legend()
         plt.grid()
@@ -347,19 +350,15 @@ class ASSET(object):
 
         ax1.plot(df.index, df.Volume, 'g', label='Volume')
         ax1.set_ylabel('Volume', color='g')
-
-        if 'Openpositions' in columns:
-            ax2 = ax1.twinx()
-            df['Openpositions'] = self.df.Openpositions.values
-            ax2.plot(df.index, df.Openpositions, 'b', label='Openpositions')
-            ax2.legend()
+        horiz_line_data = np.array([self.volume_limit for i in range(len(df.index))])
+        ax1.plot(df.index, horiz_line_data, color='b', label='Mean Volume', linestyle='-.', linewidth=1.0)
 
         ax1.grid()
 
         if 'RSI' in columns:
             plt.subplot2grid((4, 1), (3, 0), rowspan=1)
             plt.plot(df.index, df.RSI, 'r', label='RSI')
-            horiz_line_data = np.array([70 for i in range(len(df.index))])
+            horiz_line_data = np.array([60 for i in range(len(df.index))])
             plt.plot(df.index, horiz_line_data, color='g', label='Oversold', linestyle='-.', linewidth=1.0)
             horiz_line_data = np.array([30 for i in range(len(df.index))])
             plt.plot(df.index, horiz_line_data, color='b', label='Overbought', linestyle='-.', linewidth=1.0)
@@ -395,14 +394,6 @@ class ASSET(object):
 
         if 'KC_LOW' in columns and 'KC_HIGH' in columns:
             plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.1)
-
-        if self.anomaly_filter_up.any():
-            plt.scatter(df[df['BreakoutUp']].index, df[df['BreakoutUp']].Close, marker='^', color='b',
-                        label='BreakoutUp')
-
-        if self.anomaly_filter_down.any():
-            plt.scatter(df[df['BreakoutDown']].index, df[df['BreakoutDown']].Close, marker='v', color='r',
-                        label='BreakoutDown')
 
         plt.scatter(df.index, df['Max'], c='g')
         if self.breakout_level > 0:
@@ -501,15 +492,16 @@ class ASSET(object):
         self.df['BreakoutUp'] = self.anomaly_filter_up
         self.anomaly_filter_down = self.df.Close < (self.df.EMA5 - self.kc_channel * self.df.ATR)
         self.df['BreakoutDown'] = self.anomaly_filter_down
-
+        self.df = self.df.drop(['BreakoutDown'], axis=1)
+        self.df = self.df.drop(['BreakoutUp'], axis=1)
         self.anomalies = self.anomaly_filter_up.sum() + self.anomaly_filter_down.sum()
 
         return self.anomalies
 
     def detect_trend(self):
         # EMA5 > EMA20 means up trend?
-        self.df['UpTrend'] = self.df.EMA5.fillna(0) >= self.df.EMA20.fillna(0)
         self.df['DownTrend'] = self.df.EMA5.fillna(0) <= self.df.EMA20.fillna(0)
+        self.df['UpTrend'] = self.df.EMA5.fillna(0) >= self.df.EMA20.fillna(0)
 
         if self.df['UpTrend'].sum() >= 0.85 * len(self.df['UpTrend']):
             ema_trend = 'Up'
@@ -542,10 +534,46 @@ class ASSET(object):
         self.df['Event'] = event_filter
 
         self.df['tmp'] = self.df.iloc[argrelextrema(self.df.Close.values, np.greater_equal, order=points)[0]]['Close']
-        self.df['Max'] = self.df.tmp[self.df.Event == True]
+        self.df['Max'] = self.df.tmp[self.df.Event]
         self.df = self.df.drop(['Event'], axis=1)
         self.df = self.df.drop(['tmp'], axis=1)
         if self.df.Max.sum() > 0:
             self.breakout_level = self.df.Max[self.df.Max > 0].tail(1).values[0]
+
+        return self.df
+
+    def find_phase1(self, rsi=60, diff=0.5, points=3):
+        """
+        Volume + price
+        or RSI > 60?
+        """
+        self.volume_limit = self.df.Volume.mean() + diff * self.df.Volume.std()
+        self.df['Phase1_Price'] = self.df.RSI[self.df.RSI > rsi]
+        self.df['Phase1_Volume'] = self.df.Volume[self.df.Volume >= self.volume_limit]
+        self.df['Phase1'] = self.df.Close[self.df.UpTrend & self.df['Phase1_Price'] & self.df['Phase1_Volume']]
+        self.df = self.df.drop(['Phase1_Price'], axis=1)
+        self.df = self.df.drop(['Phase1_Volume'], axis=1)
+
+        self.df['PCT'] = self.df['EMA13'].pct_change().fillna(0)
+        self.df['PCT10'] = self.df['PCT'] > 0.001
+
+        self.phase1_start = self.df.Phase1[self.df.Phase1 > 0][-1:].index.values[0]
+        phase1_len = len(self.df) - self.phase1_start
+        tmp = self.df.tail(phase1_len)
+        self.phase1_end = tmp.PCT10[tmp['PCT10'] == False][:1].index.values[0]
+        self.df = self.df.drop(['PCT'], axis=1)
+        self.df = self.df.drop(['PCT10'], axis=1)
+
+        for i in range(self.phase1_start, self.phase1_end):
+            self.df.loc[i, 'Phase1'] = self.df.loc[self.phase1_start, 'Phase1']
+
+        self.df['tmp'] = self.df.iloc[argrelextrema(self.df.Close.values, np.greater_equal, order=points)[0]]['Close']
+        self.df['Phase1_Max'] = self.df.tmp[self.df['Phase1'] == self.df.loc[self.phase1_start, 'Phase1']]
+        self.df = self.df.drop(['tmp'], axis=1)
+
+        if self.df.Phase1_Max.sum() > 0:
+            self.breakout_level = self.df.Phase1_Max[self.df.Phase1_Max > 0].tail(1).values[0]
+
+        pprint(self.df)
 
         return self.df

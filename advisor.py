@@ -162,11 +162,15 @@ class ADVISOR(object):
             if asset.stoploss <= 0:
                 asset.stoploss = asset.lastprice * 0.5
 
+            pd.options.display.max_rows = 200
+
+            asset.find_phase1()
+            asset.plot('Manual:')
+
             # # Check 10% theory
             # asset.df['PCT'] = asset.df['Close'].pct_change().fillna(0)
             # asset.df['PCT10'] = asset.df['PCT'] > 0.1
             #
-            pd.options.display.max_rows = 200
             #
             # if asset.df['PCT10'].sum() > 1:
             #     print(asset.df['PCT10'].sum())
@@ -186,6 +190,7 @@ class ADVISOR(object):
             #     asset.plot('Anomaly:')
 
             # Find fous pattern
+            asset.find_event(points=3, diff=1.5)
             price_distance = 0.03
             if asset.df.Max.sum() > 0 and \
                     asset.df.Max[abs(asset.df.Max - asset.lastprice)/asset.df.Max <= price_distance].sum() > 0:
@@ -252,7 +257,7 @@ class ADVISOR(object):
 
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
-        datatypes = ['mc', 'me', 'meusd', 'a', 'ms']
+        datatypes = ['a', 'mc', 'me', 'meusd', 'ms']
         for datatype in datatypes:
             adv = ADVISOR(datatype=datatype)
             adv.check_watchlist()
