@@ -352,7 +352,7 @@ class ASSET(object):
         ax1.plot(df.index, df.Volume, 'g', label='Volume')
         ax1.set_ylabel('Volume', color='g')
         horiz_line_data = np.array([self.volume_limit for i in range(len(df.index))])
-        ax1.plot(df.index, horiz_line_data, color='b', label='Mean Volume', linestyle='-.', linewidth=1.0)
+        ax1.plot(df.index, horiz_line_data, color='b', label='Volume limit', linestyle='-.', linewidth=1.0)
 
         ax1.grid()
 
