@@ -78,6 +78,7 @@ class ASSET(object):
         self.breakout_level = 0
         self.phase1_start = 0
         self.phase1_end = 0
+        self.phase1_len = 0
 
     def __str__(self):
         result = self.get_results()
@@ -329,9 +330,9 @@ class ASSET(object):
             df['Phase1'] = self.df.Phase1.values
             plt.scatter(df.index, df['Phase1'], c='r')
 
-        if 'Phase1_Max' in columns:
-            df['Phase1_Max'] = self.df.Phase1_Max.values
-            plt.scatter(df.index, df['Phase1_Max'], c='g')
+        if 'Max' in columns:
+            df['Max'] = self.df.Max.values
+            plt.scatter(df.index, df['Max'], c='g')
 
             if self.breakout_level > 0:
                 horiz_line_data = np.array([self.breakout_level for i in range(len(df.index))])
@@ -542,7 +543,7 @@ class ASSET(object):
 
         return self.df
 
-    def find_phase1(self, rsi=60, diff=0.5, points=3):
+    def find_phase1(self, rsi=60, diff=1, points=3):
         """
         Volume + price
         or RSI > 60?
@@ -557,23 +558,23 @@ class ASSET(object):
         self.df['PCT'] = self.df['EMA13'].pct_change().fillna(0)
         self.df['PCT10'] = self.df['PCT'] > 0.001
 
-        self.phase1_start = self.df.Phase1[self.df.Phase1 > 0][-1:].index.values[0]
-        phase1_len = len(self.df) - self.phase1_start
-        tmp = self.df.tail(phase1_len)
-        self.phase1_end = tmp.PCT10[tmp['PCT10'] == False][:1].index.values[0]
-        self.df = self.df.drop(['PCT'], axis=1)
-        self.df = self.df.drop(['PCT10'], axis=1)
+        if self.df.Phase1.sum() > 0:
+            self.phase1_start = self.df.Phase1[self.df.Phase1 > 0][-1:].index.values[0]
+            self.phase1_len = len(self.df) - self.phase1_start
+            tmp = self.df.tail(self.phase1_len)
+            if tmp.PCT10[tmp['PCT10'] == False].count() > 0:
+                self.phase1_end = tmp.PCT10[tmp['PCT10'] == False][:1].index.values[0]
+                self.df = self.df.drop(['PCT'], axis=1)
+                self.df = self.df.drop(['PCT10'], axis=1)
+                self.phase1_len = self.phase1_end - self.phase1_start
+                for i in range(self.phase1_start, self.phase1_end):
+                    self.df.loc[i, 'Phase1'] = self.df.loc[self.phase1_start, 'Phase1']
 
-        for i in range(self.phase1_start, self.phase1_end):
-            self.df.loc[i, 'Phase1'] = self.df.loc[self.phase1_start, 'Phase1']
+                self.df['tmp'] = self.df.iloc[argrelextrema(self.df.Close.values, np.greater_equal, order=points)[0]]['Close']
+                self.df['Max'] = self.df.tmp[self.df['Phase1'] == self.df.loc[self.phase1_start, 'Phase1']]
+                self.df = self.df.drop(['tmp'], axis=1)
 
-        self.df['tmp'] = self.df.iloc[argrelextrema(self.df.Close.values, np.greater_equal, order=points)[0]]['Close']
-        self.df['Phase1_Max'] = self.df.tmp[self.df['Phase1'] == self.df.loc[self.phase1_start, 'Phase1']]
-        self.df = self.df.drop(['tmp'], axis=1)
-
-        if self.df.Phase1_Max.sum() > 0:
-            self.breakout_level = self.df.Phase1_Max[self.df.Phase1_Max > 0].tail(1).values[0]
-
-        pprint(self.df)
+                if self.df.Max.sum() > 0:
+                    self.breakout_level = self.df.Max[self.df.Max > 0].tail(1).values[0]
 
         return self.df

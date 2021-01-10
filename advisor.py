@@ -164,9 +164,6 @@ class ADVISOR(object):
 
             pd.options.display.max_rows = 200
 
-            asset.find_phase1()
-            asset.plot('Manual:')
-
             # # Check 10% theory
             # asset.df['PCT'] = asset.df['Close'].pct_change().fillna(0)
             # asset.df['PCT10'] = asset.df['PCT'] > 0.1
@@ -190,13 +187,19 @@ class ADVISOR(object):
             #     asset.plot('Anomaly:')
 
             # Find fous pattern
-            asset.find_event(points=3, diff=1.5)
+
+            asset.find_phase1(points=3, diff=1.5)
+
+            # asset.find_event(points=3, diff=1.5)
             price_distance = 0.03
+            if 'Max' not in asset.df.columns or asset.phase1_len < 3:
+                continue
+
             if asset.df.Max.sum() > 0 and \
                     asset.df.Max[abs(asset.df.Max - asset.lastprice)/asset.df.Max <= price_distance].sum() > 0:
                 event_index = asset.df.Max[abs(asset.df.Max - asset.lastprice)/asset.df.Max <= price_distance][-1:].index.values[0]
                 taillen = len(asset.df) - event_index
-                if taillen >= 3 and taillen <= 50:
+                if 3 <= taillen <= 50:
                     trend = asset.get_trendline(asset.df['Close'].tail(taillen))
                     angle = trend[0]
                     if angle > 0:
@@ -239,7 +242,8 @@ class ADVISOR(object):
                             asset.get_reward_risk_ratio()
                             print('Reward-Risk ratio:', asset.rewardriskratio)
 
-                            asset.plot_fous()
+                            asset.plot('Turbo:')
+                            # asset.plot_fous()
 
             if symbol_overide:
                 asset.plot('Manual:')
