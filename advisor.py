@@ -217,6 +217,8 @@ class ADVISOR(object):
                                     symbol))
                             print('Are insiders buying or selling? https://www.gurufocus.com/stock/{}/insider'.format(
                                 symbol))
+                            print('Check the stock on https://www.morningstar.com/ read news')
+                            print('Check Consensus Forward P/E, Debt/Equity, Net Margin, ROE, Free Cash Flow')
                             print('Anomalies:', asset.anomalies)
                             if asset.lastrsi > 70:
                                 print('Overbought signal (RSI > 70):', asset.lastrsi)
