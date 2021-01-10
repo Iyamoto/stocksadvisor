@@ -152,7 +152,7 @@ class ADVISOR(object):
             print(symbol)
 
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
-                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*12)
+                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*48)
 
             # Fetch data from the source
             asset.get_data()
@@ -236,6 +236,8 @@ class ADVISOR(object):
 
             if symbol_overide:
                 asset.plot('Manual:')
+
+            # asset.plot_fous()
 
         # # Save results
         # today = datetime.today()

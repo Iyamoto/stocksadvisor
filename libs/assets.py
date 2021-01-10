@@ -405,8 +405,9 @@ class ASSET(object):
                         label='BreakoutDown')
 
         plt.scatter(df.index, df['Max'], c='g')
-        horiz_line_data = np.array([self.breakout_level for i in range(len(df.index))])
-        plt.plot(df.index, horiz_line_data, color='g', label='Breakout', linestyle='-.', linewidth=1.0)
+        if self.breakout_level > 0:
+            horiz_line_data = np.array([self.breakout_level for i in range(len(df.index))])
+            plt.plot(df.index, horiz_line_data, color='g', label='Breakout', linestyle='-.', linewidth=1.0)
 
         plt.legend()
         plt.grid()
