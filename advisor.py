@@ -243,7 +243,6 @@ class ADVISOR(object):
                             print('Reward-Risk ratio:', asset.rewardriskratio)
 
                             asset.plot('Turbo:')
-                            # asset.plot_fous()
 
             if symbol_overide:
                 asset.plot('Manual:')
