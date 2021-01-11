@@ -151,7 +151,7 @@ class ASSET(object):
         return result
 
     def get_goalprice(self):
-        self.goalprice = round(self.lastprice * (1 + self.min_goal), 2)
+        self.goalprice = round(self.lastprice * (1 + self.min_goal), 6)
         return self.goalprice
 
     def get_stoploss(self):
@@ -159,7 +159,7 @@ class ASSET(object):
         self.df['StopLoss'] = self.df['Close'] - self.atr_multiplier * self.df['ATR']
         self.df['StopLossPercent'] = 1 - self.df['StopLoss'] / self.df['Close']
         self.stoplosspercent = round(self.df['StopLossPercent'].max(), 2)
-        self.stoploss = round(self.df.Close[-1:].values[0] * (1 - self.stoplosspercent), 2)
+        self.stoploss = round(self.df.Close[-1:].values[0] * (1 - self.stoplosspercent), 6)
 
         return self.stoploss, self.stoplosspercent
 
@@ -168,7 +168,7 @@ class ASSET(object):
         return self.lastprice
 
     def get_lastema13(self):
-        self.lastema13 = float(round(self.df.EMA13[-1:].values[0], 2))
+        self.lastema13 = float(round(self.df.EMA13[-1:].values[0], 6))
         return self.lastema13
 
     def get_lastrsi(self):

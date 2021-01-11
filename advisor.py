@@ -137,22 +137,25 @@ class ADVISOR(object):
         else:
             return correlation
 
-    def check_watchlist(self, symbol_overide=''):
+    def check_watchlist(self, symbol_overide='', ignore=None):
         """Do magic"""
 
         for item in self.watchdata:
 
-            symbol, entry_price, limit, dividend = configs.alphaconf.get_symbol(item)
+            symbol, entry_price, limit, dividend, desc, fair_price, average_score = configs.alphaconf.get_symbol(item)
 
             if symbol_overide:
                 if symbol != symbol_overide:
                     continue
 
+            if symbol in ignore:
+                continue
+
             print()
-            print(symbol)
+            print(symbol, ' - ', desc)
 
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
-                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*23)
+                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*23*4)
 
             # Fetch data from the source
             asset.get_data()
@@ -209,14 +212,26 @@ class ADVISOR(object):
                     if angle > 0:
                         print('Last price:', asset.lastprice)
                         print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
+                        print('Fair price based on experts estimates:', fair_price)
                         print('Trend:', asset.trend)
                         print('Breakout level:', asset.breakout_level)
                         print('StopLoss1 (EMA13 based):', asset.get_lastema13())
                         print('StopLoss2 (ATR based):', asset.stoploss)
+                        print()
+
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level <= price_distance:
-                            print('Price is close the breakout level!')
+                            print('Price is close to the breakout level!')
                             print()
                             print('Risks')
+                            if fair_price > 0:
+                                if fair_price <= asset.lastprice:
+                                    continue
+                                gain = (fair_price - asset.lastprice) * average_score / 10
+                                loss1 = (asset.lastprice - asset.get_lastema13()) * (10 - average_score) / 10
+                                loss2 = (asset.lastprice - asset.stoploss) * (10 - average_score) / 10
+                                rrr1 = round(gain / loss1, 1)
+                                rrr2 = round(gain / loss2, 1)
+                                print('Reward/Risk ratio:', rrr1, rrr2)
                             print('Please read recent news https://seekingalpha.com/symbol/{}'.format(symbol))
                             print('Check short interest')
                             print(
@@ -237,16 +252,16 @@ class ADVISOR(object):
                             if asset.lastrsi > 70:
                                 print('Overbought signal (RSI > 70):', asset.lastrsi)
                             print()
-                            print('Monte-Carlo')
+                            # print('Monte-Carlo')
                             # asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
-                            asset.get_bust_chance(bust=price_distance, sims=1000, plot=False, taillen=taillen)
-                            print('Stop loss chance:', round(asset.bust_chance, 2))
-                            print('Stop loss price:', round(asset.breakout_level, 2))
-                            print('Take profit chance:', round(asset.goal_chance, 2))
-                            asset.goalprice = asset.lastprice * 1.1
-                            print('Take profit price:', round(asset.goalprice, 2))
-                            asset.get_reward_risk_ratio()
-                            print('Reward-Risk ratio:', asset.rewardriskratio)
+                            # asset.get_bust_chance(bust=price_distance, sims=1000, plot=False, taillen=taillen)
+                            # print('Stop loss chance:', round(asset.bust_chance, 2))
+                            # print('Stop loss price:', round(asset.breakout_level, 2))
+                            # print('Take profit chance:', round(asset.goal_chance, 2))
+                            # asset.goalprice = asset.lastprice * 1.1
+                            # print('Take profit price:', round(asset.goalprice, 2))
+                            # asset.get_reward_risk_ratio()
+                            # print('Reward-Risk ratio:', asset.rewardriskratio)
 
                             asset.plot('Turbo:')
 
@@ -264,9 +279,11 @@ class ADVISOR(object):
 if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         datatypes = ['a', 'mc', 'me', 'meusd', 'ms']
+        # Ignore until February
+        ignore = ['BMY', 'SBUX', 'MDT', 'AVGO', 'ZTS', 'ROP', 'V', 'ANTM', 'SYY']
         for datatype in datatypes:
             adv = ADVISOR(datatype=datatype)
-            adv.check_watchlist()
+            adv.check_watchlist(ignore=ignore)
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)

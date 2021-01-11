@@ -107,13 +107,13 @@
         "FEES": {"div": 0.015}
     },
     {
-        "ENRU": {"div": 0.15}
+        "ENRU": {"div": 0.15, "desc": "Enel Rossia (Energy)", "fp": 1.02, "as": 5.0}
     },
     {
         "TRNFP": {"div": 11600.0}
     },
     {
-        "HYDR": {"div": 0.026, "limit": 57.0}
+        "HYDR": {"div": 0.026, "desc": "RusHydro (Energy)", "fp": 1.0, "as": 5.0}
     },
     {
         "SNGSP": {"div": 2.0, "limit": 30.0}
@@ -131,9 +131,6 @@
         "AGRO": {"div": 0.00}
     },
     {
-        "SBERP": {"limit": 150.0}
-    },
-    {
         "MAGN": {"div": 5.0}
     },
     {
@@ -143,7 +140,7 @@
         "NLMK": {"div": 14.0}
     },
     {
-        "MSRS": {"div": 0.06}
+        "MSRS": {"div": 0.06, "desc": "MSK Elektro (Energy)", "fp": 1.5, "as": 5.0}
     },
     {
         "MSNG": {"div": 0.16, "limit": 2.0}
@@ -161,7 +158,7 @@
         "TATNP": {"div": 42.0, "limit": 400.0}
     },
     {
-        "UPRO": {"div": 0.22}
+        "UPRO": {"div": 0.22, "desc": "Unipro (Energy)", "fp": 3.0, "as": 5.0}
     },
     {
         "GTRK": {"div": 0.0}

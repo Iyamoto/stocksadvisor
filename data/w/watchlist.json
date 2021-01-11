@@ -63,7 +63,7 @@
         "DHI": {"buy": 0.8}
     },
     {
-        "MBT": {"div": 1.07}
+        "MBT": {"div": 1.07, "desc": "MTS in USD", "fp": 9.4, "as": 5.0}
     },
     {
         "GM": {"div": 1.52, "limit": 37.0}
@@ -84,7 +84,7 @@
         "SJM": {"buy": 112.83, "div": 3.4}
     },
     {
-        "BMY": {"div": 2.0, "buy": 51.03}
+        "BMY": {"div": 2.0, "desc": "BRISTOL-MYERS SQUIBB (Biopharmaceutical)", "fp": 75.0, "as": 6.0}
     },
     {
         "KIM": {"div": 1.12, "limit": 17.0}
@@ -108,7 +108,7 @@
         "SJI": {"div": 1.21}
     },
     {
-        "UNM": {"div": 1.14}
+        "UNM": {"div": 1.14, "desc": "Unum Group is a provider of financial protection benefits in the United States and the United Kingdom. (Insurance)", "fp": 22.4, "as": 5.0}
     },
       {
         "UNH": {"div": 5.0}
@@ -132,7 +132,7 @@
     "SKM": {"div": 0.7, "limit": 25.0}
   },
     {
-        "SBUX": {"div": 1.2, "limit": 55.0}
+        "SBUX": {"div": 1.2, "desc": "Starbucks Corp is a coffee roaster and retailer of specialty coffee (Entertainment)", "fp": 108.19, "as": 4.0}
     },
     {
         "WBA": {"div": 2.0, "limit": 35.0}
@@ -246,10 +246,7 @@
     "BBT": {"div": 1.5}
   },
     {
-    "MDT": {"div": 2.32}
-  },
-  {
-    "BTI": {"div": 2.7}
+    "MDT": {"div": 2.32, "desc": "Medtronic Public Limited Company (Medtronic) is a medical technology and services company. (Healthcare)", "fp": 129.26, "as": 6.0}
   },
   {
     "LFC": {"div": 0.26}
@@ -288,7 +285,7 @@
       "AJG": {"div": 1.8}
   },
   {
-    "AVGO": {"div": 9.0, "limit": 200.0}
+    "AVGO": {"div": 9.0, "desc": "Broadcom Inc. is a technology company. (Semiconductor)", "fp": 469.6, "as": 8.0}
   },
     {
         "PFE": {"div": 1.36, "limit": 38.0}
@@ -315,7 +312,7 @@
     "CVX": {"div": 4.48, "limit": 110.0}
   },
     {
-        "ZTS": {"div": 0.5}
+        "ZTS": {"div": 0.5, "desc": "Zoetis Inc. is engaged in the discovery, development, manufacture and commercialization of animal health medicines and vaccines, with a focus on both livestock and companion animals. (Pharma)", "fp": 188.8, "as": 8.0}
     },
     {
         "CVS": {"div": 2.0}
@@ -384,7 +381,7 @@
     "WCC": {"div": 0.0}
   },
     {
-    "ROP": {"div": 2.25}
+    "ROP": {"div": 2.25, "desc": " The Company operate businesses that design and develop software, including both license and software-as-a-service (SaaS) and engineered products and solutions for a variety of markets. (IT)", "fp": 458.25, "as": 8.0}
   },
     {
         "VTR": {"div": 3.16, "limit": 57.0}
@@ -436,7 +433,7 @@
     "KMB": {"div": 4.0, "limit": 80.0}
   },
   {
-    "PFG": {"div": 2.1, "limit": 50.0}
+    "PFG": {"div": 2.1, "desc": "Principal Financial Group, Inc. is an investment management company. (Insurance)", "fp": 50.0, "as": 5.0}
   },
   {
     "MAC": {"div": 2.96}
@@ -525,7 +522,7 @@
     "MS": {"div": 1.1, "buy": 46.96}
   },
   {
-    "V": {"div": 0.9}
+    "V": {"div": 0.9, "desc": "Visa Inc. (Visa) is a payments technology company (IT)", "fp": 227.7, "as": 7.0}
   },
     {
     "MMM": {"div": 1.47}
@@ -597,7 +594,7 @@
     "HCA": {"div": 1.4, "limit": 90.0}
   },
   {
-    "ANTM": {"div": 3.0, "limit": 200.0}
+    "ANTM": {"div": 3.0, "desc": "Anthem, Inc. is a health benefits company. (Healthcare)", "fp": 368.7, "as": 9.0}
   },
   {
     "PNC": {"div": 3.2, "limit": 120.0}
@@ -654,7 +651,7 @@
     "HRL": {"div": 0.8, "limit": 35.0}
   },
   {
-    "SYY": {"div": 1.2, "limit": 60.0}
+    "SYY": {"div": 1.2, "desc": "Sysco Corporation (Sysco) is a distributor of food and related products primarily to the foodservice or food-away-from-home industry.. (Food and Drug retailing)", "fp": 78.3, "as": 3.0}
   },
   {
     "ABT": {"div": 1.2, "limit": 60.0}
@@ -720,7 +717,7 @@
     "NVDA": {"div": 0.64, "limit": 100.00}
   },
   {
-    "ACN": {"div": 2.0, "limit": 100.00}
+    "ACN": {"div": 2.0, "desc": "Accenture plc is a professional services company. (IT)", "fp": 278.64, "as": 9.0}
   },
   {
     "CRM": {"div": 0.0, "limit": 100.00}
