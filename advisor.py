@@ -155,7 +155,7 @@ class ADVISOR(object):
             print(symbol, ' - ', desc)
 
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
-                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*23*4)
+                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*23)
 
             # Fetch data from the source
             asset.get_data()
