@@ -359,7 +359,7 @@ class ASSET(object):
         if 'RSI' in columns:
             plt.subplot2grid((4, 1), (3, 0), rowspan=1)
             plt.plot(df.index, df.RSI, 'r', label='RSI')
-            horiz_line_data = np.array([60 for i in range(len(df.index))])
+            horiz_line_data = np.array([70 for i in range(len(df.index))])
             plt.plot(df.index, horiz_line_data, color='g', label='Oversold', linestyle='-.', linewidth=1.0)
             horiz_line_data = np.array([30 for i in range(len(df.index))])
             plt.plot(df.index, horiz_line_data, color='b', label='Overbought', linestyle='-.', linewidth=1.0)

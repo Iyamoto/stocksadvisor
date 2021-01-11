@@ -152,7 +152,7 @@ class ADVISOR(object):
             print(symbol)
 
             asset = libs.assets.ASSET(symbol=symbol, source=self.source, asset_type=self.asset_type, key=self.key,
-                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*48)
+                                      min_goal=self.min_goal, atr_multiplier=self.atr_multiplier, cacheage=3600*72)
 
             # Fetch data from the source
             asset.get_data()
@@ -188,11 +188,15 @@ class ADVISOR(object):
 
             # Find fous pattern
 
-            asset.find_phase1(points=3, diff=1.5)
+            asset.find_phase1(points=3, diff=1.5, rsi=50)
+
+            # if symbol_overide:
+            #     asset.plot('Manual:')
 
             # asset.find_event(points=3, diff=1.5)
             price_distance = 0.03
-            if 'Max' not in asset.df.columns or asset.phase1_len < 3:
+
+            if 'Max' not in asset.df.columns or asset.phase1_len < 1:
                 continue
 
             if asset.df.Max.sum() > 0 and \
@@ -244,9 +248,6 @@ class ADVISOR(object):
 
                             asset.plot('Turbo:')
 
-            if symbol_overide:
-                asset.plot('Manual:')
-
             # asset.plot_fous()
 
         # # Save results
@@ -263,7 +264,7 @@ if __name__ == "__main__":
         datatypes = ['a', 'mc', 'me', 'meusd', 'ms']
         for datatype in datatypes:
             adv = ADVISOR(datatype=datatype)
-            adv.check_watchlist()
+            adv.check_watchlist(symbol_overide='BMY')
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
