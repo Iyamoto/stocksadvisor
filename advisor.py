@@ -264,7 +264,7 @@ if __name__ == "__main__":
         datatypes = ['a', 'mc', 'me', 'meusd', 'ms']
         for datatype in datatypes:
             adv = ADVISOR(datatype=datatype)
-            adv.check_watchlist(symbol_overide='BMY')
+            adv.check_watchlist()
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
         # fire.Fire(adv.test_strategy)
