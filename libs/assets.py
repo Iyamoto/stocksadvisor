@@ -80,6 +80,9 @@ class ASSET(object):
         self.phase1_end = 0
         self.phase1_len = 0
         self.lastema13 = 0
+        self.lastema50 = 0
+        self.lastema100 = 0
+        self.is_under_accumulation = False
 
     def __str__(self):
         result = self.get_results()
@@ -101,6 +104,35 @@ class ASSET(object):
 
         return self.rewardriskratio
 
+    def compare_volumes(self, days=0):
+        self.df['UpDay'] = self.df.Volume[self.df['Close'] >= self.df['Open']]
+        updays_volume = self.df['UpDay'].tail(days).sum()
+        self.df = self.df.drop(['UpDay'], axis=1)
+
+        self.df['DownDay'] = self.df.Volume[self.df['Close'] < self.df['Open']]
+        downdays_volume = self.df['DownDay'].tail(days).sum()
+        self.df = self.df.drop(['DownDay'], axis=1)
+
+        if updays_volume > downdays_volume:
+            self.is_under_accumulation = True
+
+    # def get_money_flow_index(self, days=0):
+    #     self.df['UpDay'] = self.df.Volume[self.df['Close'] >= self.df['Open']]
+    #     self.df['MoneyFlow'] = self.df.UpDay * (self.df.Close + self.df.High + self.df.Low) / 3
+    #     up_money_flow = self.df['MoneyFlow'].tail(days).sum()
+    #     self.df = self.df.drop(['UpDay'], axis=1)
+    #     self.df = self.df.drop(['MoneyFlow'], axis=1)
+    #
+    #     self.df['DownDay'] = self.df.Volume[self.df['Close'] < self.df['Open']]
+    #     self.df['MoneyFlow'] = self.df.DownDay * (self.df.Close + self.df.High + self.df.Low) / 3
+    #     down_money_flow = self.df['MoneyFlow'].tail(days).sum()
+    #     self.df = self.df.drop(['DownDay'], axis=1)
+    #     self.df = self.df.drop(['MoneyFlow'], axis=1)
+    #
+    #     money_flow_ratio = up_money_flow / down_money_flow
+    #     money_flow_index = round(100 - (100/(1 + money_flow_ratio)), 1)
+    #     return money_flow_index
+
     def static_analysis(self, printoutput=True):
         # Calculate some stats
         self.get_lastprice()
@@ -110,8 +142,11 @@ class ASSET(object):
         self.get_ema(period=13)
         self.get_ema(period=20)
         self.get_rsi(period=14)
+        self.get_mfi(period=14)
         self.get_lastrsi()
         self.get_kc()
+        self.get_lastema50()
+        self.get_lastema100()
 
         # Stop loss
         self.get_stoploss()
@@ -166,6 +201,18 @@ class ASSET(object):
     def get_lastprice(self):
         self.lastprice = float(round(self.df.Close[-1:].values[0], 2))
         return self.lastprice
+
+    def get_lastema50(self):
+        self.get_ema(period=50)
+        self.lastema50 = float(round(self.df.EMA50[-1:].values[0], 6))
+        self.df = self.df.drop(['EMA50'], axis=1)
+        return self.lastema50
+
+    def get_lastema100(self):
+        self.get_ema(period=100)
+        self.lastema100 = float(round(self.df.EMA100[-1:].values[0], 6))
+        self.df = self.df.drop(['EMA100'], axis=1)
+        return self.lastema100
 
     def get_lastema13(self):
         self.lastema13 = float(round(self.df.EMA13[-1:].values[0], 6))
@@ -307,20 +354,9 @@ class ASSET(object):
 
         plt.plot(df.index, df.Close, 'k', label='Price', linewidth=2.0)
 
-        if 'RSI' in columns:
-            df['RSI'] = self.df.RSI.values
-
         if 'EMA13' in columns:
             df['EMA13'] = self.df.EMA13.values
             plt.plot(df.index, df.EMA13, 'g', label='EMA13', linestyle='--')
-
-        # if 'EMA5' in columns:
-        #     df['EMA5'] = self.df.EMA5.values
-        #     plt.plot(df.index, df.EMA5, 'b', label='EMA5', linestyle='--')
-        #
-        # if 'EMA20' in columns:
-        #     df['EMA20'] = self.df.EMA20.values
-        #     plt.plot(df.index, df.EMA20, 'r', label='EMA20', linestyle='--')
 
         if 'KC_LOW' in columns:
             df['KC_LOW'] = self.df.KC_LOW.values
@@ -361,9 +397,10 @@ class ASSET(object):
 
         ax1.grid()
 
-        if 'RSI' in columns:
+        if 'MFI' in columns:
+            df['MFI'] = self.df.MFI.values
             plt.subplot2grid((4, 1), (3, 0), rowspan=1)
-            plt.plot(df.index, df.RSI, 'r', label='RSI')
+            plt.plot(df.index, df.MFI, 'r', label='MFI')
             horiz_line_data = np.array([70 for i in range(len(df.index))])
             plt.plot(df.index, horiz_line_data, color='g', label='Oversold', linestyle='-.', linewidth=1.0)
             horiz_line_data = np.array([30 for i in range(len(df.index))])
@@ -374,59 +411,19 @@ class ASSET(object):
         fig.tight_layout()
         plt.show()
 
-    def plot_fous(self):
-        columns = self.df.columns
-        df = pd.concat([self.df['date'], self.df['Close'], self.df['Volume'], self.df['Max']], axis=1)
-        df.date = pd.to_datetime(df['date'], format='%Y-%m-%d')
-        df['Close'] = df.Close.replace(to_replace=0, method='ffill')
-        df['Volume'] = df.Volume.replace(to_replace=0, method='ffill')
-        fig = plt.figure(figsize=(15, 8))
-        plt.subplot2grid((4, 1), (0, 0), rowspan=2)
-        plt.title(self.symbol)
-        plt.plot(df.index, df.Close, 'k', label='Price', linewidth=2.0)
-
-        if 'EMA13' in columns:
-            df['EMA13'] = self.df.EMA13.values
-            plt.plot(df.index, df.EMA13, 'b', label='EMA13', linestyle='--')
-
-        if 'RSI' in columns:
-            df['RSI'] = self.df.RSI.values
-
-        if 'KC_LOW' in columns:
-            df['KC_LOW'] = self.df.KC_LOW.values
-
-        if 'KC_HIGH' in columns:
-            df['KC_HIGH'] = self.df.KC_HIGH.values
-
-        if 'KC_LOW' in columns and 'KC_HIGH' in columns:
-            plt.fill_between(df.index, df.KC_LOW, df.KC_HIGH, color='b', alpha=0.1)
-
-        plt.scatter(df.index, df['Max'], c='g')
-        if self.breakout_level > 0:
-            horiz_line_data = np.array([self.breakout_level for i in range(len(df.index))])
-            plt.plot(df.index, horiz_line_data, color='g', label='Breakout', linestyle='-.', linewidth=1.0)
-
-        plt.legend()
-        plt.grid()
-
-        ax1 = plt.subplot2grid((4, 1), (2, 0), rowspan=1)
-        ax1.plot(df.index, df.Volume, 'g', label='Volume')
-        ax1.set_ylabel('Volume', color='g')
-
-        ax1.grid()
-
-        if 'RSI' in columns:
-            plt.subplot2grid((4, 1), (3, 0), rowspan=1)
-            plt.plot(df.index, df.RSI, 'r', label='RSI')
-            horiz_line_data = np.array([70 for i in range(len(df.index))])
-            plt.plot(df.index, horiz_line_data, color='g', label='Overbought', linestyle='-.', linewidth=1.0)
-            horiz_line_data = np.array([30 for i in range(len(df.index))])
-            plt.plot(df.index, horiz_line_data, color='b', label='Oversold', linestyle='-.', linewidth=1.0)
-            plt.legend()
-            plt.grid()
-
-        fig.tight_layout()
-        plt.show()
+    def get_mfi(self, period=14):
+        pricedata = self.df
+        high = pricedata['High'].values
+        low = pricedata['Low'].values
+        close = pricedata['Close'].values
+        volume = pricedata['Volume'].values
+        low = low.astype(float)
+        high = high.astype(float)
+        close = close.astype(float)
+        volume = volume.astype(float)
+        output = talib.MFI(high, low, close, volume, timeperiod=period)
+        self.df['MFI'] = output
+        return output
 
     def get_atr(self, period=5):
         pricedata = self.df

@@ -220,7 +220,17 @@ class ADVISOR(object):
                         print()
 
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level <= price_distance:
+                            print('Positive signals')
                             print('Price is close to the breakout level!')
+                            asset.compare_volumes(days=taillen)
+                            if asset.is_under_accumulation:
+                                print('For the last {} days the stock is under accumulation:'.format(taillen), asset.is_under_accumulation)
+                            if 50 < asset.lastrsi < 70:
+                                print('RSI shows upside momentum: {}'.format(asset.lastrsi))
+                            if asset.lastprice > asset.lastema50:
+                                print('Price is above EMA50')
+                            if asset.lastprice > asset.lastema100:
+                                print('Price is above EMA100')
                             print()
                             print('Risks')
                             if fair_price > 0:
@@ -234,6 +244,7 @@ class ADVISOR(object):
                                 print('Reward/Risk ratio:', rrr1, rrr2)
                             print('Please read recent news https://seekingalpha.com/symbol/{}'.format(symbol))
                             print('Check short interest')
+                            print('Check money flow index for divergences')
                             print(
                                 'Please check dividend pay date https://seekingalpha.com/symbol/{}/dividends/news'.format(
                                     symbol))
@@ -264,8 +275,6 @@ class ADVISOR(object):
                             # print('Reward-Risk ratio:', asset.rewardriskratio)
 
                             asset.plot('Turbo:')
-
-            # asset.plot_fous()
 
         # # Save results
         # today = datetime.today()
