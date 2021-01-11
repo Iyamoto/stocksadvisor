@@ -211,7 +211,8 @@ class ADVISOR(object):
                         print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
                         print('Trend:', asset.trend)
                         print('Breakout level:', asset.breakout_level)
-                        print('StopLoss:', asset.stoploss)
+                        print('StopLoss1 (EMA13 based):', asset.get_lastema13())
+                        print('StopLoss2 (ATR based):', asset.stoploss)
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level <= price_distance:
                             print('Price is close the breakout level!')
                             print()

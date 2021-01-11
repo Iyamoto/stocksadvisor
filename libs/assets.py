@@ -79,6 +79,7 @@ class ASSET(object):
         self.phase1_start = 0
         self.phase1_end = 0
         self.phase1_len = 0
+        self.lastema13 = 0
 
     def __str__(self):
         result = self.get_results()
@@ -165,6 +166,10 @@ class ASSET(object):
     def get_lastprice(self):
         self.lastprice = float(round(self.df.Close[-1:].values[0], 2))
         return self.lastprice
+
+    def get_lastema13(self):
+        self.lastema13 = float(round(self.df.EMA13[-1:].values[0], 2))
+        return self.lastema13
 
     def get_lastrsi(self):
         self.lastrsi = float(round(self.df.RSI[-1:].values[0], 2))
