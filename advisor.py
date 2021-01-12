@@ -198,6 +198,8 @@ class ADVISOR(object):
 
             # asset.find_event(points=3, diff=1.5)
             price_distance = 0.03
+            gain_chance = 0.2
+            loss_chance = 0.2
 
             if 'Max' not in asset.df.columns or asset.phase1_len < 1:
                 continue
@@ -213,35 +215,74 @@ class ADVISOR(object):
                         print('Last price:', asset.lastprice)
                         print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
                         print('Fair price based on experts estimates:', fair_price)
-                        print('Trend:', asset.trend)
-                        print('Breakout level:', asset.breakout_level)
                         print('StopLoss1 (EMA13 based):', asset.get_lastema13())
                         print('StopLoss2 (ATR based):', asset.stoploss)
-                        print()
+                        if asset.lastprice > asset.lastema50:
+                            print('Price is above EMA50')
+                        if asset.lastprice > asset.lastema100:
+                            print('Price is above EMA100')
 
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level <= price_distance:
-                            print('Positive signals')
                             print('Price is close to the breakout level!')
+                            print('Breakout level:', asset.breakout_level)
+                            print()
+
+                            print('Positive signals')
+
                             asset.compare_volumes(days=taillen)
                             if asset.is_under_accumulation:
                                 print('For the last {} days the stock is under accumulation:'.format(taillen), asset.is_under_accumulation)
+                                gain_chance += 0.05
                             if 50 < asset.lastrsi < 70:
                                 print('RSI shows upside momentum: {}'.format(asset.lastrsi))
-                            if asset.lastprice > asset.lastema50:
-                                print('Price is above EMA50')
-                            if asset.lastprice > asset.lastema100:
-                                print('Price is above EMA100')
+                                gain_chance += 0.05
+                            if asset.lastrsi < 30:
+                                print('Oversold according to RSI:', asset.lastrsi)
+                                gain_chance += 0.1
+                            if average_score > 5:
+                                print('The company average score > 5', average_score)
+                                gain_chance += abs(average_score - 5) / 20
+                            if asset.lastmfi < 20:
+                                print('Oversold according to MFI:', asset.lastmfi)
+                                gain_chance += 0.1
+                            if asset.trend in ['Sideways Up', 'Up Up']:
+                                print('Trend is up:', asset.trend)
+                                gain_chance += 0.1
+
                             print()
                             print('Risks')
+
+                            if not asset.is_under_accumulation:
+                                print('For the last {} days the stock is not under accumulation:'.format(taillen), asset.is_under_accumulation)
+                                loss_chance += 0.05
+                            if 30 < asset.lastrsi < 50:
+                                print('RSI shows downside momentum: {}'.format(asset.lastrsi))
+                                loss_chance += 0.05
+                            if asset.lastrsi > 70:
+                                print('Overbought according to RSI:', asset.lastrsi)
+                                loss_chance += 0.1
+                            if average_score < 5:
+                                print('The company average score < 5', average_score)
+                                loss_chance += abs(average_score - 5) / 20
+                            if asset.lastmfi > 80:
+                                print('Overbought according to MFI:', asset.lastmfi)
+                                loss_chance += 0.1
+                            if asset.trend in ['Sideways Down', 'Up Down']:
+                                print('Trend is down:', asset.trend)
+                                loss_chance += 0.1
+
                             if fair_price > 0:
-                                if fair_price <= asset.lastprice:
+                                if 0 < fair_price <= asset.lastprice:
                                     continue
-                                gain = (fair_price - asset.lastprice) * average_score / 10
-                                loss1 = (asset.lastprice - asset.get_lastema13()) * (10 - average_score) / 10
-                                loss2 = (asset.lastprice - asset.stoploss) * (10 - average_score) / 10
+                                gain = (fair_price - asset.lastprice) * gain_chance
+                                loss1 = (asset.lastprice - asset.get_lastema13()) * loss_chance
+                                loss2 = (asset.lastprice - asset.stoploss) * loss_chance
                                 rrr1 = round(gain / loss1, 1)
                                 rrr2 = round(gain / loss2, 1)
+                                print()
                                 print('Reward/Risk ratio:', rrr1, rrr2)
+
+                            print()
                             print('Please read recent news https://seekingalpha.com/symbol/{}'.format(symbol))
                             print('Check short interest')
                             print('Check money flow index for divergences')
@@ -260,9 +301,8 @@ class ADVISOR(object):
                             print('Check the stock on https://www.morningstar.com/ read news')
                             print('Check Consensus Forward P/E, Debt/Equity, Net Margin, ROE, Free Cash Flow')
                             print('Anomalies:', asset.anomalies)
-                            if asset.lastrsi > 70:
-                                print('Overbought signal (RSI > 70):', asset.lastrsi)
                             print()
+
                             # print('Monte-Carlo')
                             # asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
                             # asset.get_bust_chance(bust=price_distance, sims=1000, plot=False, taillen=taillen)
@@ -289,7 +329,7 @@ if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         datatypes = ['a', 'mc', 'me', 'meusd', 'ms']
         # Ignore until February
-        ignore = ['BMY', 'SBUX', 'MDT', 'AVGO', 'ZTS', 'ROP', 'V', 'ANTM', 'SYY']
+        ignore = ['SBUX', 'MDT', 'AVGO', 'ZTS', 'ROP', 'V', 'ANTM', 'SYY']
         for datatype in datatypes:
             adv = ADVISOR(datatype=datatype)
             adv.check_watchlist(ignore=ignore)

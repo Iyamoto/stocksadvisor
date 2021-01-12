@@ -83,6 +83,7 @@ class ASSET(object):
         self.lastema50 = 0
         self.lastema100 = 0
         self.is_under_accumulation = False
+        self.lastmfi = 0
 
     def __str__(self):
         result = self.get_results()
@@ -144,6 +145,7 @@ class ASSET(object):
         self.get_rsi(period=14)
         self.get_mfi(period=14)
         self.get_lastrsi()
+        self.get_lastmfi()
         self.get_kc()
         self.get_lastema50()
         self.get_lastema100()
@@ -199,7 +201,7 @@ class ASSET(object):
         return self.stoploss, self.stoplosspercent
 
     def get_lastprice(self):
-        self.lastprice = float(round(self.df.Close[-1:].values[0], 2))
+        self.lastprice = float(round(self.df.Close[-1:].values[0], 6))
         return self.lastprice
 
     def get_lastema50(self):
@@ -221,6 +223,10 @@ class ASSET(object):
     def get_lastrsi(self):
         self.lastrsi = float(round(self.df.RSI[-1:].values[0], 2))
         return self.lastrsi
+
+    def get_lastmfi(self):
+        self.lastmfi = float(round(self.df.MFI[-1:].values[0], 2))
+        return self.lastmfi
 
     def get_data(self):
         if self.source == 'moex':
