@@ -202,6 +202,13 @@ class ADVISOR(object):
                     print('Fair price based on experts estimates:', fair_price)
                     print('StopLoss1 (EMA13 based):', asset.get_lastema13())
                     print('StopLoss2 (ATR based):', asset.stoploss)
+
+                    last_low = float(round(asset.df.Low[-1:].values[0], 6))
+                    last_high = float(round(asset.df.High[-1:].values[0], 6))
+                    stop_half = round((last_low + last_high) / 2, 6)
+
+                    print('StopLoss3 (Half last candle):', stop_half)
+
                     if asset.lastprice > asset.lastema50:
                         print('Price is above EMA50')
                     if asset.lastprice > asset.lastema100:
@@ -224,7 +231,7 @@ class ADVISOR(object):
                                 gain_chance += 0.05
                             if asset.lastrsi < 30:
                                 print('Oversold according to RSI:', asset.lastrsi)
-                                gain_chance += 0.1
+                                gain_chance += 0.05
                             if rsi_angle > 0.1:
                                 print('RSI trend is up', round(rsi_angle, 2))
                                 gain_chance += 0.05
@@ -233,10 +240,10 @@ class ADVISOR(object):
                                 gain_chance += abs(average_score - 5) / 20
                             if asset.lastmfi < 20:
                                 print('Oversold according to MFI:', asset.lastmfi)
-                                gain_chance += 0.1
+                                gain_chance += 0.05
                             if mfi_angle > 0.1:
                                 print('MFI trend is up', round(mfi_angle, 2))
-                                gain_chance += 0.1
+                                gain_chance += 0.05
                             if asset.trend in ['Sideways Up', 'Up Up']:
                                 print('Trend is up:', asset.trend)
                                 gain_chance += 0.1
@@ -252,7 +259,7 @@ class ADVISOR(object):
                                 loss_chance += 0.05
                             if asset.lastrsi > 70:
                                 print('Overbought according to RSI:', asset.lastrsi)
-                                loss_chance += 0.1
+                                loss_chance += 0.05
                             if rsi_angle < -0.1:
                                 print('RSI trend is down', round(rsi_angle, 2))
                                 loss_chance += 0.05
@@ -261,10 +268,10 @@ class ADVISOR(object):
                                 loss_chance += abs(average_score - 5) / 20
                             if asset.lastmfi > 80:
                                 print('Overbought according to MFI:', asset.lastmfi)
-                                loss_chance += 0.1
+                                loss_chance += 0.05
                             if mfi_angle < -0.1:
                                 print('MFI trend is down', round(mfi_angle, 2))
-                                loss_chance += 0.1
+                                loss_chance += 0.05
                             if asset.trend in ['Sideways Down', 'Up Down']:
                                 print('Trend is down:', asset.trend)
                                 loss_chance += 0.1
@@ -276,10 +283,12 @@ class ADVISOR(object):
                                 gain = (fair_price - asset.lastprice) * gain_chance
                                 loss1 = (asset.lastprice - asset.get_lastema13()) * loss_chance
                                 loss2 = (asset.lastprice - asset.stoploss) * loss_chance
+                                loss3 = (asset.lastprice - stop_half) * loss_chance
                                 rrr1 = round(gain / loss1, 1)
                                 rrr2 = round(gain / loss2, 1)
+                                rrr3 = round(gain / loss3, 1)
                                 print()
-                                print('Reward/Risk ratio EMA13:', rrr1, 'ATR:', rrr2)
+                                print('Reward/Risk ratio EMA13:', rrr1, 'ATR:', rrr2, 'Half candle:', rrr3)
 
                             print()
                             print('Please read recent news https://seekingalpha.com/symbol/{}'.format(symbol))
