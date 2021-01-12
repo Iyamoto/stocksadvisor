@@ -167,30 +167,6 @@ class ADVISOR(object):
 
             pd.options.display.max_rows = 200
 
-            # # Check 10% theory
-            # asset.df['PCT'] = asset.df['Close'].pct_change().fillna(0)
-            # asset.df['PCT10'] = asset.df['PCT'] > 0.1
-            #
-            #
-            # if asset.df['PCT10'].sum() > 1:
-            #     print(asset.df['PCT10'].sum())
-            #     print(asset.df[['PCT', 'PCT10']])
-            # else:
-            #     continue
-
-            # usd_rub_correlation = round(self.correlation(datatype2=self.datatype, symbol2=symbol), 2)
-            # print('USD-RUB-Correlation:', usd_rub_correlation)
-
-            # print(asset.df)
-            # exit()
-
-            # Find anomalies
-            # if asset.anomalies > 0 and self.plot_anomaly:
-            #     print('Anomaly detected')
-            #     asset.plot('Anomaly:')
-
-            # Find fous pattern
-
             asset.find_phase1(points=3, diff=1.5, rsi=50)
 
             # asset.find_event(points=3, diff=1.5)
@@ -338,14 +314,6 @@ class ADVISOR(object):
                             # print('Reward-Risk ratio:', asset.rewardriskratio)
 
                             asset.plot('Turbo:')
-
-        # # Save results
-        # today = datetime.today()
-        # filename = self.datatype + '-' + self.source + '-' + str(today.strftime("%Y-%m-%d")) + '.json'
-        # filepath = os.path.join('', 'recommendations', filename)
-        # if len(results) > 0:
-        #     with open(filepath, 'w') as outfile:
-        #         json.dump(results, outfile, indent=4)
 
 
 if __name__ == "__main__":
