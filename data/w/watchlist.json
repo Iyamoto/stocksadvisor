@@ -729,7 +729,7 @@
     "AN": {"div": 0.0}
   },
   {
-    "ALL": {"div": 2.16}
+    "ALL": {"div": 2.16, "desc": "Allstate Corporation (Allstate) is a holding company for Allstate Insurance Company (Insurance)", "fp": 123.9, "as": 10.0}
   },
   {
     "ALLE": {"div": 1.28}
