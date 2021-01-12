@@ -193,13 +193,14 @@ class ADVISOR(object):
 
             asset.find_phase1(points=3, diff=1.5, rsi=50)
 
-            # if symbol_overide:
-            #     asset.plot('Manual:')
-
             # asset.find_event(points=3, diff=1.5)
             price_distance = 0.03
             gain_chance = 0.2
             loss_chance = 0.2
+
+            if symbol_overide:
+                asset.plot('Manual:')
+                exit()
 
             if 'Max' not in asset.df.columns or asset.phase1_len < 1:
                 continue
@@ -211,17 +212,22 @@ class ADVISOR(object):
                 if 3 <= taillen <= 50:
                     trend = asset.get_trendline(asset.df['Close'].tail(taillen))
                     angle = trend[0]
-                    if angle > 0:
-                        print('Last price:', asset.lastprice)
-                        print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
-                        print('Fair price based on experts estimates:', fair_price)
-                        print('StopLoss1 (EMA13 based):', asset.get_lastema13())
-                        print('StopLoss2 (ATR based):', asset.stoploss)
-                        if asset.lastprice > asset.lastema50:
-                            print('Price is above EMA50')
-                        if asset.lastprice > asset.lastema100:
-                            print('Price is above EMA100')
+                    trend = asset.get_trendline(asset.df['MFI'].tail(taillen))
+                    mfi_angle = trend[0]
+                    trend = asset.get_trendline(asset.df['RSI'].tail(taillen))
+                    rsi_angle = trend[0]
 
+                    print('Last price:', asset.lastprice)
+                    print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
+                    print('Fair price based on experts estimates:', fair_price)
+                    print('StopLoss1 (EMA13 based):', asset.get_lastema13())
+                    print('StopLoss2 (ATR based):', asset.stoploss)
+                    if asset.lastprice > asset.lastema50:
+                        print('Price is above EMA50')
+                    if asset.lastprice > asset.lastema100:
+                        print('Price is above EMA100')
+
+                    if angle > 0:
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level <= price_distance:
                             print('Price is close to the breakout level!')
                             print('Breakout level:', asset.breakout_level)
@@ -239,11 +245,17 @@ class ADVISOR(object):
                             if asset.lastrsi < 30:
                                 print('Oversold according to RSI:', asset.lastrsi)
                                 gain_chance += 0.1
+                            if rsi_angle > 0.1:
+                                print('RSI trend is up', round(rsi_angle, 2))
+                                gain_chance += 0.05
                             if average_score > 5:
                                 print('The company average score > 5', average_score)
                                 gain_chance += abs(average_score - 5) / 20
                             if asset.lastmfi < 20:
                                 print('Oversold according to MFI:', asset.lastmfi)
+                                gain_chance += 0.1
+                            if mfi_angle > 0.1:
+                                print('MFI trend is up', round(mfi_angle, 2))
                                 gain_chance += 0.1
                             if asset.trend in ['Sideways Up', 'Up Up']:
                                 print('Trend is up:', asset.trend)
@@ -261,11 +273,17 @@ class ADVISOR(object):
                             if asset.lastrsi > 70:
                                 print('Overbought according to RSI:', asset.lastrsi)
                                 loss_chance += 0.1
+                            if rsi_angle < -0.1:
+                                print('RSI trend is down', round(rsi_angle, 2))
+                                loss_chance += 0.05
                             if average_score < 5:
                                 print('The company average score < 5', average_score)
                                 loss_chance += abs(average_score - 5) / 20
                             if asset.lastmfi > 80:
                                 print('Overbought according to MFI:', asset.lastmfi)
+                                loss_chance += 0.1
+                            if mfi_angle < -0.1:
+                                print('MFI trend is down', round(mfi_angle, 2))
                                 loss_chance += 0.1
                             if asset.trend in ['Sideways Down', 'Up Down']:
                                 print('Trend is down:', asset.trend)

@@ -403,14 +403,16 @@ class ASSET(object):
 
         ax1.grid()
 
-        if 'MFI' in columns:
+        if 'MFI' in columns and 'RSI' in columns:
             df['MFI'] = self.df.MFI.values
+            df['RSI'] = self.df.RSI.values
             plt.subplot2grid((4, 1), (3, 0), rowspan=1)
             plt.plot(df.index, df.MFI, 'r', label='MFI')
+            plt.plot(df.index, df.RSI, 'b', label='RSI')
             horiz_line_data = np.array([70 for i in range(len(df.index))])
-            plt.plot(df.index, horiz_line_data, color='g', label='Oversold', linestyle='-.', linewidth=1.0)
+            plt.plot(df.index, horiz_line_data, label='Oversold', linestyle='-.', linewidth=1.0)
             horiz_line_data = np.array([30 for i in range(len(df.index))])
-            plt.plot(df.index, horiz_line_data, color='b', label='Overbought', linestyle='-.', linewidth=1.0)
+            plt.plot(df.index, horiz_line_data, color='g', label='Overbought', linestyle='-.', linewidth=1.0)
             plt.legend()
             plt.grid()
 

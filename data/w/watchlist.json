@@ -75,7 +75,7 @@
         "HRB": {"limit": 26.0, "div": 1.0}
     },
     {
-        "HOG": {"buy": 42.38, "div": 1.5}
+        "HOG": {"div": 1.5, "desc": "Harley-Davidson (Automobiles)", "fp": 37.8, "as": 3.0}
     },
     {
         "IBM": {"buy": 132.82, "div": 6.0}
