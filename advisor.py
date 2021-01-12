@@ -210,12 +210,16 @@ class ADVISOR(object):
                 event_index = asset.df.Max[abs(asset.df.Max - asset.lastprice)/asset.df.Max <= price_distance][-1:].index.values[0]
                 taillen = len(asset.df) - event_index
                 if 3 <= taillen <= 50:
-                    trend = asset.get_trendline(asset.df['Close'].tail(taillen))
-                    angle = trend[0]
-                    trend = asset.get_trendline(asset.df['MFI'].tail(taillen))
-                    mfi_angle = trend[0]
-                    trend = asset.get_trendline(asset.df['RSI'].tail(taillen))
-                    rsi_angle = trend[0]
+                    try:
+                        trend = asset.get_trendline(asset.df['Close'].tail(taillen))
+                        angle = trend[0]
+                        trend = asset.get_trendline(asset.df['MFI'].tail(taillen))
+                        mfi_angle = trend[0]
+                        trend = asset.get_trendline(asset.df['RSI'].tail(taillen))
+                        rsi_angle = trend[0]
+                    except:
+                        pprint(asset.df)
+                        continue
 
                     print('Last price:', asset.lastprice)
                     print('Fair price based on divs:', asset.get_fair_price(dividend=dividend))
@@ -299,7 +303,7 @@ class ADVISOR(object):
                                 rrr1 = round(gain / loss1, 1)
                                 rrr2 = round(gain / loss2, 1)
                                 print()
-                                print('Reward/Risk ratio:', rrr1, rrr2)
+                                print('Reward/Risk ratio EMA13:', rrr1, 'ATR:', rrr2)
 
                             print()
                             print('Please read recent news https://seekingalpha.com/symbol/{}'.format(symbol))
@@ -348,7 +352,7 @@ if __name__ == "__main__":
     if "PYCHARM_HOSTED" in os.environ:
         datatypes = ['a', 'mc', 'me', 'meusd', 'ms']
         # Ignore until February
-        ignore = ['SBUX', 'MDT', 'AVGO', 'ZTS', 'ROP', 'V', 'ANTM', 'SYY']
+        ignore = ['SBUX', 'MDT', 'AVGO', 'ZTS', 'ROP', 'V', 'ANTM', 'SYY', 'MCD']
         for datatype in datatypes:
             adv = ADVISOR(datatype=datatype)
             adv.check_watchlist(ignore=ignore)

@@ -427,7 +427,7 @@
         "UDR": {"div": 1.28, "limit": 41.0}
     },
   {
-    "IVZ": {"div": 1.2}
+    "IVZ": {"div": 1.2, "desc": " Invesco is an independent investment management company (Investment)", "fp": 16.0, "as": 9.0}
   },
   {
     "KMB": {"div": 4.0, "limit": 80.0}
@@ -445,7 +445,7 @@
     "EXC": {"div": 1.53}
   },
   {
-    "K": {"div": 2.28}
+    "K": {"div": 2.28, "desc": "Kellogg Company is a manufacturer and marketer of ready-to-eat cereal and convenience foods. (Food)", "fp": 67.3, "as": 6.0}
   },
   {
     "BIIB": {"div": 0.0}
@@ -503,7 +503,7 @@
   },
     {
         "MCD": {
-            "div": 4.04, "limit": 160.0
+            "div": 4.04, "desc": "MCDONALDS CORP (Entertainment)", "fp": 238.0, "as": 3.0
         }
     },
     {
@@ -708,7 +708,7 @@
     "AAPL": {"div": 3.0, "limit": 170.00}
   },
   {
-    "MA": {"div": 1.3, "limit": 200.00}
+    "MA": {"div": 1.3, "desc": "MASTERCARD (IT)", "fp": 362.0, "as": 6.0}
   },
   {
     "ADBE": {"div": 0.0, "limit": 160.00}
