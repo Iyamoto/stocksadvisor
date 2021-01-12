@@ -30,7 +30,7 @@ class ADVISOR(object):
 
         self.min_goal = 0.1
         self.min_RewardRiskRatio = 5
-        self.atr_multiplier = 1
+        self.atr_multiplier = 2
         self.accepted_goal_chance = 0.33
 
     def get_assettype(self, datatype='ms'):
@@ -209,20 +209,19 @@ class ADVISOR(object):
 
                     print('StopLoss3 (Half last candle):', stop_half)
 
-                    if asset.lastprice > asset.lastema50:
-                        print('Price is above EMA50')
-                    if asset.lastprice > asset.lastema100:
-                        print('Price is above EMA100')
-
                     if angle > 0:
                         if abs(asset.lastprice - asset.breakout_level)/asset.breakout_level <= price_distance:
-                            print('Price is close to the breakout level!')
                             print('Breakout level:', asset.breakout_level)
+                            print('Price is close to the breakout level!')
                             print()
 
                             print('Positive signals')
 
                             asset.compare_volumes(days=taillen)
+                            if asset.lastprice > asset.lastema50:
+                                print('Price is above EMA50')
+                            if asset.lastprice > asset.lastema100:
+                                print('Price is above EMA100')
                             if asset.is_under_accumulation:
                                 print('For the last {} days the stock is under accumulation:'.format(taillen), asset.is_under_accumulation)
                                 gain_chance += 0.05
@@ -250,7 +249,10 @@ class ADVISOR(object):
 
                             print()
                             print('Risks')
-
+                            if asset.lastprice < asset.lastema50:
+                                print('Price is bellow EMA50')
+                            if asset.lastprice < asset.lastema100:
+                                print('Price is bellow EMA100')
                             if not asset.is_under_accumulation:
                                 print('For the last {} days the stock is not under accumulation:'.format(taillen), asset.is_under_accumulation)
                                 loss_chance += 0.05
@@ -280,15 +282,27 @@ class ADVISOR(object):
                                 if fair_price <= asset.lastprice:
                                     print('Fair prise estimate is bellow the last price')
                                     continue
+
                                 gain = (fair_price - asset.lastprice) * gain_chance
                                 loss1 = (asset.lastprice - asset.get_lastema13()) * loss_chance
                                 loss2 = (asset.lastprice - asset.stoploss) * loss_chance
                                 loss3 = (asset.lastprice - stop_half) * loss_chance
+                                loss4 = (asset.lastprice - asset.breakout_level) * loss_chance
                                 rrr1 = round(gain / loss1, 1)
                                 rrr2 = round(gain / loss2, 1)
                                 rrr3 = round(gain / loss3, 1)
+                                rrr4 = round(gain / loss4, 1)
                                 print()
-                                print('Reward/Risk ratio EMA13:', rrr1, 'ATR:', rrr2, 'Half candle:', rrr3)
+                                print('Advice')
+                                print('Gain chance:', round(gain_chance, 2))
+                                print('Loss chance:', round(loss_chance, 2))
+                                print('Reward/Risk ratio EMA13:', rrr1, 'ATR:', rrr2,
+                                      'Half candle:', rrr3, 'Breakout level:', rrr4)
+
+                                print('Monte-Carlo')
+                                asset.get_bust_chance(sims=1000, plot=False)
+                                print('Goal chance:', round(asset.goal_chance, 2))
+                                print('Bust chance:', round(asset.bust_chance, 2))
 
                             print()
                             print('Please read recent news https://seekingalpha.com/symbol/{}'.format(symbol))
@@ -310,17 +324,6 @@ class ADVISOR(object):
                             print('Check Consensus Forward P/E, Debt/Equity, Net Margin, ROE, Free Cash Flow')
                             print('Anomalies:', asset.anomalies)
                             print()
-
-                            # print('Monte-Carlo')
-                            # asset.get_bust_chance(bust=asset.stoplosspercent, sims=10000, plot=False, taillen=taillen)
-                            # asset.get_bust_chance(bust=price_distance, sims=1000, plot=False, taillen=taillen)
-                            # print('Stop loss chance:', round(asset.bust_chance, 2))
-                            # print('Stop loss price:', round(asset.breakout_level, 2))
-                            # print('Take profit chance:', round(asset.goal_chance, 2))
-                            # asset.goalprice = asset.lastprice * 1.1
-                            # print('Take profit price:', round(asset.goalprice, 2))
-                            # asset.get_reward_risk_ratio()
-                            # print('Reward-Risk ratio:', asset.rewardriskratio)
 
                             asset.plot('Turbo:')
 

@@ -465,9 +465,9 @@ class ASSET(object):
         self.df['KC_LOW'] = self.df['EMA' + str(period)] - self.kc_channel * self.df['ATR']
         self.df['KC_HIGH'] = self.df['EMA' + str(period)] + self.kc_channel * self.df['ATR']
 
-    def get_bust_chance(self, sims=1000, bust=0.1, goal=0.1, plot=False, taillen=0):
+    def get_bust_chance(self, sims=1000, bust=0.1, goal=0.1, plot=False):
         # Monte-Carlo
-        df = self.df.tail(taillen).copy()
+        df = self.df.copy()
         df['Return'] = df['Close'].pct_change().fillna(0)
 
         # print('Real returns stats:')
