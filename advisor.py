@@ -290,7 +290,8 @@ class ADVISOR(object):
                                 loss_chance += 0.1
 
                             if fair_price > 0:
-                                if 0 < fair_price <= asset.lastprice:
+                                if fair_price <= asset.lastprice:
+                                    print('Fair prise estimate is bellow the last price')
                                     continue
                                 gain = (fair_price - asset.lastprice) * gain_chance
                                 loss1 = (asset.lastprice - asset.get_lastema13()) * loss_chance

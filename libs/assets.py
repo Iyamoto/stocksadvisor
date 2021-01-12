@@ -571,6 +571,9 @@ class ASSET(object):
         if self.df.Phase1.sum() > 0:
             self.phase1_start = self.df.Phase1[self.df.Phase1 > 0][-1:].index.values[0]
             self.phase1_len = len(self.df) - self.phase1_start
+            if self.phase1_len < 3:
+                self.phase1_start = self.df.Phase1[self.df.Phase1 > 0][-2:].index.values[0]
+                self.phase1_len = len(self.df) - self.phase1_start
             tmp = self.df.tail(self.phase1_len)
             if tmp.PCT10[tmp['PCT10'] == False].count() > 0:
                 self.phase1_end = tmp.PCT10[tmp['PCT10'] == False][:1].index.values[0]
