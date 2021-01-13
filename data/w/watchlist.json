@@ -309,7 +309,7 @@
         "XOM": {"div": 3.2, "limit": 75.0, "buy": 79.66}
     },
   {
-    "CSCO": {"div": 1.3, "limit": 42.0}
+    "CSCO": {"div": 1.3, "desc": "CISCO SYS. (Networking)", "fp": 49.1, "as": 6.0}
   },
     {
         "TGT": {"div": 2.5, "limit": 75.0}

@@ -170,7 +170,7 @@ class ADVISOR(object):
             asset.find_phase1(points=3, diff=1.5, rsi=50)
 
             # asset.find_event(points=3, diff=1.5)
-            price_distance = 0.03
+            price_distance = 0.05
             gain_chance = 0.2
             loss_chance = 0.2
 

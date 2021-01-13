@@ -158,7 +158,7 @@
         "TATNP": {"div": 42.0, "limit": 400.0}
     },
     {
-        "UPRO": {"div": 0.22, "desc": "Unipro (Energy)", "fp": 3.0, "as": 5.0}
+        "UPRO": {"div": 0.22, "desc": "Unipro (Energy)", "fp": 3.1, "as": 5.0}
     },
     {
         "GTRK": {"div": 0.0}
