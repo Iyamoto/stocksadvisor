@@ -66,7 +66,10 @@
         "MBT": {"div": 1.07, "desc": "MTS in USD", "fp": 9.4, "as": 5.0}
     },
     {
-        "GM": {"div": 1.52, "limit": 37.0}
+        "GM": {"div": 1.52}
+    },
+    {
+        "FSLR": {"div": 0.0, "desc": "First Solar, Inc. is a provider of photovoltaic (PV) solar energy solutions. (Renewable Energy)", "fp": 93.85, "as": 7.0}
     },
     {
         "HAS": {"div": 2.5, "limit": 75.0}
@@ -626,6 +629,9 @@
   {
     "ATVI": {"div": 0.34}
   },
+    {
+        "SEDG": {"div": 0.0, "desc": "SolarEdge Technologies, Inc. offers an inverter solution for a solar photovoltaic (PV) system. (Renewable Energy)", "fp": 281.1, "as": 5.0}
+    },
   {
     "CAG": {"div": 1.1}
   },
