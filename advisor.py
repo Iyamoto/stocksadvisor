@@ -18,8 +18,8 @@ import fire
 class ADVISOR(object):
     """Stocks Advisor"""
 
-    def __init__(self, datatype='m', plot_anomaly=False, caching=True):
-        self.plot_anomaly = plot_anomaly
+    def __init__(self, datatype='m', plot=False, caching=True):
+        self.plot = plot
         self.datatype = datatype
         self.watchdata, self.source, self.asset_type = self.get_assettype(datatype=self.datatype)
         self.key = configs.alphaconf.key
@@ -139,6 +139,8 @@ class ADVISOR(object):
 
     def check_watchlist(self, symbol_overide='', ignore=None):
         """Do magic"""
+        if not ignore:
+            ignore = list()
 
         for item in self.watchdata:
 
@@ -325,7 +327,8 @@ class ADVISOR(object):
                             print('Anomalies:', asset.anomalies)
                             print()
 
-                            asset.plot('Turbo:')
+                            if self.plot:
+                                asset.plot('Turbo:')
 
 
 if __name__ == "__main__":
@@ -334,7 +337,7 @@ if __name__ == "__main__":
         # Ignore until February
         ignore = ['SBUX', 'MDT', 'AVGO', 'ZTS', 'ROP', 'V', 'ANTM', 'SYY', 'MCD']
         for datatype in datatypes:
-            adv = ADVISOR(datatype=datatype)
+            adv = ADVISOR(datatype=datatype, plot=True)
             adv.check_watchlist(ignore=ignore)
 
         # fire.Fire(adv.correlation(datatype2='ms', symbol2='SBER'))
