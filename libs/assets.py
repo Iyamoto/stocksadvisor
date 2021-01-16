@@ -274,20 +274,21 @@ class ASSET(object):
 
     def fetch_alpha(self, key='demo', size='compact', timeout=5):
         ts = TimeSeries(key=key, output_format='pandas')
+        sleep = timeout
         retry = 0
         while True:
             try:
-                if self.symbol == 'TCS':
-                    symbol = 'LON:TCS'
-                else:
-                    symbol = self.symbol
+                symbol = self.symbol
+                # data, meta_data = ts.get_weekly_adjusted(symbol=symbol, outputsize=size)
                 data, meta_data = ts.get_daily_adjusted(symbol=symbol, outputsize=size)
                 break
             except:
                 retry += 1
+                print(symbol, 'retrying...')
                 if retry > 10:
                     exit('Can not fetch ' + self.symbol)
-                time.sleep(timeout)
+                time.sleep(sleep)
+                sleep += timeout
                 continue
         return data
 
