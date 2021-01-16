@@ -180,6 +180,12 @@
         "CCL": {"div": 2.0}
     },
     {
+        "SWBI": {"div": 0.0}
+    },
+    {
+        "AOUT": {"div": 0.0}
+    },
+    {
         "ET": {"div": 0.61}
     },
     {
@@ -357,6 +363,9 @@
     "NOC": {"div": 4.8}
   },
   {
+    "DLX": {"div": 1.2}
+  },
+  {
     "TSM": {"div": 1.5, "limit": 44.56}
   },
   {
@@ -390,6 +399,21 @@
     "HST": {"div": 0.8}
   },
   {
+    "RAVN": {"div": 0.4}
+  },
+  {
+    "IPAR": {"div": 0.0}
+  },
+  {
+    "NVEE": {"div": 0.0}
+  },
+  {
+    "UCTT": {"div": 0.4}
+  },
+  {
+    "PGTI": {"div": 0.0}
+  },
+  {
     "STRA": {"div": 2.4}
   },
   {
@@ -397,6 +421,9 @@
   },
     {
     "WCC": {"div": 0.0}
+  },
+    {
+    "RIG": {"div": 0.0}
   },
     {
     "ROP": {"div": 2.25, "desc": " The Company operate businesses that design and develop software, including both license and software-as-a-service (SaaS) and engineered products and solutions for a variety of markets. (IT)", "fp": 458.25, "as": 8.0}
@@ -467,6 +494,9 @@
   },
   {
     "BIIB": {"div": 0.0}
+  },
+  {
+    "KMT": {"div": 0.0}
   },
   {
     "BGS": {"div": 1.9}
@@ -703,6 +733,15 @@
   },
   {
     "APTV": {"div": 0.8}
+  },
+  {
+    "APEI": {"div": 0.0}
+  },
+  {
+    "VPG": {"div": 0.0}
+  },
+  {
+    "OFIX": {"div": 0.0}
   },
   {
     "XYL": {"div": 0.9, "limit": 66.0}
