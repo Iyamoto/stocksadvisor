@@ -304,7 +304,7 @@ class ASSET(object):
         self.df = df
         self.df = df.reset_index()
 
-    def fetch_moex(self, days=100, timeout=1):
+    def fetch_moex(self, days=120, timeout=1):
         date_N_days_ago = datetime.now() - timedelta(days=days)
         start = date_N_days_ago.strftime('%m/%d/%Y')
 
@@ -324,7 +324,7 @@ class ASSET(object):
 
         return filtered
 
-    def get_data_from_moex(self, cachedir='cache-m', timeout=3, days=100):
+    def get_data_from_moex(self, cachedir='cache-m', timeout=3, days=120):
         if self.caching:
             if not os.path.isdir(cachedir):
                 os.mkdir(cachedir)
