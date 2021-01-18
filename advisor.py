@@ -307,6 +307,7 @@ class ADVISOR(object):
                                 print('Bust chance:', round(asset.bust_chance, 2))
 
                             print()
+                            print('Check weekly data')
                             print('Please read recent news https://seekingalpha.com/symbol/{}'.format(symbol))
                             print('Check short interest')
                             print('Check money flow index for divergences')
