@@ -570,6 +570,9 @@
     "MS": {"div": 1.1}
   },
   {
+    "SCI": {"div": 0.84}
+  },
+  {
     "V": {"div": 0.9, "desc": "Visa Inc. (Visa) is a payments technology company (IT)", "fp": 227.7, "as": 7.0}
   },
     {
